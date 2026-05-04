@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Define tu Nicho — Nueva Oferta de IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --surface: #0e0e1a;
+  --surface2: #14142a;
+  --border: #1e1e3a;
+  --accent: #7c3aed;
+  --accent-light: #a855f7;
+  --accent-glow: rgba(124,58,237,0.15);
+  --gold: #f59e0b;
+  --gold-light: #fbbf24;
+  --green: #10b981;
+  --red: #ef4444;
+  --text: #f1f0ff;
+  --text-muted: #6b6b9a;
+  --text-dim: #9d9dc0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Animated background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(124,58,237,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero */
+.hero {
+  padding: 56px 0 40px;
+  text-align: center;
+}
+
+.module-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--accent-light);
+  font-size: 11px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  margin-bottom: 28px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.module-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.hero h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(24px, 4.5vw, 38px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--gold), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto 36px;
+}
+
+/* Warning banner */
+.warning-banner {
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 40px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.warning-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.warning-text { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+.warning-text strong { color: var(--gold); }
+
+/* Progress */
+.progress-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.progress-info { flex: 1; }
+.progress-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.progress-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  width: 0%;
+}
+
+.progress-pct {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--accent-light);
+  min-width: 52px;
+  text-align: right;
+  transition: all 0.3s;
+}
+
+/* Phase cards */
+.phase {
+  margin-bottom: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.phase.active {
+  border-color: rgba(124,58,237,0.4);
+  box-shadow: 0 0 0 1px rgba(124,58,237,0.1), 0 8px 40px rgba(124,58,237,0.08);
+}
+
+.phase.completed {
+  border-color: rgba(16,185,129,0.25);
+}
+
+.phase-header {
+  padding: 22px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.phase-header:hover { background: rgba(255,255,255,0.02); }
+
+.phase-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.phase.active .phase-icon {
+  background: var(--accent-glow);
+  border-color: rgba(124,58,237,0.3);
+}
+
+.phase.completed .phase-icon {
+  background: rgba(16,185,129,0.1);
+  border-color: rgba(16,185,129,0.25);
+}
+
+.phase-meta { flex: 1; }
+
+.phase-number {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.phase.active .phase-number { color: var(--accent-light); }
+.phase.completed .phase-number { color: var(--green); }
+
+.phase-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.phase-status {
+  font-size: 18px;
+  transition: transform 0.3s;
+}
+
+.phase.open .phase-status { transform: rotate(180deg); }
+.phase.completed .phase-status { transform: none; }
+
+.phase-body {
+  display: none;
+  padding: 0 24px 28px;
+  border-top: 1px solid var(--border);
+}
+
+.phase.open .phase-body { display: block; }
+
+/* Section title inside phase */
+.section-intro {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  padding: 18px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+/* Input groups */
+.field-group {
+  margin-bottom: 24px;
+}
+
+.field-label {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.field-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 48px;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: rgba(124,58,237,0.4);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.08);
+}
+
+.field-input::placeholder { color: var(--text-muted); }
+
+/* Options selector */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.option-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.option-card:hover {
+  border-color: rgba(124,58,237,0.3);
+  color: var(--text);
+}
+
+.option-card.selected {
+  background: var(--accent-glow);
+  border-color: rgba(124,58,237,0.4);
+  color: var(--text);
+}
+
+.option-card .opt-icon { font-size: 16px; margin-bottom: 6px; display: block; }
+.option-card .opt-label { font-size: 12px; font-weight: 700; display: block; margin-bottom: 2px; }
+.option-card .opt-desc { font-size: 11px; color: var(--text-muted); }
+.option-card.selected .opt-desc { color: var(--text-dim); }
+
+/* Criteria checklist */
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.criteria-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.criteria-item:hover { border-color: rgba(124,58,237,0.25); }
+
+.criteria-item.checked {
+  background: rgba(16,185,129,0.05);
+  border-color: rgba(16,185,129,0.25);
+}
+
+.criteria-check {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  margin-top: 1px;
+}
+
+.criteria-item.checked .criteria-check {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.criteria-content { flex: 1; }
+.criteria-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.criteria-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+/* Score meter */
+.score-meter {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.score-number {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  min-width: 60px;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.score-info { flex: 1; }
+.score-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.score-bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s, background 0.3s; }
+.score-verdict { font-size: 12px; margin-top: 6px; font-weight: 700; }
+
+/* Nicho examples */
+.example-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.example-row:last-child { border-bottom: none; }
+.ex-bad { color: var(--red); flex: 1; }
+.ex-good { color: var(--green); flex: 1; }
+.ex-arrow { color: var(--text-muted); font-size: 16px; }
+
+/* Result card */
+.result-card {
+  background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(245,158,11,0.04));
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px 0;
+}
+
+.result-card h3 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-light);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.result-line {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.result-line:last-child { margin-bottom: 0; }
+.result-key { color: var(--text-muted); min-width: 80px; flex-shrink: 0; }
+.result-val { color: var(--text); font-weight: 700; }
+.result-val.empty { color: var(--text-muted); font-style: italic; font-weight: 400; }
+
+/* GPT button */
+.gpt-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(16,185,129,0.06);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+  margin: 16px 0;
+  cursor: pointer;
+}
+
+.gpt-btn:hover {
+  background: rgba(16,185,129,0.1);
+  border-color: rgba(16,185,129,0.35);
+}
+
+.gpt-icon {
+  width: 40px; height: 40px;
+  background: rgba(16,185,129,0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.gpt-content { flex: 1; }
+.gpt-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.gpt-desc { font-size: 12px; color: var(--text-muted); }
+.gpt-arrow { color: var(--green); font-size: 18px; }
+
+/* Done button */
+.done-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  padding: 12px 24px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 10px;
+  color: var(--accent-light);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.done-btn:hover { background: rgba(124,58,237,0.18); }
+.done-btn.completed-state { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); color: var(--green); }
+
+/* Back button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  margin-left: 12px;
+  padding: 12px 20px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-btn:hover { border-color: rgba(124,58,237,0.3); color: var(--text-dim); }
+
+/* Alert */
+.alert {
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+.alert-gold { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15); }
+.alert-gold strong { color: var(--gold); }
+.alert-purple { background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.15); }
+.alert-purple strong { color: var(--accent-light); }
+
+/* Final card */
+.final-card {
+  background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(245,158,11,0.06));
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  margin-top: 40px;
+  display: none;
+}
+
+.final-card.show { display: block; }
+
+.final-emoji { font-size: 52px; margin-bottom: 16px; }
+
+.final-card h2 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent-light), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.final-card p { color: var(--text-dim); font-size: 13px; line-height: 1.7; }
+
+.final-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin: 24px 0;
+  text-align: left;
+}
+
+.final-summary-title {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.summary-line {
+  font-size: 13px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+}
+
+.summary-line:last-child { border-bottom: none; }
+.summary-key { color: var(--text-muted); min-width: 90px; }
+.summary-val { color: var(--text); font-weight: 700; word-break: break-word; }
+
+/* Sticky bottom */
+.sticky-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(8,8,16,0.95);
+  border-top: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  backdrop-filter: blur(20px);
+  z-index: 100;
+}
+
+.sticky-progress-text {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.sticky-progress-text strong { color: var(--accent-light); }
+
+.next-btn {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--accent), #6d28d9);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.next-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.next-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.phase { animation: fadeUp 0.4s ease both; }
+.phase:nth-child(1) { animation-delay: 0.05s; }
+.phase:nth-child(2) { animation-delay: 0.1s; }
+.phase:nth-child(3) { animation-delay: 0.15s; }
+.phase:nth-child(4) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="module-tag">Módulo 01 · Semana 1</div>
+    <h1>Define tu <em>nicho</em><br>para la nueva oferta de IA</h1>
+    <p class="hero-desc">Ya tienes agencia. Ya sabes vender. Ahora necesitas decidir qué problema de IA vas a resolver, para quién y por qué te van a pagar por ello.</p>
+  </div>
+
+  <div class="warning-banner">
+    <span class="warning-icon">⚡</span>
+    <div class="warning-text"><strong>Antes de tocar Claude Code necesitas esto.</strong> Si no tienes claro el nicho y el problema, el agente no sabe a quién hablar, qué preguntar ni cómo cualificar. Esto es la base de todo lo que viene después.</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <div class="progress-label">// progreso del módulo</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+
+  <!-- FASE 1 -->
+  <div class="phase" id="phase-0">
+    <div class="phase-header" onclick="togglePhase(0)">
+      <div class="phase-icon">🎯</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 01</div>
+        <div class="phase-title">Elige tu sector objetivo</div>
+      </div>
+      <div class="phase-status">⌄</div>
+    </div>
+    <div class="phase-body">
+      <div class="section-intro">
+        No eres una agencia de IA genérica. Eres la agencia de IA para un tipo concreto de negocio. Cuanto más específico sea el sector, más fácil vender.
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">¿A qué sector va dirigida tu nueva oferta?</label>
+        <div class="field-hint">Elige el que mejor encaje con tu experiencia actual o con los clientes que ya tienes.</div>
+        <div class="options-grid">
+          <div class="option-card" onclick="selectOption(this, 'sector')">
+            <span class="opt-icon">📞</span>
+            <span class="opt-label">Agencias de captación</span>
+            <span class="opt-desc">Generación de leads, prospección, reuniones</span>
+          </div>
+          <div class="option-card" onclick="selectOption(this, 'sector')">
+            <span class="opt-icon">⚙️</span>
+            <span class="opt-label">Agencias de automatización</span>
+            <span class="opt-desc">Make, n8n, Zapier, flujos internos</span>
+          </div>
+          <div class="option-card" onclick="selectOption(this, 'sector')">
+            <span class="opt-icon">🏥</span>
+            <span class="opt-label">Clínicas y salud</span>
+            <span class="opt-desc">Citas, seguimiento, atención al paciente</span>
+          </div>
+          <div class="option-card" onclick="selectOption(this, 'sector')">
+            <span class="opt-icon">🏠</span>
+            <span class="opt-label">Inmobiliarias</span>
+            <span class="opt-desc">Leads, cualificación, seguimiento</span>
+          </div>
+          <div class="option-card" onclick="selectOption(this, 'sector')">
+            <span class="opt-icon">⚖️</span>
+            <span class="opt-label">Despachos y profesionales</span>
+            <span class="opt-desc">Abogados, asesores, consultoras</span>
+          </div>
+          <div class="option-card" onclick="selectOption(this, 'sector')">
+            <span class="opt-icon">✏️</span>
+            <span class="opt-label">Otro sector</span>
+            <span class="opt-desc">Escríbelo abajo</span>
+          </div>
+        </div>
+        <input type="text" class="field-input" id="sector-custom" placeholder="Si elegiste 'otro' o quieres ser más específico, escríbelo aquí..." style="margin-top:10px;">
+      </div>
+
+      <div class="alert alert-gold">
+        <span>⚠️</span>
+        <span><strong>Regla de oro:</strong> elige el sector donde ya tienes contactos o experiencia. Es mucho más fácil vender donde ya tienes credibilidad.</span>
+      </div>
+
+      <button class="done-btn" onclick="completePhase(0)">→ Tengo mi sector</button>
+      <button class="back-btn" id="back-0" style="display:none;" onclick="reopenPhase(0)">← Editar</button>
+    </div>
+  </div>
+
+  <!-- FASE 2 -->
+  <div class="phase" id="phase-1">
+    <div class="phase-header" onclick="togglePhase(1)">
+      <div class="phase-icon">🔥</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 02</div>
+        <div class="phase-title">Identifica el problema que duele</div>
+      </div>
+      <div class="phase-status">⌄</div>
+    </div>
+    <div class="phase-body">
+      <div class="section-intro">
+        El mercado no te paga por saber IA. Te paga por resolver un problema concreto que le está costando dinero, tiempo o clientes. Necesitas identificar ese problema antes de diseñar nada.
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">¿Cuál es el problema principal de ese sector?</label>
+        <div class="field-hint">Tiene que ser algo que ya exista, que se repita y que duela económicamente.</div>
+
+        <div class="criteria-list">
+          <div class="criteria-item" onclick="toggleCriteria(this)">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">Pierden leads por no responder a tiempo</div>
+              <div class="criteria-desc">El lead llega, nadie responde en las primeras horas y se enfría</div>
+            </div>
+          </div>
+          <div class="criteria-item" onclick="toggleCriteria(this)">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">No tienen seguimiento sistemático</div>
+              <div class="criteria-desc">Hacen 1-2 toques y abandonan. La mayoría de ventas muere aquí</div>
+            </div>
+          </div>
+          <div class="criteria-item" onclick="toggleCriteria(this)">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">Procesos manuales que consumen tiempo</div>
+              <div class="criteria-desc">Actualizan CRM a mano, copian datos, hacen tareas repetitivas</div>
+            </div>
+          </div>
+          <div class="criteria-item" onclick="toggleCriteria(this)">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">No saben qué leads tienen más potencial</div>
+              <div class="criteria-desc">Tratan igual a todos y pierden tiempo con los malos</div>
+            </div>
+          </div>
+          <div class="criteria-item" onclick="toggleCriteria(this)">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">No pueden atender fuera de horario</div>
+              <div class="criteria-desc">Pierden oportunidades cuando el equipo no está disponible</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Descríbelo con tus palabras</label>
+        <div class="field-hint">Escríbelo como si se lo explicaras a un cliente. Cuanto más concreto, mejor.</div>
+        <textarea class="field-input" id="problema-input" rows="3" placeholder="Ej: las clínicas estéticas pierden entre 3 y 5 leads al día porque nadie responde el WhatsApp fuera de horario..."></textarea>
+      </div>
+
+      <div class="alert alert-purple">
+        <span>💡</span>
+        <span><strong>Test rápido:</strong> si puedes decir "este problema le cuesta X euros al mes", es un buen problema. Si no puedes cuantificarlo, sigue buscando.</span>
+      </div>
+
+      <button class="done-btn" onclick="completePhase(1)">→ Tengo el problema claro</button>
+      <button class="back-btn" id="back-1" style="display:none;" onclick="reopenPhase(1)">← Editar</button>
+    </div>
+  </div>
+
+  <!-- FASE 3 -->
+  <div class="phase" id="phase-2">
+    <div class="phase-header" onclick="togglePhase(2)">
+      <div class="phase-icon">💰</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 03</div>
+        <div class="phase-title">Valida que tienen dinero y acceso</div>
+      </div>
+      <div class="phase-status">⌄</div>
+    </div>
+    <div class="phase-body">
+      <div class="section-intro">
+        Un nicho con problema pero sin dinero no es un negocio. Y un nicho con dinero al que no puedes acceder tampoco. Estos dos criterios son innegociables.
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Criterios de viabilidad — marca los que se cumplen</label>
+
+        <div class="criteria-list" id="viability-checks">
+          <div class="criteria-item" onclick="toggleCriteria(this); updateScore()">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">💶 Tienen presupuesto para servicios</div>
+              <div class="criteria-desc">Ya pagan por marketing, software u otros servicios similares</div>
+            </div>
+          </div>
+          <div class="criteria-item" onclick="toggleCriteria(this); updateScore()">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">📈 El problema tiene impacto económico directo</div>
+              <div class="criteria-desc">Pueden calcular cuánto les cuesta no resolverlo</div>
+            </div>
+          </div>
+          <div class="criteria-item" onclick="toggleCriteria(this); updateScore()">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">📍 Sé dónde encontrarlos</div>
+              <div class="criteria-desc">LinkedIn, Google Maps, grupos, asociaciones, eventos</div>
+            </div>
+          </div>
+          <div class="criteria-item" onclick="toggleCriteria(this); updateScore()">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">🤝 Tengo o puedo tener acceso directo</div>
+              <div class="criteria-desc">Contactos existentes, puerta fría posible, referidos</div>
+            </div>
+          </div>
+          <div class="criteria-item" onclick="toggleCriteria(this); updateScore()">
+            <div class="criteria-check">✓</div>
+            <div class="criteria-content">
+              <div class="criteria-title">🧠 Entiendo cómo piensan y qué les importa</div>
+              <div class="criteria-desc">Conozco el sector, tengo experiencia o clientes actuales ahí</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="score-meter" id="scoreMeter">
+        <div class="score-number" id="scoreNum">0</div>
+        <div class="score-info">
+          <div class="score-label">// viabilidad del nicho</div>
+          <div class="score-bar-track">
+            <div class="score-bar-fill" id="scoreBar" style="width:0%; background: var(--red);"></div>
+          </div>
+          <div class="score-verdict" id="scoreVerdict" style="color: var(--text-muted);">Marca los criterios que se cumplen</div>
+        </div>
+      </div>
+
+      <button class="done-btn" onclick="completePhase(2)">→ Nicho validado</button>
+      <button class="back-btn" id="back-2" style="display:none;" onclick="reopenPhase(2)">← Editar</button>
+    </div>
+  </div>
+
+  <!-- FASE 4 -->
+  <div class="phase" id="phase-3">
+    <div class="phase-header" onclick="togglePhase(3)">
+      <div class="phase-icon">✍️</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 04</div>
+        <div class="phase-title">Construye tu frase de nicho</div>
+      </div>
+      <div class="phase-status">⌄</div>
+    </div>
+    <div class="phase-body">
+      <div class="section-intro">
+        Si no puedes explicar tu nicho en una frase, no está lo suficientemente claro. Esta frase es la base de tu oferta, tu mensaje y tu agente de ventas.
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">De genérico a específico — así se hace</label>
+        <div style="background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+          <div class="example-row">
+            <span class="ex-bad">❌ "agencias de marketing"</span>
+            <span class="ex-arrow">→</span>
+            <span class="ex-good">✅ "agencias de captación que pierden leads por no responder a tiempo"</span>
+          </div>
+          <div class="example-row">
+            <span class="ex-bad">❌ "clínicas"</span>
+            <span class="ex-arrow">→</span>
+            <span class="ex-good">✅ "clínicas estéticas que pierden citas por no tener seguimiento automático"</span>
+          </div>
+          <div class="example-row">
+            <span class="ex-bad">❌ "inmobiliarias"</span>
+            <span class="ex-arrow">→</span>
+            <span class="ex-good">✅ "inmobiliarias que reciben leads pero no tienen sistema de cualificación"</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Tu frase de nicho</label>
+        <div class="field-hint">Formato: [sector específico] + que + [problema concreto que resuelves]</div>
+        <input type="text" class="field-input" id="frase-nicho" placeholder="Ej: agencias de captación que pierden leads por falta de seguimiento automático...">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">¿Cómo lo resuelve tu oferta de IA?</label>
+        <div class="field-hint">Una frase. Sin tecnicismos. Como se lo explicarías a un cliente en una conversación.</div>
+        <input type="text" class="field-input" id="solucion-input" placeholder="Ej: un agente de WhatsApp que responde, cualifica y agenda reuniones solo, 24 horas al día...">
+      </div>
+
+      <a href="https://chatgpt.com/g/g-69cbee3d6ca48191aef8ebc833627ade-descubridor-de-nichos" target="_blank" class="gpt-btn">
+        <div class="gpt-icon">🤖</div>
+        <div class="gpt-content">
+          <div class="gpt-name">GPT Descubridor de Nichos</div>
+          <div class="gpt-desc">Si te quedas atascado úsalo para generar ideas y filtrarlas más rápido</div>
+        </div>
+        <div class="gpt-arrow">↗</div>
+      </a>
+
+      <div class="alert alert-gold">
+        <span>⚠️</span>
+        <span><strong>No es para siempre.</strong> Esta es tu decisión de arranque. La vas a ajustar con feedback real del mercado. Lo importante es elegir y moverse.</span>
+      </div>
+
+      <!-- Live result -->
+      <div class="result-card" id="liveResult">
+        <h3>// Tu nicho en limpio</h3>
+        <div class="result-line">
+          <span class="result-key">Sector</span>
+          <span class="result-val" id="res-sector">—</span>
+        </div>
+        <div class="result-line">
+          <span class="result-key">Problema</span>
+          <span class="result-val" id="res-problema">—</span>
+        </div>
+        <div class="result-line">
+          <span class="result-key">Nicho</span>
+          <span class="result-val" id="res-nicho">—</span>
+        </div>
+        <div class="result-line">
+          <span class="result-key">Solución</span>
+          <span class="result-val" id="res-solucion">—</span>
+        </div>
+      </div>
+
+      <button class="done-btn" onclick="completePhase(3)">→ Mi nicho está definido</button>
+      <button class="back-btn" id="back-3" style="display:none;" onclick="reopenPhase(3)">← Editar</button>
+    </div>
+  </div>
+
+  <!-- Final card -->
+  <div class="final-card" id="finalCard">
+    <div class="final-emoji">🚀</div>
+    <h2>Nicho definido</h2>
+    <p>Tienes la base de todo lo que viene después. El master prompt, el agente, el mensaje de ventas y la oferta completa arrancan desde aquí.</p>
+
+    <div class="final-summary" id="finalSummary">
+      <div class="final-summary-title">// resumen de tu nicho</div>
+      <div class="summary-line">
+        <span class="summary-key">Sector</span>
+        <span class="summary-val" id="sum-sector">—</span>
+      </div>
+      <div class="summary-line">
+        <span class="summary-key">Problema</span>
+        <span class="summary-val" id="sum-problema">—</span>
+      </div>
+      <div class="summary-line">
+        <span class="summary-key">Nicho</span>
+        <span class="summary-val" id="sum-nicho">—</span>
+      </div>
+      <div class="summary-line">
+        <span class="summary-key">Solución</span>
+        <span class="summary-val" id="sum-solucion">—</span>
+      </div>
+    </div>
+
+    <p style="margin-top:8px;">El próximo paso es definir tu avatar: el cliente exacto dentro de ese nicho que tiene el problema, el dinero y las ganas de resolverlo.</p>
+  </div>
+
+</div>
+
+<div class="sticky-bottom">
+  <span class="sticky-progress-text">Fase <strong id="navCurrent">1</strong> de 4</span>
+  <button class="next-btn" id="nextBtn" onclick="goNext()" disabled>Siguiente fase →</button>
+</div>
+
+<script>
+const TOTAL = 4;
+let completed = new Set();
+let currentOpen = 0;
+let selectedSector = '';
+
+function togglePhase(idx) {
+  const phase = document.getElementById(`phase-${idx}`);
+  const isOpen = phase.classList.contains('open');
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('open', 'active'));
+  if (!isOpen) {
+    phase.classList.add('open', 'active');
+    currentOpen = idx;
+  }
+  updateNav();
+}
+
+function selectOption(el, group) {
+  el.closest('.options-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSector = el.querySelector('.opt-label').textContent;
+  updateLiveResult();
+}
+
+function toggleCriteria(el) {
+  el.classList.toggle('checked');
+}
+
+let viabilityScore = 0;
+function updateScore() {
+  const items = document.querySelectorAll('#viability-checks .criteria-item.checked');
+  viabilityScore = items.length;
+  const pct = (viabilityScore / 5) * 100;
+  const num = document.getElementById('scoreNum');
+  const bar = document.getElementById('scoreBar');
+  const verdict = document.getElementById('scoreVerdict');
+
+  num.textContent = viabilityScore + '/5';
+
+  bar.style.width = pct + '%';
+
+  if (viabilityScore <= 1) {
+    bar.style.background = 'var(--red)';
+    num.style.color = 'var(--red)';
+    verdict.style.color = 'var(--red)';
+    verdict.textContent = 'Nicho arriesgado — sigue buscando';
+  } else if (viabilityScore <= 3) {
+    bar.style.background = 'var(--gold)';
+    num.style.color = 'var(--gold)';
+    verdict.style.color = 'var(--gold)';
+    verdict.textContent = 'Puede funcionar — refina los puntos débiles';
+  } else {
+    bar.style.background = 'var(--green)';
+    num.style.color = 'var(--green)';
+    verdict.style.color = 'var(--green)';
+    verdict.textContent = '✓ Nicho sólido — adelante';
+  }
+}
+
+function updateLiveResult() {
+  const sector = selectedSector || document.getElementById('sector-custom').value || '—';
+  const problema = document.getElementById('problema-input') ? document.getElementById('problema-input').value || '—' : '—';
+  const nicho = document.getElementById('frase-nicho') ? document.getElementById('frase-nicho').value || '—' : '—';
+  const solucion = document.getElementById('solucion-input') ? document.getElementById('solucion-input').value || '—' : '—';
+
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = val;
+      el.className = 'result-val' + (val === '—' ? ' empty' : '');
+    }
+  };
+
+  set('res-sector', sector);
+  set('res-problema', problema);
+  set('res-nicho', nicho);
+  set('res-solucion', solucion);
+}
+
+// Live update inputs
+document.addEventListener('input', (e) => {
+  if (['sector-custom','problema-input','frase-nicho','solucion-input'].includes(e.target.id)) {
+    updateLiveResult();
+  }
+});
+
+function completePhase(idx) {
+  completed.add(idx);
+  const phase = document.getElementById(`phase-${idx}`);
+  phase.classList.add('completed');
+  phase.classList.remove('open', 'active');
+  const btn = phase.querySelector('.done-btn');
+  btn.classList.add('completed-state');
+  btn.textContent = '✓ Completado';
+  btn.style.display = 'none';
+
+  // Show edit button
+  const backBtn = document.getElementById(`back-${idx}`);
+  if (backBtn) backBtn.style.display = 'inline-flex';
+
+  phase.querySelector('.phase-status').textContent = '✓';
+  updateProgress();
+  updateNav();
+
+  if (idx < TOTAL - 1) {
+    setTimeout(() => {
+      togglePhase(idx + 1);
+      document.getElementById(`phase-${idx + 1}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  } else {
+    showFinal();
+  }
+}
+
+function reopenPhase(idx) {
+  completed.delete(idx);
+  const phase = document.getElementById(`phase-${idx}`);
+  phase.classList.remove('completed');
+
+  const btn = phase.querySelector('.done-btn');
+  btn.classList.remove('completed-state');
+  btn.textContent = idx === 0 ? '→ Tengo mi sector' : idx === 1 ? '→ Tengo el problema claro' : idx === 2 ? '→ Nicho validado' : '→ Mi nicho está definido';
+  btn.style.display = 'inline-flex';
+
+  const backBtn = document.getElementById(`back-${idx}`);
+  if (backBtn) backBtn.style.display = 'none';
+
+  phase.querySelector('.phase-status').textContent = '⌄';
+
+  // Hide final card if last phase reopened
+  if (idx === TOTAL - 1) {
+    document.getElementById('finalCard').classList.remove('show');
+  }
+
+  togglePhase(idx);
+  phase.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updateProgress();
+  updateNav();
+}
+
+function showFinal() {
+  const sector = selectedSector || document.getElementById('sector-custom').value || '—';
+  const problema = document.getElementById('problema-input').value || '—';
+  const nicho = document.getElementById('frase-nicho').value || '—';
+  const solucion = document.getElementById('solucion-input').value || '—';
+
+  document.getElementById('sum-sector').textContent = sector;
+  document.getElementById('sum-problema').textContent = problema;
+  document.getElementById('sum-nicho').textContent = nicho;
+  document.getElementById('sum-solucion').textContent = solucion;
+
+  const fc = document.getElementById('finalCard');
+  fc.classList.add('show');
+  setTimeout(() => fc.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+}
+
+function updateProgress() {
+  const pct = Math.round((completed.size / TOTAL) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function updateNav() {
+  document.getElementById('navCurrent').textContent = currentOpen + 1;
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.disabled = currentOpen >= TOTAL - 1;
+}
+
+function goNext() {
+  if (currentOpen < TOTAL - 1) {
+    togglePhase(currentOpen + 1);
+    document.getElementById(`phase-${currentOpen + 1}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// Open first
+togglePhase(0);
+</script>
+</body>
+</html>
