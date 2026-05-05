@@ -4,23 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Define tu Avatar — Sistema Agéntico</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Clash+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #fafaf7;
-  --surface: #ffffff;
-  --surface2: #f4f3ee;
-  --border: #e8e6df;
-  --border2: #d4d0c4;
-  --ink: #1a1916;
-  --ink2: #4a4840;
-  --ink3: #8a8678;
-  --accent: #c84b31;
-  --accent2: #e8864f;
-  --gold: #c9a84c;
-  --green: #3a7d5a;
-  --blue: #2d5f8a;
+  --bg: #080810;
+  --surface: #0e0e1a;
+  --surface2: #14142a;
+  --border: #1e1e3a;
+  --accent: #7c3aed;
+  --accent-light: #a855f7;
+  --accent-glow: rgba(124,58,237,0.15);
+  --gold: #f59e0b;
+  --gold-light: #fbbf24;
+  --green: #10b981;
+  --red: #ef4444;
+  --text: #f1f0ff;
+  --text-muted: #6b6b9a;
+  --text-dim: #9d9dc0;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,175 +28,218 @@ html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
-  color: var(--ink);
-  font-family: 'DM Mono', monospace;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Grain texture */
-body::after {
+body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(124,58,237,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.04) 0%, transparent 50%);
   pointer-events: none;
-  z-index: 999;
-  opacity: 0.4;
+  z-index: 0;
 }
 
 .container {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 0 24px 120px;
+  padding: 0 20px 100px;
   position: relative;
+  z-index: 1;
 }
 
-/* Header */
-.header {
-  padding: 56px 0 0;
-  border-bottom: 2px solid var(--ink);
-  margin-bottom: 48px;
+.hero {
+  padding: 56px 0 40px;
+  text-align: center;
 }
 
-.module-label {
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: var(--ink3);
+.module-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--accent-light);
+  font-size: 11px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  margin-bottom: 28px;
+  letter-spacing: 2px;
   text-transform: uppercase;
+}
+
+.module-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.hero h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(24px, 4.5vw, 38px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -1px;
   margin-bottom: 16px;
 }
 
-.header h1 {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(32px, 6vw, 52px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -1px;
-  margin-bottom: 20px;
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--gold), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.header h1 em {
-  font-style: italic;
-  color: var(--accent);
-}
-
-.header-desc {
+.hero-desc {
+  color: var(--text-dim);
   font-size: 13px;
-  color: var(--ink2);
   line-height: 1.7;
-  max-width: 500px;
-  padding-bottom: 32px;
+  max-width: 520px;
+  margin: 0 auto 36px;
 }
 
-/* Warning strip */
-.strip {
-  background: var(--ink);
-  color: var(--bg);
-  padding: 14px 20px;
-  font-size: 12px;
-  line-height: 1.6;
+.warning-banner {
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
   margin-bottom: 40px;
-  border-radius: 2px;
   display: flex;
-  gap: 12px;
+  gap: 14px;
   align-items: flex-start;
 }
 
-.strip strong { color: var(--accent2); }
+.warning-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.warning-text { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+.warning-text strong { color: var(--gold); }
 
-/* Progress */
-.progress-row {
+.progress-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 40px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 48px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--border);
+  gap: 20px;
 }
 
-.progress-steps {
-  display: flex;
-  gap: 6px;
-  flex: 1;
-}
-
-.prog-step {
-  height: 4px;
-  flex: 1;
-  background: var(--border2);
-  border-radius: 2px;
-  transition: background 0.4s;
-}
-
-.prog-step.active { background: var(--accent); }
-.prog-step.done { background: var(--green); }
-
-.prog-label {
+.progress-info { flex: 1; }
+.progress-label {
   font-size: 11px;
-  color: var(--ink3);
+  color: var(--text-muted);
   letter-spacing: 1px;
-  white-space: nowrap;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
-.prog-label strong { color: var(--ink); }
-
-/* Phase cards */
-.phase {
-  border: 1.5px solid var(--border);
-  border-radius: 4px;
-  margin-bottom: 16px;
-  background: var(--surface);
-  transition: border-color 0.3s, box-shadow 0.3s;
+.progress-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
   overflow: hidden;
 }
 
-.phase.active {
-  border-color: var(--ink);
-  box-shadow: 4px 4px 0 var(--ink);
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  width: 0%;
 }
 
-.phase.completed {
-  border-color: var(--green);
-  box-shadow: 4px 4px 0 rgba(58,125,90,0.2);
+.progress-pct {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--accent-light);
+  min-width: 52px;
+  text-align: right;
+  transition: all 0.3s;
 }
+
+/* Phase cards */
+.phase {
+  margin-bottom: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.phase.active {
+  border-color: rgba(124,58,237,0.4);
+  box-shadow: 0 0 0 1px rgba(124,58,237,0.1), 0 8px 40px rgba(124,58,237,0.08);
+}
+
+.phase.completed { border-color: rgba(16,185,129,0.25); }
 
 .phase-header {
-  padding: 20px 24px;
+  padding: 22px 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 16px;
   user-select: none;
+  transition: background 0.2s;
 }
 
-.phase-num {
+.phase-header:hover { background: rgba(255,255,255,0.02); }
+
+.phase-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.phase.active .phase-icon { background: var(--accent-glow); border-color: rgba(124,58,237,0.3); }
+.phase.completed .phase-icon { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.25); }
+
+.phase-meta { flex: 1; }
+
+.phase-number {
   font-size: 10px;
   letter-spacing: 2px;
-  color: var(--ink3);
+  color: var(--text-muted);
   text-transform: uppercase;
-  min-width: 60px;
+  margin-bottom: 4px;
 }
 
-.phase.active .phase-num { color: var(--accent); }
-.phase.completed .phase-num { color: var(--green); }
+.phase.active .phase-number { color: var(--accent-light); }
+.phase.completed .phase-number { color: var(--green); }
 
 .phase-title {
-  font-family: 'Fraunces', serif;
-  font-size: 18px;
-  font-weight: 600;
-  flex: 1;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
   line-height: 1.3;
 }
 
-.phase-arrow {
-  font-size: 18px;
-  color: var(--ink3);
-  transition: transform 0.3s;
-}
-
-.phase.open .phase-arrow { transform: rotate(90deg); }
-.phase.completed .phase-arrow { color: var(--green); }
+.phase-status { font-size: 18px; transition: transform 0.3s; }
+.phase.open .phase-status { transform: rotate(180deg); }
+.phase.completed .phase-status { transform: none; }
 
 .phase-body {
   display: none;
@@ -206,85 +249,78 @@ body::after {
 
 .phase.open .phase-body { display: block; }
 
-.phase-intro {
+.section-intro {
   font-size: 13px;
-  color: var(--ink2);
+  color: var(--text-dim);
   line-height: 1.7;
-  padding: 18px 0 22px;
+  padding: 18px 0 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
 }
 
-/* Fields */
-.field {
-  margin-bottom: 22px;
-}
+.field-group { margin-bottom: 24px; }
 
 .field-label {
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--accent-light);
   text-transform: uppercase;
-  color: var(--ink3);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   display: block;
 }
 
 .field-hint {
   font-size: 12px;
-  color: var(--ink3);
-  margin-bottom: 8px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
   line-height: 1.5;
-  font-style: italic;
 }
 
 .field-input {
   width: 100%;
   background: var(--surface2);
-  border: 1.5px solid var(--border2);
-  border-radius: 3px;
-  padding: 11px 14px;
-  color: var(--ink);
-  font-family: 'DM Mono', monospace;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
   font-size: 13px;
   line-height: 1.5;
   resize: vertical;
-  transition: border-color 0.2s;
-  min-height: 44px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 48px;
 }
 
 .field-input:focus {
   outline: none;
-  border-color: var(--ink);
-  background: var(--surface);
+  border-color: rgba(124,58,237,0.4);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.08);
 }
 
-.field-input::placeholder { color: var(--ink3); font-style: italic; }
+.field-input::placeholder { color: var(--text-muted); }
 
-/* Tag selector */
+/* Tag chips */
 .tag-group {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 8px 0;
+  margin: 10px 0;
 }
 
 .tag {
   background: var(--surface2);
-  border: 1.5px solid var(--border2);
-  border-radius: 2px;
-  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
   font-size: 12px;
-  color: var(--ink2);
+  color: var(--text-dim);
   cursor: pointer;
-  transition: all 0.15s;
-  font-family: 'DM Mono', monospace;
+  transition: all 0.2s;
+  font-family: 'Space Mono', monospace;
 }
 
-.tag:hover { border-color: var(--ink2); color: var(--ink); }
-
-.tag.selected {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--bg);
-}
+.tag:hover { border-color: rgba(124,58,237,0.3); color: var(--text); }
+.tag.selected { background: var(--accent-glow); border-color: rgba(124,58,237,0.4); color: var(--text); }
 
 /* Pain cards */
 .pain-grid {
@@ -296,47 +332,36 @@ body::after {
 
 .pain-card {
   background: var(--surface2);
-  border: 1.5px solid var(--border2);
-  border-radius: 3px;
-  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 14px;
   cursor: pointer;
-  transition: all 0.15s;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--ink2);
+  transition: all 0.2s;
+  line-height: 1.4;
 }
 
-.pain-card:hover { border-color: var(--ink2); color: var(--ink); }
+.pain-card:hover { border-color: rgba(124,58,237,0.25); }
+.pain-card.selected { background: rgba(200,75,49,0.06); border-color: rgba(239,68,68,0.3); }
 
-.pain-card.selected {
-  background: rgba(200,75,49,0.06);
-  border-color: var(--accent);
-  color: var(--ink);
-}
-
-.pain-card .pain-title {
-  font-weight: 500;
-  margin-bottom: 3px;
-  font-size: 13px;
-  color: var(--ink);
-}
-
-.pain-card.selected .pain-title { color: var(--accent); }
-.pain-card .pain-desc { font-size: 11px; color: var(--ink3); }
+.pain-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; color: var(--text); }
+.pain-card.selected .pain-title { color: var(--red); }
+.pain-desc { font-size: 11px; color: var(--text-muted); }
 
 /* Slider */
+.slider-wrap { margin: 10px 0; }
+
 .slider-row {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 8px 0;
+  margin-bottom: 6px;
 }
 
 .slider-input {
   flex: 1;
   -webkit-appearance: none;
   height: 3px;
-  background: var(--border2);
+  background: var(--border);
   border-radius: 2px;
   outline: none;
 }
@@ -345,17 +370,17 @@ body::after {
   -webkit-appearance: none;
   width: 18px; height: 18px;
   border-radius: 50%;
-  background: var(--ink);
+  background: var(--accent-light);
   cursor: pointer;
   border: 2px solid var(--bg);
-  box-shadow: 0 0 0 1px var(--ink);
+  box-shadow: 0 0 0 1px var(--accent-light);
 }
 
 .slider-val {
-  font-family: 'Fraunces', serif;
+  font-family: 'Unbounded', sans-serif;
   font-size: 20px;
-  font-weight: 700;
-  color: var(--accent);
+  font-weight: 900;
+  color: var(--accent-light);
   min-width: 40px;
   text-align: right;
 }
@@ -364,315 +389,362 @@ body::after {
   display: flex;
   justify-content: space-between;
   font-size: 10px;
-  color: var(--ink3);
-  margin-top: 4px;
+  color: var(--text-muted);
   letter-spacing: 1px;
 }
 
-/* Divider */
-.divider {
-  height: 1px;
-  background: var(--border);
+/* Criteria checklist */
+.criteria-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.criteria-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.criteria-item:hover { border-color: rgba(124,58,237,0.25); }
+.criteria-item.checked { background: rgba(16,185,129,0.05); border-color: rgba(16,185,129,0.25); }
+
+.criteria-check {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  margin-top: 1px;
+}
+
+.criteria-item.checked .criteria-check { background: var(--green); border-color: var(--green); color: white; }
+.criteria-content { flex: 1; }
+.criteria-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.criteria-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+/* Result card */
+.result-card {
+  background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(245,158,11,0.04));
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 16px;
+  padding: 24px;
   margin: 20px 0;
 }
 
-/* Note box */
-.note {
-  background: var(--surface2);
-  border-left: 3px solid var(--gold);
-  padding: 12px 16px;
-  font-size: 12px;
-  color: var(--ink2);
-  line-height: 1.6;
-  margin: 14px 0;
-  border-radius: 0 3px 3px 0;
-}
-
-.note strong { color: var(--gold); }
-
-/* Done / back buttons */
-.btn-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 24px;
-  flex-wrap: wrap;
-}
-
-.done-btn {
-  background: var(--ink);
-  color: var(--bg);
-  border: none;
-  padding: 12px 24px;
-  font-family: 'DM Mono', monospace;
+.result-card h3 {
+  font-family: 'Unbounded', sans-serif;
   font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: opacity 0.2s;
-  letter-spacing: 0.5px;
-}
-
-.done-btn:hover { opacity: 0.85; }
-.done-btn.completed-state { background: var(--green); }
-
-.back-btn {
-  background: transparent;
-  color: var(--ink3);
-  border: 1.5px solid var(--border2);
-  padding: 12px 20px;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s;
-  display: none;
-}
-
-.back-btn:hover { border-color: var(--ink2); color: var(--ink2); }
-.back-btn.visible { display: inline-block; }
-
-/* Avatar card result */
-.avatar-card {
-  background: var(--surface);
-  border: 1.5px solid var(--ink);
-  border-radius: 4px;
-  padding: 24px;
-  margin: 24px 0;
-  box-shadow: 4px 4px 0 var(--ink);
-}
-
-.avatar-card-title {
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--ink3);
+  font-weight: 700;
+  color: var(--accent-light);
   margin-bottom: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-.avatar-row {
+.result-line {
   display: flex;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  margin-bottom: 12px;
   font-size: 13px;
   line-height: 1.5;
 }
 
-.avatar-row:last-child { border-bottom: none; }
-.avatar-key { color: var(--ink3); min-width: 100px; flex-shrink: 0; font-size: 11px; letter-spacing: 0.5px; }
-.avatar-val { color: var(--ink); font-weight: 500; }
-.avatar-val.empty { color: var(--ink3); font-style: italic; font-weight: 400; }
+.result-line:last-child { margin-bottom: 0; }
+.result-key { color: var(--text-muted); min-width: 100px; flex-shrink: 0; }
+.result-val { color: var(--text); font-weight: 700; }
+.result-val.empty { color: var(--text-muted); font-style: italic; font-weight: 400; }
 
-/* Final */
-.final-block {
-  display: none;
-  margin-top: 40px;
-  border-top: 2px solid var(--ink);
-  padding-top: 40px;
+/* Alert */
+.alert {
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 14px 0;
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-dim);
 }
 
-.final-block.show { display: block; }
+.alert-gold { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15); }
+.alert-gold strong { color: var(--gold); }
+.alert-purple { background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.15); }
+.alert-purple strong { color: var(--accent-light); }
 
-.final-title {
-  font-family: 'Fraunces', serif;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  line-height: 1.2;
-}
-
-.final-title em { font-style: italic; color: var(--accent); }
-
-.final-desc {
+/* Done / back buttons */
+.done-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+  padding: 12px 24px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 10px;
+  color: var(--accent-light);
+  font-family: 'Space Mono', monospace;
   font-size: 13px;
-  color: var(--ink2);
-  line-height: 1.7;
-  margin-bottom: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
 }
+
+.done-btn:hover { background: rgba(124,58,237,0.18); }
+.done-btn.completed-state { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); color: var(--green); }
+
+.back-btn {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  margin-left: 12px;
+  padding: 12px 20px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-btn:hover { border-color: rgba(124,58,237,0.3); color: var(--text-dim); }
+
+/* Final card */
+.final-card {
+  background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(245,158,11,0.06));
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  margin-top: 40px;
+  display: none;
+}
+
+.final-card.show { display: block; }
+.final-emoji { font-size: 52px; margin-bottom: 16px; }
+
+.final-card h2 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent-light), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.final-card p { color: var(--text-dim); font-size: 13px; line-height: 1.6; }
 
 .final-summary {
-  background: var(--surface2);
-  border: 1.5px solid var(--border2);
-  border-radius: 4px;
-  padding: 20px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin: 24px 0;
+  text-align: left;
 }
 
-.final-summary-label {
+.final-summary-title {
   font-size: 10px;
   letter-spacing: 2px;
+  color: var(--text-muted);
   text-transform: uppercase;
-  color: var(--ink3);
   margin-bottom: 14px;
 }
 
-.sum-line {
-  display: flex;
-  gap: 12px;
+.summary-line {
+  font-size: 13px;
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 13px;
+  display: flex;
+  gap: 10px;
 }
 
-.sum-line:last-child { border-bottom: none; }
-.sum-key { color: var(--ink3); min-width: 110px; font-size: 11px; letter-spacing: 0.5px; flex-shrink: 0; }
-.sum-val { color: var(--ink); font-weight: 500; word-break: break-word; }
+.summary-line:last-child { border-bottom: none; }
+.summary-key { color: var(--text-muted); min-width: 100px; font-size: 11px; flex-shrink: 0; }
+.summary-val { color: var(--text); font-weight: 700; word-break: break-word; }
 
-/* Sticky */
-.sticky {
+/* Sticky nav */
+.sticky-nav {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: var(--ink);
-  padding: 14px 24px;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(14,14,26,0.95);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
+  backdrop-filter: blur(20px);
   z-index: 100;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
 }
 
-.sticky-left {
-  font-size: 12px;
-  color: rgba(255,255,255,0.5);
-}
+.nav-step-label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-muted); }
+.nav-progress { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent-light); font-weight: 700; }
 
-.sticky-left strong { color: white; }
-
-.sticky-next {
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 10px 22px;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  font-weight: 500;
+.nav-btn {
+  background: rgba(124,58,237,0.08);
+  border: 1px solid rgba(124,58,237,0.2);
+  color: var(--accent-light);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
-  border-radius: 2px;
-  letter-spacing: 0.5px;
-  transition: opacity 0.2s;
+  font-family: 'Space Mono', monospace;
+  transition: all 0.2s;
 }
 
-.sticky-next:hover { opacity: 0.9; }
-.sticky-next:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-btn:hover { background: rgba(124,58,237,0.15); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.phase { animation: fadeUp 0.35s ease both; }
-.phase:nth-child(1) { animation-delay: 0.05s; }
-.phase:nth-child(2) { animation-delay: 0.1s; }
-.phase:nth-child(3) { animation-delay: 0.15s; }
-.phase:nth-child(4) { animation-delay: 0.2s; }
+
+.phase { animation: fadeInUp 0.4s ease both; }
+.phase:nth-child(1) { animation-delay: 0.1s; }
+.phase:nth-child(2) { animation-delay: 0.15s; }
+.phase:nth-child(3) { animation-delay: 0.2s; }
+.phase:nth-child(4) { animation-delay: 0.25s; }
 </style>
 </head>
 <body>
 
 <div class="container">
 
-  <div class="header">
-    <div class="module-label">Módulo 02 · Semana 1</div>
-    <h1>Define tu<br><em>avatar</em></h1>
-    <p class="header-desc">El agente no le habla a "agencias de captación". Le habla a una persona concreta con un problema concreto. Sin esto el agente improvisa. Con esto, vende.</p>
+  <div class="hero">
+    <div class="module-tag">Módulo 02 · Semana 1</div>
+    <h1>Define tu <em>avatar</em></h1>
+    <p class="hero-desc">El agente no le habla a "agencias de captación". Le habla a una persona concreta con un problema concreto. Sin esto el agente improvisa. Con esto, vende.</p>
   </div>
 
-  <div class="strip">
-    <span>→</span>
-    <span>El resultado de hoy es una <strong>ficha de avatar lista para meter en el master prompt</strong> de tu agente. No es un ejercicio teórico. Es la materia prima de todo lo que construimos después.</span>
+  <div class="warning-banner">
+    <span class="warning-icon">⚡</span>
+    <div class="warning-text"><strong>El resultado de hoy es una ficha de avatar lista para meter en el master prompt.</strong> No es un ejercicio teórico. Es la materia prima de todo lo que construimos después.</div>
   </div>
 
-  <div class="progress-row">
-    <div class="progress-steps">
-      <div class="prog-step" id="ps0"></div>
-      <div class="prog-step" id="ps1"></div>
-      <div class="prog-step" id="ps2"></div>
-      <div class="prog-step" id="ps3"></div>
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <div class="progress-label">// progreso del módulo</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
     </div>
-    <div class="prog-label">Fase <strong id="progCurrent">1</strong> de 4</div>
+    <div class="progress-pct" id="progressPct">0%</div>
   </div>
 
   <!-- FASE 1 -->
   <div class="phase" id="phase-0">
     <div class="phase-header" onclick="togglePhase(0)">
-      <div class="phase-num">Fase 01</div>
-      <div class="phase-title">¿Quién es tu cliente ideal?</div>
-      <div class="phase-arrow">›</div>
+      <div class="phase-icon">👤</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 01</div>
+        <div class="phase-title">¿Quién es tu cliente ideal?</div>
+      </div>
+      <div class="phase-status">⌄</div>
     </div>
     <div class="phase-body">
-      <div class="phase-intro">No el sector, sino la persona. Cargo, tipo de negocio, tamaño, experiencia. Cuanto más específico, mejor habla el agente.</div>
+      <div class="section-intro">No el sector, sino la persona. Cargo, tamaño de equipo, facturación, experiencia y dónde está. Cuanto más específico, mejor habla el agente.</div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">Cargo o rol</label>
-        <div class="field-hint">¿Con quién hablas exactamente? Marca los que aplican.</div>
+        <div class="field-hint">¿Con quién hablas exactamente? Selecciona los que aplican.</div>
         <div class="tag-group" id="cargo-tags">
-          <div class="tag" onclick="toggleTag(this, 'cargo')">Fundador / Dueño</div>
-          <div class="tag" onclick="toggleTag(this, 'cargo')">CEO</div>
-          <div class="tag" onclick="toggleTag(this, 'cargo')">Director de Marketing</div>
-          <div class="tag" onclick="toggleTag(this, 'cargo')">Director Comercial</div>
-          <div class="tag" onclick="toggleTag(this, 'cargo')">Freelancer</div>
-          <div class="tag" onclick="toggleTag(this, 'cargo')">Otro</div>
+          <div class="tag" onclick="toggleTag(this,'cargo')">Fundador / Dueño</div>
+          <div class="tag" onclick="toggleTag(this,'cargo')">CEO</div>
+          <div class="tag" onclick="toggleTag(this,'cargo')">Director de Marketing</div>
+          <div class="tag" onclick="toggleTag(this,'cargo')">Director Comercial</div>
+          <div class="tag" onclick="toggleTag(this,'cargo')">Freelancer</div>
+          <div class="tag" onclick="toggleTag(this,'cargo')">Otro</div>
         </div>
-        <input type="text" class="field-input" id="cargo-custom" placeholder="Si elegiste 'Otro' o quieres ser más específico..." style="margin-top:8px;">
+        <input type="text" class="field-input" id="cargo-custom" placeholder="Si elegiste 'Otro' o quieres ser más específico..." style="margin-top:10px;">
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">Tamaño del equipo</label>
         <div class="tag-group" id="tamano-tags">
-          <div class="tag" onclick="toggleTag(this, 'tamano')">Solo (freelancer)</div>
-          <div class="tag" onclick="toggleTag(this, 'tamano')">2-5 personas</div>
-          <div class="tag" onclick="toggleTag(this, 'tamano')">5-15 personas</div>
-          <div class="tag" onclick="toggleTag(this, 'tamano')">15-30 personas</div>
+          <div class="tag" onclick="toggleTag(this,'tamano')">Solo (freelancer)</div>
+          <div class="tag" onclick="toggleTag(this,'tamano')">2-5 personas</div>
+          <div class="tag" onclick="toggleTag(this,'tamano')">5-15 personas</div>
+          <div class="tag" onclick="toggleTag(this,'tamano')">15-30 personas</div>
         </div>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">Facturación aproximada</label>
         <div class="tag-group" id="factura-tags">
-          <div class="tag" onclick="toggleTag(this, 'factura')">Menos de 3k/mes</div>
-          <div class="tag" onclick="toggleTag(this, 'factura')">3k - 8k/mes</div>
-          <div class="tag" onclick="toggleTag(this, 'factura')">8k - 20k/mes</div>
-          <div class="tag" onclick="toggleTag(this, 'factura')">Más de 20k/mes</div>
+          <div class="tag" onclick="toggleTag(this,'factura')">Menos de 3k/mes</div>
+          <div class="tag" onclick="toggleTag(this,'factura')">3k - 8k/mes</div>
+          <div class="tag" onclick="toggleTag(this,'factura')">8k - 20k/mes</div>
+          <div class="tag" onclick="toggleTag(this,'factura')">Más de 20k/mes</div>
         </div>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">Años de experiencia</label>
         <div class="tag-group" id="exp-tags">
-          <div class="tag" onclick="toggleTag(this, 'exp')">Menos de 1 año</div>
-          <div class="tag" onclick="toggleTag(this, 'exp')">1-3 años</div>
-          <div class="tag" onclick="toggleTag(this, 'exp')">3-6 años</div>
-          <div class="tag" onclick="toggleTag(this, 'exp')">Más de 6 años</div>
+          <div class="tag" onclick="toggleTag(this,'exp')">Menos de 1 año</div>
+          <div class="tag" onclick="toggleTag(this,'exp')">1-3 años</div>
+          <div class="tag" onclick="toggleTag(this,'exp')">3-6 años</div>
+          <div class="tag" onclick="toggleTag(this,'exp')">Más de 6 años</div>
         </div>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">Ubicación</label>
         <div class="tag-group" id="ubicacion-tags">
-          <div class="tag" onclick="toggleTag(this, 'ubicacion')">España</div>
-          <div class="tag" onclick="toggleTag(this, 'ubicacion')">México</div>
-          <div class="tag" onclick="toggleTag(this, 'ubicacion')">Argentina</div>
-          <div class="tag" onclick="toggleTag(this, 'ubicacion')">Colombia</div>
-          <div class="tag" onclick="toggleTag(this, 'ubicacion')">Otro LATAM</div>
+          <div class="tag" onclick="toggleTag(this,'ubicacion')">España</div>
+          <div class="tag" onclick="toggleTag(this,'ubicacion')">México</div>
+          <div class="tag" onclick="toggleTag(this,'ubicacion')">Argentina</div>
+          <div class="tag" onclick="toggleTag(this,'ubicacion')">Colombia</div>
+          <div class="tag" onclick="toggleTag(this,'ubicacion')">Otro LATAM</div>
         </div>
       </div>
 
-      <div class="btn-row">
-        <button class="done-btn" onclick="completePhase(0)">→ Tengo claro quién es</button>
-        <button class="back-btn" id="back-0" onclick="reopenPhase(0)">← Editar</button>
+      <div class="alert alert-purple">
+        <span>💡</span>
+        <span><strong>Regla de oro:</strong> elige el perfil que ya conoces o con el que ya has trabajado. Es mucho más fácil vender donde ya tienes credibilidad.</span>
       </div>
+
+      <button class="done-btn" id="done-0" onclick="completePhase(0)">→ Tengo claro quién es</button>
+      <button class="back-btn" id="back-0" onclick="reopenPhase(0)">← Editar</button>
     </div>
   </div>
 
   <!-- FASE 2 -->
   <div class="phase" id="phase-1">
     <div class="phase-header" onclick="togglePhase(1)">
-      <div class="phase-num">Fase 02</div>
-      <div class="phase-title">¿Qué le duele?</div>
-      <div class="phase-arrow">›</div>
+      <div class="phase-icon">🔥</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 02</div>
+        <div class="phase-title">¿Qué le duele?</div>
+      </div>
+      <div class="phase-status">⌄</div>
     </div>
     <div class="phase-body">
-      <div class="phase-intro">El problema que tiene ahora mismo. Lo que le quita el sueño. Lo que le está costando dinero, tiempo o clientes. Esto es lo que tu agente tiene que detectar en la conversación.</div>
+      <div class="section-intro">El problema que tiene ahora mismo. Lo que le quita el sueño. Lo que le está costando dinero, tiempo o clientes. Esto es lo que tu agente tiene que detectar en la conversación.</div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">Problemas más comunes — marca los que aplican</label>
         <div class="pain-grid">
           <div class="pain-card" onclick="togglePain(this)">
@@ -696,284 +768,276 @@ body::after {
             <div class="pain-desc">Tiene agencia y quiere añadir IA</div>
           </div>
           <div class="pain-card" onclick="togglePain(this)">
-            <div class="pain-title">Consume contenido de IA pero no ejecuta</div>
+            <div class="pain-title">Consume contenido pero no ejecuta</div>
             <div class="pain-desc">Parálisis por análisis</div>
           </div>
         </div>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">El problema principal con sus palabras</label>
         <div class="field-hint">Escríbelo como si fuera tu cliente hablando. En primera persona si puedes.</div>
-        <textarea class="field-input" id="dolor-input" rows="3" placeholder='Ej: "Llevo meses aprendiendo de IA pero sigo sin saber exactamente qué servicio montar ni a quién vendérselo..."'></textarea>
+        <textarea class="field-input" id="dolor-input" rows="3" placeholder='"Llevo meses aprendiendo de IA pero sigo sin saber exactamente qué servicio montar ni a quién vendérselo..."'></textarea>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">¿Cuánto le cuesta no resolverlo?</label>
-        <div class="field-hint">Dinero, tiempo, clientes perdidos, oportunidades. Cuantifícalo aunque sea aproximado.</div>
+        <div class="field-hint">Dinero, tiempo, clientes perdidos. Cuantifícalo aunque sea aproximado.</div>
         <input type="text" class="field-input" id="coste-input" placeholder="Ej: pierde 2-3 oportunidades al mes por no tener una oferta clara...">
       </div>
 
-      <div class="btn-row">
-        <button class="done-btn" onclick="completePhase(1)">→ Tengo claro qué le duele</button>
-        <button class="back-btn" id="back-1" onclick="reopenPhase(1)">← Editar</button>
+      <div class="alert alert-gold">
+        <span>⚠️</span>
+        <span><strong>Test rápido:</strong> si puedes decir "este problema le cuesta X euros al mes", es un buen dolor. Si no puedes cuantificarlo, sigue profundizando.</span>
       </div>
+
+      <button class="done-btn" id="done-1" onclick="completePhase(1)">→ Tengo claro qué le duele</button>
+      <button class="back-btn" id="back-1" onclick="reopenPhase(1)">← Editar</button>
     </div>
   </div>
 
   <!-- FASE 3 -->
   <div class="phase" id="phase-2">
     <div class="phase-header" onclick="togglePhase(2)">
-      <div class="phase-num">Fase 03</div>
-      <div class="phase-title">¿Qué ha intentado antes?</div>
-      <div class="phase-arrow">›</div>
+      <div class="phase-icon">🔄</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 03</div>
+        <div class="phase-title">¿Qué ha intentado antes?</div>
+      </div>
+      <div class="phase-status">⌄</div>
     </div>
     <div class="phase-body">
-      <div class="phase-intro">Esto es clave para no sonar igual que todo lo que ya ha probado. Si sabes qué intentó y por qué no funcionó, tu mensaje se diferencia solo.</div>
+      <div class="section-intro">Esto es clave para no sonar igual que todo lo que ya ha probado. Si sabes qué intentó y por qué no funcionó, tu mensaje se diferencia solo.</div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">Soluciones que ya probó</label>
         <div class="tag-group" id="intentos-tags">
-          <div class="tag" onclick="toggleTag(this, 'intentos')">Cursos de IA online</div>
-          <div class="tag" onclick="toggleTag(this, 'intentos')">YouTube / contenido gratuito</div>
-          <div class="tag" onclick="toggleTag(this, 'intentos')">Herramientas sueltas</div>
-          <div class="tag" onclick="toggleTag(this, 'intentos')">Mentoría genérica</div>
-          <div class="tag" onclick="toggleTag(this, 'intentos')">Grupos de Telegram / Discord</div>
-          <div class="tag" onclick="toggleTag(this, 'intentos')">Lo intentó solo sin guía</div>
-          <div class="tag" onclick="toggleTag(this, 'intentos')">Comunidades de IA</div>
+          <div class="tag" onclick="toggleTag(this,'intentos')">Cursos de IA online</div>
+          <div class="tag" onclick="toggleTag(this,'intentos')">YouTube / contenido gratuito</div>
+          <div class="tag" onclick="toggleTag(this,'intentos')">Herramientas sueltas</div>
+          <div class="tag" onclick="toggleTag(this,'intentos')">Mentoría genérica</div>
+          <div class="tag" onclick="toggleTag(this,'intentos')">Grupos de Telegram / Discord</div>
+          <div class="tag" onclick="toggleTag(this,'intentos')">Lo intentó solo sin guía</div>
+          <div class="tag" onclick="toggleTag(this,'intentos')">Comunidades de IA</div>
         </div>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">¿Por qué no funcionó?</label>
-        <div class="field-hint">El motivo real por el que esas soluciones no le resolvieron el problema.</div>
+        <div class="field-hint">El motivo real por el que esas soluciones no resolvieron el problema.</div>
         <textarea class="field-input" id="fallo-input" rows="3" placeholder="Ej: aprendió herramientas pero nadie le enseñó a convertirlas en una oferta que pueda vender..."></textarea>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">¿Qué nivel de urgencia tiene para resolverlo?</label>
-        <div class="slider-row">
-          <input type="range" class="slider-input" id="urgencia-slider" min="1" max="10" value="5" oninput="updateSlider('urgencia-slider', 'urgencia-val')">
-          <div class="slider-val" id="urgencia-val">5</div>
-        </div>
-        <div class="slider-labels">
-          <span>PUEDE ESPERAR</span>
-          <span>LO NECESITA YA</span>
+        <div class="slider-wrap">
+          <div class="slider-row">
+            <input type="range" class="slider-input" id="urgencia-slider" min="1" max="10" value="5" oninput="updateSlider()">
+            <div class="slider-val" id="urgencia-val">5</div>
+          </div>
+          <div class="slider-labels">
+            <span>PUEDE ESPERAR</span>
+            <span>LO NECESITA YA</span>
+          </div>
         </div>
       </div>
 
-      <div class="note">
-        <strong>Por qué importa esto:</strong> si sabes que ya probó cursos genéricos, no le hables de "aprender IA". Háblale de tener una oferta clara en X semanas. Eso es diferenciación real.
+      <div class="alert alert-purple">
+        <span>💡</span>
+        <span><strong>Por qué importa:</strong> si sabes que ya probó cursos genéricos, no le hables de "aprender IA". Háblale de tener una oferta clara en X semanas. Eso es diferenciación real.</span>
       </div>
 
-      <div class="btn-row">
-        <button class="done-btn" onclick="completePhase(2)">→ Tengo claro qué ha intentado</button>
-        <button class="back-btn" id="back-2" onclick="reopenPhase(2)">← Editar</button>
-      </div>
+      <button class="done-btn" id="done-2" onclick="completePhase(2)">→ Tengo claro qué ha intentado</button>
+      <button class="back-btn" id="back-2" onclick="reopenPhase(2)">← Editar</button>
     </div>
   </div>
 
   <!-- FASE 4 -->
   <div class="phase" id="phase-3">
     <div class="phase-header" onclick="togglePhase(3)">
-      <div class="phase-num">Fase 04</div>
-      <div class="phase-title">¿Qué desea conseguir?</div>
-      <div class="phase-arrow">›</div>
+      <div class="phase-icon">🎯</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 04</div>
+        <div class="phase-title">¿Qué desea conseguir?</div>
+      </div>
+      <div class="phase-status">⌄</div>
     </div>
     <div class="phase-body">
-      <div class="phase-intro">El resultado concreto que quiere. No el tuyo, el suyo. Cómo sería su negocio o su vida si el problema estuviera resuelto. Esto es lo que motiva la compra.</div>
+      <div class="section-intro">El resultado concreto que quiere. No el tuyo, el suyo. Cómo sería su negocio si el problema estuviera resuelto. Esto es lo que motiva la compra.</div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">Deseos principales — marca los que aplican</label>
         <div class="tag-group" id="deseos-tags">
-          <div class="tag" onclick="toggleTag(this, 'deseos')">Tener una oferta clara que pueda vender</div>
-          <div class="tag" onclick="toggleTag(this, 'deseos')">Abrir una nueva línea de ingresos</div>
-          <div class="tag" onclick="toggleTag(this, 'deseos')">Subir el ticket de sus servicios</div>
-          <div class="tag" onclick="toggleTag(this, 'deseos')">Conseguir sus primeros clientes de IA</div>
-          <div class="tag" onclick="toggleTag(this, 'deseos')">Diferenciarse de la competencia</div>
-          <div class="tag" onclick="toggleTag(this, 'deseos')">Trabajar con menos clientes pero mejor pagados</div>
-          <div class="tag" onclick="toggleTag(this, 'deseos')">Tener un sistema que funcione sin él</div>
+          <div class="tag" onclick="toggleTag(this,'deseos')">Tener una oferta clara que pueda vender</div>
+          <div class="tag" onclick="toggleTag(this,'deseos')">Abrir una nueva línea de ingresos</div>
+          <div class="tag" onclick="toggleTag(this,'deseos')">Subir el ticket de sus servicios</div>
+          <div class="tag" onclick="toggleTag(this,'deseos')">Conseguir sus primeros clientes de IA</div>
+          <div class="tag" onclick="toggleTag(this,'deseos')">Diferenciarse de la competencia</div>
+          <div class="tag" onclick="toggleTag(this,'deseos')">Trabajar con menos clientes pero mejor pagados</div>
+          <div class="tag" onclick="toggleTag(this,'deseos')">Tener un sistema que funcione sin él</div>
         </div>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">El resultado en sus palabras</label>
         <div class="field-hint">¿Cómo describiría el éxito? ¿Qué cambiaría en su negocio o en su vida?</div>
-        <textarea class="field-input" id="deseo-input" rows="3" placeholder='Ej: "Quiero tener un servicio de IA claro que pueda ofrecer a mis clientes actuales y cobrar entre 1.500 y 3.000€ al mes por ello..."'></textarea>
+        <textarea class="field-input" id="deseo-input" rows="3" placeholder='"Quiero tener un servicio de IA claro que pueda ofrecer a mis clientes actuales y cobrar entre 1.500 y 3.000€ al mes por ello..."'></textarea>
       </div>
 
-      <div class="field">
+      <div class="field-group">
         <label class="field-label">¿En cuánto tiempo quiere verlo?</label>
         <div class="tag-group" id="tiempo-tags">
-          <div class="tag" onclick="toggleTag(this, 'tiempo')">1 mes</div>
-          <div class="tag" onclick="toggleTag(this, 'tiempo')">3 meses</div>
-          <div class="tag" onclick="toggleTag(this, 'tiempo')">6 meses</div>
-          <div class="tag" onclick="toggleTag(this, 'tiempo')">Sin urgencia de plazo</div>
+          <div class="tag" onclick="toggleTag(this,'tiempo')">1 mes</div>
+          <div class="tag" onclick="toggleTag(this,'tiempo')">3 meses</div>
+          <div class="tag" onclick="toggleTag(this,'tiempo')">6 meses</div>
+          <div class="tag" onclick="toggleTag(this,'tiempo')">Sin urgencia de plazo</div>
         </div>
       </div>
 
-      <!-- Live avatar card -->
-      <div class="avatar-card" id="avatarCard">
-        <div class="avatar-card-title">// Tu ficha de avatar</div>
-        <div class="avatar-row">
-          <span class="avatar-key">Quién es</span>
-          <span class="avatar-val" id="av-quien">—</span>
+      <div class="result-card" id="liveResult">
+        <h3>// Tu ficha de avatar</h3>
+        <div class="result-line">
+          <span class="result-key">Quién es</span>
+          <span class="result-val empty" id="res-quien">—</span>
         </div>
-        <div class="avatar-row">
-          <span class="avatar-key">Le duele</span>
-          <span class="avatar-val" id="av-dolor">—</span>
+        <div class="result-line">
+          <span class="result-key">Le duele</span>
+          <span class="result-val empty" id="res-dolor">—</span>
         </div>
-        <div class="avatar-row">
-          <span class="avatar-key">Ya intentó</span>
-          <span class="avatar-val" id="av-intento">—</span>
+        <div class="result-line">
+          <span class="result-key">Ya intentó</span>
+          <span class="result-val empty" id="res-intento">—</span>
         </div>
-        <div class="avatar-row">
-          <span class="avatar-key">Desea</span>
-          <span class="avatar-val" id="av-deseo">—</span>
+        <div class="result-line">
+          <span class="result-key">Desea</span>
+          <span class="result-val empty" id="res-deseo">—</span>
         </div>
-        <div class="avatar-row">
-          <span class="avatar-key">Urgencia</span>
-          <span class="avatar-val" id="av-urgencia">—</span>
+        <div class="result-line">
+          <span class="result-key">Urgencia</span>
+          <span class="result-val empty" id="res-urgencia">—</span>
         </div>
       </div>
 
-      <div class="btn-row">
-        <button class="done-btn" onclick="completePhase(3)">→ Mi avatar está definido</button>
-        <button class="back-btn" id="back-3" onclick="reopenPhase(3)">← Editar</button>
+      <div class="alert alert-gold">
+        <span>⚠️</span>
+        <span><strong>No es para siempre.</strong> Esta ficha se ajusta con el tiempo. Lo importante es tenerla escrita antes de construir el master prompt.</span>
       </div>
+
+      <button class="done-btn" id="done-3" onclick="completePhase(3)">→ Mi avatar está definido</button>
+      <button class="back-btn" id="back-3" onclick="reopenPhase(3)">← Editar</button>
     </div>
   </div>
 
   <!-- Final -->
-  <div class="final-block" id="finalBlock">
-    <div class="final-title">Avatar <em>listo.</em></div>
-    <p class="final-desc">Tienes la ficha completa de tu cliente ideal. El siguiente paso es construir tu mensaje: cómo le hablas, qué le dices y cómo explicas tu oferta en una frase que él entienda y quiera.</p>
+  <div class="final-card" id="finalCard">
+    <div class="final-emoji">🚀</div>
+    <h2>Avatar definido</h2>
+    <p>Tienes la ficha completa de tu cliente ideal. El siguiente paso es construir tu mensaje: cómo le hablas, qué le dices y cómo explicas tu oferta en una frase que él entienda y quiera comprar.</p>
 
     <div class="final-summary" id="finalSummary">
-      <div class="final-summary-label">// Resumen para el master prompt</div>
-      <div class="sum-line"><span class="sum-key">Quién es</span><span class="sum-val" id="fs-quien">—</span></div>
-      <div class="sum-line"><span class="sum-key">Le duele</span><span class="sum-val" id="fs-dolor">—</span></div>
-      <div class="sum-line"><span class="sum-key">Ya intentó</span><span class="sum-val" id="fs-intento">—</span></div>
-      <div class="sum-line"><span class="sum-key">Desea</span><span class="sum-val" id="fs-deseo">—</span></div>
-      <div class="sum-line"><span class="sum-key">Urgencia</span><span class="sum-val" id="fs-urgencia">—</span></div>
+      <div class="final-summary-title">// Ficha lista para el master prompt</div>
+      <div class="summary-line"><span class="summary-key">Quién es</span><span class="summary-val" id="sum-quien">—</span></div>
+      <div class="summary-line"><span class="summary-key">Le duele</span><span class="summary-val" id="sum-dolor">—</span></div>
+      <div class="summary-line"><span class="summary-key">Ya intentó</span><span class="summary-val" id="sum-intento">—</span></div>
+      <div class="summary-line"><span class="summary-key">Desea</span><span class="summary-val" id="sum-deseo">—</span></div>
+      <div class="summary-line"><span class="summary-key">Urgencia</span><span class="summary-val" id="sum-urgencia">—</span></div>
     </div>
+
+    <p style="margin-top:8px;">El próximo paso es definir tu mensaje: cómo explicas lo que vendes en una frase que tu avatar entienda y quiera comprar.</p>
   </div>
 
 </div>
 
-<div class="sticky">
-  <div class="sticky-left">Fase <strong id="stickyPhase">1</strong> de 4</div>
-  <button class="sticky-next" id="stickyNext" onclick="goNext()" disabled>Siguiente →</button>
+<div class="sticky-nav">
+  <span class="nav-step-label" id="navLabel">Paso 1 de 4</span>
+  <span class="nav-progress" id="navProgress">0%</span>
+  <button class="nav-btn" id="navBtn" onclick="openNext()">Siguiente →</button>
 </div>
 
 <script>
 const TOTAL = 4;
 let completed = new Set();
 let currentOpen = 0;
-let selectedTags = { cargo: [], tamano: [], factura: [], exp: [], ubicacion: [], intentos: [], deseos: [], tiempo: [] };
+let tags = { cargo:[], tamano:[], factura:[], exp:[], ubicacion:[], intentos:[], deseos:[], tiempo:[] };
 
 function togglePhase(idx) {
   const phase = document.getElementById(`phase-${idx}`);
   const isOpen = phase.classList.contains('open');
-  document.querySelectorAll('.phase').forEach(p => p.classList.remove('open', 'active'));
-  if (!isOpen) {
-    phase.classList.add('open', 'active');
-    currentOpen = idx;
-  }
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('open','active'));
+  if (!isOpen) { phase.classList.add('open','active'); currentOpen = idx; }
   updateNav();
 }
 
 function toggleTag(el, group) {
   el.classList.toggle('selected');
-  selectedTags[group] = Array.from(document.querySelectorAll(`#${group}-tags .tag.selected`)).map(t => t.textContent.trim());
-  updateAvatarCard();
+  tags[group] = Array.from(document.querySelectorAll(`#${group}-tags .tag.selected`)).map(t => t.textContent.trim());
+  updateLive();
 }
 
-function togglePain(el) {
-  el.classList.toggle('selected');
-  updateAvatarCard();
+function togglePain(el) { el.classList.toggle('selected'); updateLive(); }
+
+function updateSlider() {
+  document.getElementById('urgencia-val').textContent = document.getElementById('urgencia-slider').value;
+  updateLive();
 }
 
-function updateSlider(sliderId, valId) {
-  document.getElementById(valId).textContent = document.getElementById(sliderId).value;
-  updateAvatarCard();
-}
-
-function updateAvatarCard() {
-  const cargo = [...selectedTags.cargo, document.getElementById('cargo-custom').value].filter(Boolean).join(', ') || '—';
-  const tamano = selectedTags.tamano.join(', ') || '—';
-  const factura = selectedTags.factura.join(', ') || '—';
-  const exp = selectedTags.exp.join(', ') || '—';
-  const ubicacion = selectedTags.ubicacion.join(', ') || '—';
-
-  const quien = [cargo, tamano, factura, exp, ubicacion].filter(v => v !== '—').join(' · ') || '—';
+function updateLive() {
+  const cargo = [...tags.cargo, document.getElementById('cargo-custom').value].filter(Boolean).join(', ') || '—';
+  const quien = [cargo, tags.tamano.join(', '), tags.factura.join(', '), tags.exp.join(', '), tags.ubicacion.join(', ')].filter(v => v && v !== '—').join(' · ') || '—';
 
   const pains = Array.from(document.querySelectorAll('.pain-card.selected')).map(p => p.querySelector('.pain-title').textContent).join(', ');
-  const dolorInput = document.getElementById('dolor-input').value;
-  const dolor = [pains, dolorInput].filter(Boolean).join(' — ') || '—';
+  const dolorTxt = document.getElementById('dolor-input').value;
+  const dolor = [pains, dolorTxt].filter(Boolean).join(' — ') || '—';
 
-  const intentos = selectedTags.intentos.join(', ') || '—';
-  const falloInput = document.getElementById('fallo-input') ? document.getElementById('fallo-input').value : '';
-  const intento = [intentos, falloInput].filter(Boolean).join(' — ') || '—';
+  const intentosTxt = document.getElementById('fallo-input').value;
+  const intento = [tags.intentos.join(', '), intentosTxt].filter(Boolean).join(' — ') || '—';
 
-  const deseos = selectedTags.deseos.join(', ') || '—';
-  const deseoInput = document.getElementById('deseo-input') ? document.getElementById('deseo-input').value : '';
-  const deseo = [deseos, deseoInput].filter(Boolean).join(' — ') || '—';
+  const deseoTxt = document.getElementById('deseo-input') ? document.getElementById('deseo-input').value : '';
+  const deseo = [tags.deseos.join(', '), deseoTxt].filter(Boolean).join(' — ') || '—';
 
-  const urgVal = document.getElementById('urgencia-slider') ? document.getElementById('urgencia-slider').value : '—';
-  const tiempo = selectedTags.tiempo.join(', ') || '—';
-  const urgencia = `${urgVal}/10 · Plazo: ${tiempo}`;
+  const urgVal = document.getElementById('urgencia-slider').value;
+  const tiempoStr = tags.tiempo.join(', ') || 'sin definir';
+  const urgencia = `${urgVal}/10 · Plazo: ${tiempoStr}`;
 
   const set = (id, val) => {
     const el = document.getElementById(id);
     if (!el) return;
     el.textContent = val;
-    el.className = 'avatar-val' + (val === '—' ? ' empty' : '');
+    el.className = 'result-val' + (val === '—' ? ' empty' : '');
   };
 
-  set('av-quien', quien);
-  set('av-dolor', dolor);
-  set('av-intento', intento);
-  set('av-deseo', deseo);
-  set('av-urgencia', urgencia);
+  set('res-quien', quien);
+  set('res-dolor', dolor);
+  set('res-intento', intento);
+  set('res-deseo', deseo);
+  set('res-urgencia', urgencia);
 }
 
-document.addEventListener('input', (e) => {
-  if (['cargo-custom','dolor-input','coste-input','fallo-input','deseo-input'].includes(e.target.id)) {
-    updateAvatarCard();
-  }
+document.addEventListener('input', e => {
+  if (['cargo-custom','dolor-input','coste-input','fallo-input','deseo-input'].includes(e.target.id)) updateLive();
 });
 
 function completePhase(idx) {
   completed.add(idx);
   const phase = document.getElementById(`phase-${idx}`);
   phase.classList.add('completed');
-  phase.classList.remove('open', 'active');
+  phase.classList.remove('open','active');
 
-  const btn = phase.querySelector('.done-btn');
+  const btn = document.getElementById(`done-${idx}`);
   btn.classList.add('completed-state');
-  const labels = ['→ Quién es: definido', '→ Dolor: definido', '→ Intentos: definido', '→ Deseos: definido'];
-  btn.textContent = labels[idx];
+  btn.textContent = '✓ Completado';
   btn.style.display = 'none';
 
-  const backBtn = document.getElementById(`back-${idx}`);
-  if (backBtn) backBtn.classList.add('visible');
+  const back = document.getElementById(`back-${idx}`);
+  back.style.display = 'inline-flex';
 
-  const arrow = phase.querySelector('.phase-arrow');
-  arrow.textContent = '✓';
-  arrow.style.color = 'var(--green)';
-
-  updateProgressBar();
+  phase.querySelector('.phase-status').textContent = '✓';
+  updateProgress();
   updateNav();
 
   if (idx < TOTAL - 1) {
-    setTimeout(() => {
-      togglePhase(idx + 1);
-      document.getElementById(`phase-${idx + 1}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 300);
-  } else {
-    showFinal();
-  }
+    setTimeout(() => { togglePhase(idx+1); document.getElementById(`phase-${idx+1}`).scrollIntoView({behavior:'smooth',block:'start'}); }, 300);
+  } else { showFinal(); }
 }
 
 function reopenPhase(idx) {
@@ -981,63 +1045,52 @@ function reopenPhase(idx) {
   const phase = document.getElementById(`phase-${idx}`);
   phase.classList.remove('completed');
 
-  const btn = phase.querySelector('.done-btn');
+  const btn = document.getElementById(`done-${idx}`);
   btn.classList.remove('completed-state');
-  const labels = ['→ Tengo claro quién es', '→ Tengo claro qué le duele', '→ Tengo claro qué ha intentado', '→ Mi avatar está definido'];
+  const labels = ['→ Tengo claro quién es','→ Tengo claro qué le duele','→ Tengo claro qué ha intentado','→ Mi avatar está definido'];
   btn.textContent = labels[idx];
-  btn.style.display = 'inline-block';
+  btn.style.display = 'inline-flex';
 
-  const backBtn = document.getElementById(`back-${idx}`);
-  if (backBtn) backBtn.classList.remove('visible');
+  document.getElementById(`back-${idx}`).style.display = 'none';
+  phase.querySelector('.phase-status').textContent = '⌄';
 
-  const arrow = phase.querySelector('.phase-arrow');
-  arrow.textContent = '›';
-  arrow.style.color = '';
-
-  if (idx === TOTAL - 1) {
-    document.getElementById('finalBlock').classList.remove('show');
-  }
+  if (idx === TOTAL-1) document.getElementById('finalCard').classList.remove('show');
 
   togglePhase(idx);
-  phase.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  updateProgressBar();
+  phase.scrollIntoView({behavior:'smooth',block:'start'});
+  updateProgress();
   updateNav();
 }
 
 function showFinal() {
   const get = id => document.getElementById(id) ? document.getElementById(id).textContent : '—';
-  document.getElementById('fs-quien').textContent = get('av-quien');
-  document.getElementById('fs-dolor').textContent = get('av-dolor');
-  document.getElementById('fs-intento').textContent = get('av-intento');
-  document.getElementById('fs-deseo').textContent = get('av-deseo');
-  document.getElementById('fs-urgencia').textContent = get('av-urgencia');
+  document.getElementById('sum-quien').textContent = get('res-quien');
+  document.getElementById('sum-dolor').textContent = get('res-dolor');
+  document.getElementById('sum-intento').textContent = get('res-intento');
+  document.getElementById('sum-deseo').textContent = get('res-deseo');
+  document.getElementById('sum-urgencia').textContent = get('res-urgencia');
 
-  const fb = document.getElementById('finalBlock');
-  fb.classList.add('show');
-  setTimeout(() => fb.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+  const fc = document.getElementById('finalCard');
+  fc.classList.add('show');
+  setTimeout(() => fc.scrollIntoView({behavior:'smooth',block:'start'}), 200);
 }
 
-function updateProgressBar() {
-  for (let i = 0; i < TOTAL; i++) {
-    const step = document.getElementById(`ps${i}`);
-    step.className = 'prog-step';
-    if (completed.has(i)) step.classList.add('done');
-    else if (i === currentOpen) step.classList.add('active');
-  }
+function updateProgress() {
+  const pct = Math.round((completed.size / TOTAL) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('navProgress').textContent = pct + '%';
 }
 
 function updateNav() {
-  document.getElementById('progCurrent').textContent = currentOpen + 1;
-  document.getElementById('stickyPhase').textContent = currentOpen + 1;
-  const btn = document.getElementById('stickyNext');
-  btn.disabled = currentOpen >= TOTAL - 1;
-  updateProgressBar();
+  document.getElementById('navLabel').textContent = `Paso ${currentOpen+1} de ${TOTAL}`;
+  document.getElementById('navBtn').disabled = currentOpen >= TOTAL-1;
 }
 
-function goNext() {
-  if (currentOpen < TOTAL - 1) {
-    togglePhase(currentOpen + 1);
-    document.getElementById(`phase-${currentOpen + 1}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+function openNext() {
+  if (currentOpen < TOTAL-1) {
+    togglePhase(currentOpen+1);
+    document.getElementById(`phase-${currentOpen+1}`).scrollIntoView({behavior:'smooth',block:'start'});
   }
 }
 
