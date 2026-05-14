@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Niveles de Conciencia — Sistema Agéntico</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --surface: #0e0e1a;
+  --surface2: #14142a;
+  --border: #1e1e3a;
+  --accent: #7c3aed;
+  --accent-light: #a855f7;
+  --accent-glow: rgba(124,58,237,0.15);
+  --gold: #f59e0b;
+  --gold-light: #fbbf24;
+  --green: #10b981;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --text: #f1f0ff;
+  --text-muted: #6b6b9a;
+  --text-dim: #9d9dc0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(124,58,237,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  padding: 56px 0 40px;
+  text-align: center;
+}
+
+.module-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--accent-light);
+  font-size: 11px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  margin-bottom: 28px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.module-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.hero h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(24px, 4.5vw, 38px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--gold), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto 36px;
+}
+
+.warning-banner {
+  background: rgba(245,158,11,0.06);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 40px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.warning-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.warning-text { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+.warning-text strong { color: var(--gold); }
+
+.progress-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.progress-info { flex: 1; }
+.progress-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.progress-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); border-radius: 2px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); width: 0%; }
+.progress-pct { font-family: 'Unbounded', sans-serif; font-size: 22px; font-weight: 900; color: var(--accent-light); min-width: 52px; text-align: right; }
+
+/* Level pyramid */
+.pyramid {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  margin-bottom: 40px;
+}
+
+.pyramid-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-light);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.pyramid-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pyramid-level {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pyramid-level:hover { border-color: rgba(124,58,237,0.3); }
+.pyramid-level.active { border-color: rgba(124,58,237,0.4); background: var(--accent-glow); }
+
+.level-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  min-width: 32px;
+  text-align: center;
+}
+
+.level-content { flex: 1; }
+.level-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.level-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+.level-pct {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* Level detail panel */
+.level-detail {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 12px;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.level-detail.show { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.detail-title { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.detail-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+.detail-card-label { font-size: 9px; letter-spacing: 1.5px; color: var(--accent-light); text-transform: uppercase; margin-bottom: 6px; }
+.detail-card-text { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+/* Phase cards */
+.phase {
+  margin-bottom: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.phase.active { border-color: rgba(124,58,237,0.4); box-shadow: 0 0 0 1px rgba(124,58,237,0.1), 0 8px 40px rgba(124,58,237,0.08); }
+.phase.completed { border-color: rgba(16,185,129,0.25); }
+
+.phase-header {
+  padding: 22px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.phase-header:hover { background: rgba(255,255,255,0.02); }
+
+.phase-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.phase.active .phase-icon { background: var(--accent-glow); border-color: rgba(124,58,237,0.3); }
+.phase.completed .phase-icon { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.25); }
+
+.phase-meta { flex: 1; }
+.phase-number { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+.phase.active .phase-number { color: var(--accent-light); }
+.phase.completed .phase-number { color: var(--green); }
+
+.phase-title { font-family: 'Unbounded', sans-serif; font-size: 15px; font-weight: 700; line-height: 1.3; }
+.phase-status { font-size: 18px; transition: transform 0.3s; }
+.phase.open .phase-status { transform: rotate(180deg); }
+.phase.completed .phase-status { transform: none; }
+
+.phase-body { display: none; padding: 0 24px 28px; border-top: 1px solid var(--border); }
+.phase.open .phase-body { display: block; }
+
+.section-intro { font-size: 13px; color: var(--text-dim); line-height: 1.7; padding: 18px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+
+.field-group { margin-bottom: 24px; }
+.field-label { font-size: 11px; letter-spacing: 1.5px; color: var(--accent-light); text-transform: uppercase; margin-bottom: 8px; display: block; }
+.field-hint { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5; }
+
+.field-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 48px;
+}
+
+.field-input:focus { outline: none; border-color: rgba(124,58,237,0.4); box-shadow: 0 0 0 3px rgba(124,58,237,0.08); }
+.field-input::placeholder { color: var(--text-muted); }
+
+/* Message cards */
+.msg-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.msg-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.msg-level-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+}
+
+.msg-card textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s;
+}
+
+.msg-card textarea:focus { outline: none; border-color: rgba(124,58,237,0.4); }
+.msg-card textarea::placeholder { color: var(--text-muted); }
+
+/* Tag group */
+.tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.tag {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Space Mono', monospace;
+}
+.tag:hover { border-color: rgba(124,58,237,0.3); color: var(--text); }
+.tag.selected { background: var(--accent-glow); border-color: rgba(124,58,237,0.4); color: var(--text); }
+
+/* Alert */
+.alert { border-radius: 10px; padding: 12px 16px; margin: 14px 0; display: flex; gap: 10px; font-size: 12px; line-height: 1.6; color: var(--text-dim); }
+.alert-gold { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15); }
+.alert-gold strong { color: var(--gold); }
+.alert-purple { background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.15); }
+.alert-purple strong { color: var(--accent-light); }
+.alert-green { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15); }
+.alert-green strong { color: var(--green); }
+
+/* Result card */
+.result-card {
+  background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(245,158,11,0.04));
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px 0;
+}
+
+.result-card h3 { font-family: 'Unbounded', sans-serif; font-size: 13px; font-weight: 700; color: var(--accent-light); margin-bottom: 16px; letter-spacing: 1px; text-transform: uppercase; }
+.result-line { display: flex; gap: 12px; margin-bottom: 12px; font-size: 13px; line-height: 1.5; flex-wrap: wrap; }
+.result-line:last-child { margin-bottom: 0; }
+.result-key { color: var(--text-muted); min-width: 110px; flex-shrink: 0; font-size: 11px; }
+.result-val { color: var(--text); font-weight: 700; flex: 1; word-break: break-word; }
+.result-val.empty { color: var(--text-muted); font-style: italic; font-weight: 400; }
+
+/* Done/back */
+.done-btn {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 24px;
+  padding: 12px 24px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 10px; color: var(--accent-light); font-family: 'Space Mono', monospace;
+  font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+}
+.done-btn:hover { background: rgba(124,58,237,0.18); }
+.done-btn.completed-state { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); color: var(--green); }
+
+.back-btn {
+  display: none; align-items: center; gap: 8px; margin-top: 24px; margin-left: 12px;
+  padding: 12px 20px; background: transparent; border: 1px solid var(--border);
+  border-radius: 10px; color: var(--text-muted); font-family: 'Space Mono', monospace;
+  font-size: 13px; cursor: pointer; transition: all 0.2s;
+}
+.back-btn:hover { border-color: rgba(124,58,237,0.3); color: var(--text-dim); }
+
+/* Final */
+.final-card { background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(245,158,11,0.06)); border: 1px solid rgba(124,58,237,0.3); border-radius: 20px; padding: 40px; text-align: center; margin-top: 40px; display: none; }
+.final-card.show { display: block; }
+.final-emoji { font-size: 52px; margin-bottom: 16px; }
+.final-card h2 { font-family: 'Unbounded', sans-serif; font-size: 22px; font-weight: 900; margin-bottom: 12px; background: linear-gradient(135deg, var(--accent-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.final-card p { color: var(--text-dim); font-size: 13px; line-height: 1.6; }
+
+.final-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin: 24px 0; text-align: left; }
+.final-summary-title { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px; }
+.summary-line { font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; }
+.summary-line:last-child { border-bottom: none; }
+.summary-key { color: var(--text-muted); min-width: 130px; font-size: 11px; flex-shrink: 0; }
+.summary-val { color: var(--text); font-weight: 700; word-break: break-word; flex: 1; }
+
+/* Sticky */
+.sticky-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(14,14,26,0.95); border: 1px solid var(--border); border-radius: 50px; padding: 10px 20px; display: flex; align-items: center; gap: 16px; backdrop-filter: blur(20px); z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+.nav-step-label { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-muted); }
+.nav-progress { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent-light); font-weight: 700; }
+.nav-btn { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2); color: var(--accent-light); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Space Mono', monospace; transition: all 0.2s; }
+.nav-btn:hover { background: rgba(124,58,237,0.15); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.phase { animation: fadeInUp 0.4s ease both; }
+.phase:nth-child(1) { animation-delay: 0.05s; }
+.phase:nth-child(2) { animation-delay: 0.1s; }
+.phase:nth-child(3) { animation-delay: 0.15s; }
+.phase:nth-child(4) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <div class="module-tag">Módulo 05 · Marketing</div>
+    <h1>Niveles de <em>conciencia</em></h1>
+    <p class="hero-desc">No todo el mundo está en el mismo punto cuando recibe tu mensaje. Si hablas igual a todos, pierdes a casi todos. Hoy aprendes a hablarle a cada nivel.</p>
+  </div>
+
+  <div class="warning-banner">
+    <span class="warning-icon">⚡</span>
+    <div class="warning-text"><strong>El resultado de hoy:</strong> saber exactamente en qué nivel está tu avatar, qué mensaje necesita en cada momento y cómo programar tu agente para que adapte la conversación según el nivel.</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <div class="progress-label">// progreso del módulo</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+
+  <!-- PIRÁMIDE INTERACTIVA -->
+  <div class="pyramid">
+    <div class="pyramid-title">// Los 5 niveles de conciencia</div>
+    <div class="pyramid-levels">
+
+      <div class="pyramid-level" onclick="toggleLevel(0)" id="lvl-0">
+        <div class="level-num" style="color:#ef4444;">1</div>
+        <div class="level-content">
+          <div class="level-name">Inconsciente del problema</div>
+          <div class="level-desc">No sabe que tiene el problema que tú resuelves</div>
+        </div>
+        <div class="level-pct" style="background:rgba(239,68,68,0.1); color:#ef4444;">~60%</div>
+      </div>
+      <div class="level-detail" id="detail-0">
+        <div class="detail-title">// Cómo hablarle</div>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div class="detail-card-label">Qué piensa</div>
+            <div class="detail-card-text">"Todo va bien" o "así es como funciona esto". No ha conectado el síntoma con el problema real.</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Tu mensaje</div>
+            <div class="detail-card-text">Habla del síntoma, no de la solución. "El 80% de las agencias pierde leads por no responder a tiempo." Datos que hacen pensar.</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Canal ideal</div>
+            <div class="detail-card-text">Contenido orgánico, posts de LinkedIn, vídeos. Lugares donde no te está buscando.</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Error común</div>
+            <div class="detail-card-text">Hablarle de tu solución antes de que sepa que tiene el problema. No te va a entender.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pyramid-level" onclick="toggleLevel(1)" id="lvl-1">
+        <div class="level-num" style="color:#f59e0b;">2</div>
+        <div class="level-content">
+          <div class="level-name">Consciente del problema</div>
+          <div class="level-desc">Sabe que tiene el problema pero no está buscando solución activamente</div>
+        </div>
+        <div class="level-pct" style="background:rgba(245,158,11,0.1); color:#f59e0b;">~20%</div>
+      </div>
+      <div class="level-detail" id="detail-1">
+        <div class="detail-title">// Cómo hablarle</div>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div class="detail-card-label">Qué piensa</div>
+            <div class="detail-card-text">"Sé que tengo este problema pero no sé si hay solución o si merece la pena resolverlo ahora."</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Tu mensaje</div>
+            <div class="detail-card-text">Cuantifica el coste del problema. "Cada mes sin una oferta clara te cuesta X oportunidades." Crea urgencia real.</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Canal ideal</div>
+            <div class="detail-card-text">Contenido educativo, casos reales, posts con datos concretos. Le das la chispa para que empiece a buscar.</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Error común</div>
+            <div class="detail-card-text">Venderle directamente. Todavía no está listo. Necesita entender por qué resolverlo es urgente.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pyramid-level" onclick="toggleLevel(2)" id="lvl-2">
+        <div class="level-num" style="color:#3b82f6;">3</div>
+        <div class="level-content">
+          <div class="level-name">Consciente de la solución</div>
+          <div class="level-desc">Sabe que existe solución pero no te conoce a ti</div>
+        </div>
+        <div class="level-pct" style="background:rgba(59,130,246,0.1); color:#3b82f6;">~12%</div>
+      </div>
+      <div class="level-detail" id="detail-2">
+        <div class="detail-title">// Cómo hablarle</div>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div class="detail-card-label">Qué piensa</div>
+            <div class="detail-card-text">"Sé que hay soluciones para esto pero no sé cuál es la mejor ni en quién confiar."</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Tu mensaje</div>
+            <div class="detail-card-text">Diferénciate. No te vendas, posiciónate. "La diferencia entre una agencia de IA con clientes y una sin ellos no es técnica."</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Canal ideal</div>
+            <div class="detail-card-text">Comparativas, posicionamiento, prueba social, casos de éxito. Le das razones para elegirte a ti.</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Error común</div>
+            <div class="detail-card-text">Sonar igual que todos los demás. Si tu mensaje no se diferencia, no existe para este nivel.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pyramid-level" onclick="toggleLevel(3)" id="lvl-3">
+        <div class="level-num" style="color:#a855f7;">4</div>
+        <div class="level-content">
+          <div class="level-name">Consciente de tu oferta</div>
+          <div class="level-desc">Te conoce pero todavía no ha comprado</div>
+        </div>
+        <div class="level-pct" style="background:rgba(168,85,247,0.1); color:#a855f7;">~6%</div>
+      </div>
+      <div class="level-detail" id="detail-3">
+        <div class="detail-title">// Cómo hablarle</div>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div class="detail-card-label">Qué piensa</div>
+            <div class="detail-card-text">"Me interesa lo que hace este tío pero tengo dudas. ¿Funcionará para mi caso? ¿Vale lo que cuesta?"</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Tu mensaje</div>
+            <div class="detail-card-text">Rompe objeciones. Prueba social específica. Casos concretos. "Esto es exactamente lo que consiguió alguien con tu mismo perfil."</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Canal ideal</div>
+            <div class="detail-card-text">Email, DM directo, retargeting, comunidad. Ya te conoce, solo necesita el empujón final.</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Error común</div>
+            <div class="detail-card-text">Seguir educando cuando ya está listo para decidir. A este nivel necesita una razón para actuar ya.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pyramid-level" onclick="toggleLevel(4)" id="lvl-4">
+        <div class="level-num" style="color:#10b981;">5</div>
+        <div class="level-content">
+          <div class="level-name">Listo para comprar</div>
+          <div class="level-desc">Tiene el problema, conoce tu solución y quiere actuar ahora</div>
+        </div>
+        <div class="level-pct" style="background:rgba(16,185,129,0.1); color:#10b981;">~2%</div>
+      </div>
+      <div class="level-detail" id="detail-4">
+        <div class="detail-title">// Cómo hablarle</div>
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div class="detail-card-label">Qué piensa</div>
+            <div class="detail-card-text">"Quiero esto. Solo necesito saber cómo empezar y que alguien me diga el siguiente paso."</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Tu mensaje</div>
+            <div class="detail-card-text">CTA directo y claro. Sin rodeos. "Escríbeme y en 24h tienes una llamada para ver si encajamos."</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Canal ideal</div>
+            <div class="detail-card-text">DM directo, WhatsApp, llamada. Este nivel no necesita más contenido, necesita acción.</div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-card-label">Error común</div>
+            <div class="detail-card-text">Seguir calentando a alguien que ya está caliente. Si tardas en responder, lo pierdes.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FASE 1 -->
+  <div class="phase" id="phase-0">
+    <div class="phase-header" onclick="togglePhase(0)">
+      <div class="phase-icon">🎯</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 01</div>
+        <div class="phase-title">¿En qué nivel está tu avatar ahora mismo?</div>
+      </div>
+      <div class="phase-status">⌄</div>
+    </div>
+    <div class="phase-body">
+      <div class="section-intro">Antes de escribir un solo mensaje necesitas saber desde dónde parte tu cliente ideal. La mayoría asume que su avatar está en el nivel 4 o 5. Casi siempre está en el 2 o el 3.</div>
+
+      <div class="field-group">
+        <label class="field-label">¿Dónde está la mayoría de tu avatar?</label>
+        <div class="field-hint">Sé honesto. No donde quieres que esté, sino donde realmente está.</div>
+        <div class="tag-group" id="nivel-tags">
+          <div class="tag" onclick="toggleTag(this,'nivel')">Nivel 1 — No sabe que tiene el problema</div>
+          <div class="tag" onclick="toggleTag(this,'nivel')">Nivel 2 — Sabe el problema pero no busca</div>
+          <div class="tag" onclick="toggleTag(this,'nivel')">Nivel 3 — Busca solución pero no te conoce</div>
+          <div class="tag" onclick="toggleTag(this,'nivel')">Nivel 4 — Te conoce pero no ha comprado</div>
+          <div class="tag" onclick="toggleTag(this,'nivel')">Nivel 5 — Listo para comprar</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">¿Cómo lo sabes?</label>
+        <div class="field-hint">¿Qué señales te indican que tu avatar está en ese nivel?</div>
+        <textarea class="field-input" id="nivel-evidencia" rows="3" placeholder="Ej: cuando llegan a mí ya saben que tienen el problema de no saber qué vender pero todavía no han buscado solución activamente, lo veo porque me preguntan cosas básicas sobre oferta..."></textarea>
+      </div>
+
+      <div class="alert alert-purple">
+        <span>💡</span>
+        <span><strong>Clave:</strong> la mayoría del mercado está en los niveles 1 y 2. Si tu contenido solo habla de tu solución, estás ignorando al 80% de tu mercado potencial.</span>
+      </div>
+
+      <button class="done-btn" id="done-0" onclick="completePhase(0)">→ Sé en qué nivel está mi avatar</button>
+      <button class="back-btn" id="back-0" onclick="reopenPhase(0)">← Editar</button>
+    </div>
+  </div>
+
+  <!-- FASE 2 -->
+  <div class="phase" id="phase-1">
+    <div class="phase-header" onclick="togglePhase(1)">
+      <div class="phase-icon">✍️</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 02</div>
+        <div class="phase-title">Construye el mensaje para cada nivel</div>
+      </div>
+      <div class="phase-status">⌄</div>
+    </div>
+    <div class="phase-body">
+      <div class="section-intro">Ahora que sabes en qué nivel está tu avatar, toca construir el mensaje exacto para cada uno. No tienes que cubrir los 5, céntrate en los 3 que más te interesan.</div>
+
+      <div class="field-group">
+        <label class="field-label">Mensaje para nivel 1 — El que no sabe que tiene el problema</label>
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <div class="msg-level-badge" style="background:rgba(239,68,68,0.1); color:#ef4444;">NIVEL 1</div>
+            <span style="font-size:11px; color:var(--text-muted);">Habla del síntoma, no de la solución</span>
+          </div>
+          <textarea placeholder="Ej: El 80% de las agencias de IA que conozco saben montar sistemas pero siguen sin clientes. No es un problema técnico..."></textarea>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Mensaje para nivel 2 — El que sabe el problema pero no busca</label>
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <div class="msg-level-badge" style="background:rgba(245,158,11,0.1); color:#f59e0b;">NIVEL 2</div>
+            <span style="font-size:11px; color:var(--text-muted);">Cuantifica el coste de no resolverlo</span>
+          </div>
+          <textarea placeholder="Ej: Cada mes sin una oferta clara son entre 3 y 5 oportunidades que se pierden. No porque no hayas hecho el trabajo..."></textarea>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Mensaje para nivel 3 — El que busca solución pero no te conoce</label>
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <div class="msg-level-badge" style="background:rgba(59,130,246,0.1); color:#3b82f6;">NIVEL 3</div>
+            <span style="font-size:11px; color:var(--text-muted);">Diferénciate sin vender todavía</span>
+          </div>
+          <textarea placeholder="Ej: La diferencia entre una agencia de IA que vende y una que no no está en las herramientas. Está en si tienen una oferta que alguien entiende..."></textarea>
+        </div>
+      </div>
+
+      <div class="alert alert-gold">
+        <span>⚠️</span>
+        <span><strong>No tienes que escribirlos perfectos ahora.</strong> Son borradores. El objetivo es que entiendas el cambio de tono entre un nivel y otro.</span>
+      </div>
+
+      <button class="done-btn" id="done-1" onclick="completePhase(1)">→ Mensajes construidos</button>
+      <button class="back-btn" id="back-1" onclick="reopenPhase(1)">← Editar</button>
+    </div>
+  </div>
+
+  <!-- FASE 3 -->
+  <div class="phase" id="phase-2">
+    <div class="phase-header" onclick="togglePhase(2)">
+      <div class="phase-icon">🤖</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 03</div>
+        <div class="phase-title">Cómo lo usa tu agente</div>
+      </div>
+      <div class="phase-status">⌄</div>
+    </div>
+    <div class="phase-body">
+      <div class="section-intro">Tu agente ahora tiene una oferta clara y un avatar definido. El siguiente nivel es enseñarle a detectar en qué nivel de conciencia está cada lead y adaptar la conversación.</div>
+
+      <div class="field-group">
+        <label class="field-label">¿Cómo detecta el nivel tu agente?</label>
+        <div class="field-hint">Las señales que indican en qué nivel está el lead según lo que dice en la primera conversación.</div>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin:12px 0;">
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px;">
+            <div style="font-size:10px; letter-spacing:1.5px; color:#ef4444; text-transform:uppercase; margin-bottom:6px;">Nivel 1 — Señales</div>
+            <div style="font-size:12px; color:var(--text-dim); line-height:1.6;">Pregunta qué es la IA, qué se puede hacer con ella, llega sin contexto claro. No menciona ningún problema concreto.</div>
+          </div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px;">
+            <div style="font-size:10px; letter-spacing:1.5px; color:#f59e0b; text-transform:uppercase; margin-bottom:6px;">Nivel 2 — Señales</div>
+            <div style="font-size:12px; color:var(--text-dim); line-height:1.6;">Menciona el problema pero no busca solución todavía. "Sé que debería tener más clientes" o "no tengo claro qué vender".</div>
+          </div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px;">
+            <div style="font-size:10px; letter-spacing:1.5px; color:#3b82f6; text-transform:uppercase; margin-bottom:6px;">Nivel 3 — Señales</div>
+            <div style="font-size:12px; color:var(--text-dim); line-height:1.6;">Está comparando opciones. "He visto varias mentorías" o "estoy buscando algo para definir mi oferta de IA".</div>
+          </div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px;">
+            <div style="font-size:10px; letter-spacing:1.5px; color:#a855f7; text-transform:uppercase; margin-bottom:6px;">Nivel 4 — Señales</div>
+            <div style="font-size:12px; color:var(--text-dim); line-height:1.6;">Te conoce. "Vi tu post sobre el agente", "estoy en tu comunidad", "llevo tiempo siguiéndote".</div>
+          </div>
+          <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px;">
+            <div style="font-size:10px; letter-spacing:1.5px; color:#10b981; text-transform:uppercase; margin-bottom:6px;">Nivel 5 — Señales</div>
+            <div style="font-size:12px; color:var(--text-dim); line-height:1.6;">Pregunta directamente por precio, disponibilidad o cómo empezar. "¿Cuánto cuesta?", "¿cuándo podemos hablar?".</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">¿Qué hace tu agente según el nivel?</label>
+        <div class="field-hint">Define la respuesta inicial del agente para cada nivel. Esto va directo al master prompt.</div>
+        <textarea class="field-input" id="agente-niveles" rows="5" placeholder="Nivel 1: el agente educa sobre el problema sin mencionar la oferta. Hace preguntas para despertar conciencia...&#10;Nivel 2: el agente cuantifica el coste del problema y presenta la solución como consecuencia lógica...&#10;Nivel 3: el agente se diferencia y presenta prueba social...&#10;Nivel 4: el agente rompe objeciones y propone llamada...&#10;Nivel 5: el agente agenda directamente..."></textarea>
+      </div>
+
+      <div class="alert alert-green">
+        <span>🎯</span>
+        <span><strong>Esto va al master prompt.</strong> Cuando tu agente sepa detectar el nivel y adaptar el mensaje, las conversaciones van a cambiar radicalmente.</span>
+      </div>
+
+      <button class="done-btn" id="done-2" onclick="completePhase(2)">→ Agente preparado por niveles</button>
+      <button class="back-btn" id="back-2" onclick="reopenPhase(2)">← Editar</button>
+    </div>
+  </div>
+
+  <!-- FASE 4 -->
+  <div class="phase" id="phase-3">
+    <div class="phase-header" onclick="togglePhase(3)">
+      <div class="phase-icon">📊</div>
+      <div class="phase-meta">
+        <div class="phase-number">Fase 04</div>
+        <div class="phase-title">Tu estrategia de contenido por niveles</div>
+      </div>
+      <div class="phase-status">⌄</div>
+    </div>
+    <div class="phase-body">
+      <div class="section-intro">El contenido que publicas en LinkedIn también tiene que trabajar los diferentes niveles. Un post que habla solo de tu solución solo llega al 8% del mercado. Aquí diseñas tu mix.</div>
+
+      <div class="field-group">
+        <label class="field-label">¿Qué porcentaje de tu contenido va a cada nivel?</label>
+        <div class="field-hint">La distribución recomendada para construir audiencia y convertir al mismo tiempo.</div>
+
+        <div style="background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:18px; margin:12px 0;">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="font-size:11px; color:#ef4444; min-width:80px;">Nivel 1-2</div>
+              <div style="flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden;">
+                <div style="width:50%; height:100%; background:linear-gradient(90deg,#ef4444,#f59e0b); border-radius:4px;"></div>
+              </div>
+              <div style="font-size:12px; font-weight:700; color:var(--text-dim); min-width:40px;">50%</div>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); padding-left:92px;">Contenido de problema: posts que despiertan conciencia, datos, verdades incómodas</div>
+
+            <div style="display:flex; align-items:center; gap:12px; margin-top:6px;">
+              <div style="font-size:11px; color:#3b82f6; min-width:80px;">Nivel 3</div>
+              <div style="flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden;">
+                <div style="width:30%; height:100%; background:#3b82f6; border-radius:4px;"></div>
+              </div>
+              <div style="font-size:12px; font-weight:700; color:var(--text-dim); min-width:40px;">30%</div>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); padding-left:92px;">Contenido de posicionamiento: diferenciación, construcción en público, prueba social</div>
+
+            <div style="display:flex; align-items:center; gap:12px; margin-top:6px;">
+              <div style="font-size:11px; color:#10b981; min-width:80px;">Nivel 4-5</div>
+              <div style="flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden;">
+                <div style="width:20%; height:100%; background:#10b981; border-radius:4px;"></div>
+              </div>
+              <div style="font-size:12px; font-weight:700; color:var(--text-dim); min-width:40px;">20%</div>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted); padding-left:92px;">Contenido de conversión: lead magnets, CTAs, comunidad, recursos</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Ejemplos de post para cada nivel en tu caso</label>
+        <div class="field-hint">Un titular de post para cada nivel aplicado a tu nicho y avatar concretos.</div>
+        <textarea class="field-input" id="post-ejemplos" rows="5" placeholder="Nivel 1-2: 'El 80% de las agencias de IA tiene herramientas montadas y cero clientes. Aquí está el motivo.'&#10;Nivel 3: 'La diferencia entre una agencia de IA que vende y una que no no está en el stack.'&#10;Nivel 4-5: 'Si quieres convertir la IA en una oferta vendible, escribe RECURSOS en comentarios.'"></textarea>
+      </div>
+
+      <!-- Live result -->
+      <div class="result-card" id="liveResult">
+        <h3>// Tu estrategia por niveles</h3>
+        <div class="result-line">
+          <span class="result-key">Nivel avatar</span>
+          <span class="result-val empty" id="res-nivel">—</span>
+        </div>
+        <div class="result-line">
+          <span class="result-key">Señales</span>
+          <span class="result-val empty" id="res-evidencia">—</span>
+        </div>
+        <div class="result-line">
+          <span class="result-key">Agente</span>
+          <span class="result-val empty" id="res-agente">—</span>
+        </div>
+        <div class="result-line">
+          <span class="result-key">Posts ejemplo</span>
+          <span class="result-val empty" id="res-posts">—</span>
+        </div>
+      </div>
+
+      <button class="done-btn" id="done-3" onclick="completePhase(3)">→ Estrategia definida</button>
+      <button class="back-btn" id="back-3" onclick="reopenPhase(3)">← Editar</button>
+    </div>
+  </div>
+
+  <!-- Final -->
+  <div class="final-card" id="finalCard">
+    <div class="final-emoji">🧠</div>
+    <h2>Niveles dominados</h2>
+    <p>Ya sabes en qué nivel está tu avatar, qué mensaje necesita en cada momento y cómo tu agente adapta la conversación. Mañana construimos el mensaje comercial definitivo.</p>
+
+    <div class="final-summary" id="finalSummary">
+      <div class="final-summary-title">// Resumen para el master prompt</div>
+      <div class="summary-line"><span class="summary-key">Nivel principal</span><span class="summary-val" id="sum-nivel">—</span></div>
+      <div class="summary-line"><span class="summary-key">Señales detectoras</span><span class="summary-val" id="sum-evidencia">—</span></div>
+      <div class="summary-line"><span class="summary-key">Respuesta agente</span><span class="summary-val" id="sum-agente">—</span></div>
+      <div class="summary-line"><span class="summary-key">Mix contenido</span><span class="summary-val">50% problema · 30% posicionamiento · 20% conversión</span></div>
+    </div>
+
+    <p style="margin-top:8px;">Mañana: el mensaje comercial. Cómo explicas tu oferta en una frase que tu avatar entienda y quiera comprar.</p>
+  </div>
+
+</div>
+
+<div class="sticky-nav">
+  <span class="nav-step-label" id="navLabel">Paso 1 de 4</span>
+  <span class="nav-progress" id="navProgress">0%</span>
+  <button class="nav-btn" id="navBtn" onclick="openNext()">Siguiente →</button>
+</div>
+
+<script>
+const TOTAL = 4;
+let completed = new Set();
+let currentOpen = 0;
+let tags = { nivel: [] };
+let activeLevel = -1;
+
+function toggleLevel(idx) {
+  const detail = document.getElementById(`detail-${idx}`);
+  const lvl = document.getElementById(`lvl-${idx}`);
+
+  if (activeLevel === idx) {
+    detail.classList.remove('show');
+    lvl.classList.remove('active');
+    activeLevel = -1;
+  } else {
+    document.querySelectorAll('.level-detail').forEach(d => d.classList.remove('show'));
+    document.querySelectorAll('.pyramid-level').forEach(l => l.classList.remove('active'));
+    detail.classList.add('show');
+    lvl.classList.add('active');
+    activeLevel = idx;
+  }
+}
+
+function togglePhase(idx) {
+  const phase = document.getElementById(`phase-${idx}`);
+  const isOpen = phase.classList.contains('open');
+  document.querySelectorAll('.phase').forEach(p => p.classList.remove('open','active'));
+  if (!isOpen) { phase.classList.add('open','active'); currentOpen = idx; }
+  updateNav();
+}
+
+function toggleTag(el, group) {
+  el.closest('.tag-group').querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  tags[group] = [el.textContent.trim()];
+  updateLive();
+}
+
+function updateLive() {
+  const nivel = tags.nivel[0] || '—';
+  const evidencia = document.getElementById('nivel-evidencia') ? document.getElementById('nivel-evidencia').value || '—' : '—';
+  const agente = document.getElementById('agente-niveles') ? document.getElementById('agente-niveles').value || '—' : '—';
+  const posts = document.getElementById('post-ejemplos') ? document.getElementById('post-ejemplos').value || '—' : '—';
+
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = val;
+    el.className = 'result-val' + (val === '—' ? ' empty' : '');
+  };
+
+  set('res-nivel', nivel);
+  set('res-evidencia', evidencia);
+  set('res-agente', agente);
+  set('res-posts', posts);
+}
+
+document.addEventListener('input', e => {
+  if (['nivel-evidencia','agente-niveles','post-ejemplos'].includes(e.target.id)) updateLive();
+});
+
+function completePhase(idx) {
+  completed.add(idx);
+  const phase = document.getElementById(`phase-${idx}`);
+  phase.classList.add('completed');
+  phase.classList.remove('open','active');
+
+  const btn = document.getElementById(`done-${idx}`);
+  btn.classList.add('completed-state');
+  btn.textContent = '✓ Completado';
+  btn.style.display = 'none';
+
+  const back = document.getElementById(`back-${idx}`);
+  back.style.display = 'inline-flex';
+  phase.querySelector('.phase-status').textContent = '✓';
+
+  updateProgress();
+  updateNav();
+
+  if (idx < TOTAL-1) {
+    setTimeout(() => { togglePhase(idx+1); document.getElementById(`phase-${idx+1}`).scrollIntoView({behavior:'smooth',block:'start'}); }, 300);
+  } else { showFinal(); }
+}
+
+function reopenPhase(idx) {
+  completed.delete(idx);
+  const phase = document.getElementById(`phase-${idx}`);
+  phase.classList.remove('completed');
+
+  const btn = document.getElementById(`done-${idx}`);
+  btn.classList.remove('completed-state');
+  const labels = ['→ Sé en qué nivel está mi avatar','→ Mensajes construidos','→ Agente preparado por niveles','→ Estrategia definida'];
+  btn.textContent = labels[idx];
+  btn.style.display = 'inline-flex';
+
+  document.getElementById(`back-${idx}`).style.display = 'none';
+  phase.querySelector('.phase-status').textContent = '⌄';
+
+  if (idx === TOTAL-1) document.getElementById('finalCard').classList.remove('show');
+
+  togglePhase(idx);
+  phase.scrollIntoView({behavior:'smooth',block:'start'});
+  updateProgress();
+  updateNav();
+}
+
+function showFinal() {
+  document.getElementById('sum-nivel').textContent = tags.nivel[0] || '—';
+  document.getElementById('sum-evidencia').textContent = document.getElementById('nivel-evidencia').value || '—';
+  document.getElementById('sum-agente').textContent = document.getElementById('agente-niveles').value || '—';
+
+  const fc = document.getElementById('finalCard');
+  fc.classList.add('show');
+  setTimeout(() => fc.scrollIntoView({behavior:'smooth',block:'start'}), 200);
+}
+
+function updateProgress() {
+  const pct = Math.round((completed.size / TOTAL) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('navProgress').textContent = pct + '%';
+}
+
+function updateNav() {
+  document.getElementById('navLabel').textContent = `Paso ${currentOpen+1} de ${TOTAL}`;
+  document.getElementById('navBtn').disabled = currentOpen >= TOTAL-1;
+}
+
+function openNext() {
+  if (currentOpen < TOTAL-1) {
+    togglePhase(currentOpen+1);
+    document.getElementById(`phase-${currentOpen+1}`).scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+togglePhase(0);
+</script>
+</body>
+</html>
