@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constructor de Webs para Negocios Locales — Manual Claude Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --surface: #0e0e1a;
+  --surface2: #14142a;
+  --border: #1e1e3a;
+  --accent: #7c3aed;
+  --accent-light: #a855f7;
+  --accent-glow: rgba(124,58,237,0.15);
+  --gold: #f59e0b;
+  --gold-light: #fbbf24;
+  --green: #10b981;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --orange: #f97316;
+  --text: #f1f0ff;
+  --text-muted: #6b6b9a;
+  --text-dim: #9d9dc0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(124,58,237,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  padding: 60px 0 48px;
+  text-align: center;
+}
+
+.module-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--accent-light);
+  font-size: 11px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  margin-bottom: 28px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.module-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+.hero h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--gold), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 540px;
+  margin: 0 auto 36px;
+}
+
+/* OPPORTUNITY */
+.opportunity {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(124,58,237,0.06));
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 40px;
+}
+
+.opp-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+.opp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.opp-stat {
+  text-align: center;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  padding: 16px 12px;
+  border: 1px solid rgba(245,158,11,0.15);
+}
+
+.opp-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.opp-label { font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+.opp-desc { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
+
+/* FLOW VISUAL */
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 20px 0;
+}
+
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 0.2s;
+}
+
+.flow-step:hover { border-color: rgba(124,58,237,0.3); }
+
+.flow-num {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--accent-glow);
+  border: 1px solid rgba(124,58,237,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--accent-light);
+  flex-shrink: 0;
+}
+
+.flow-content { flex: 1; }
+.flow-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.flow-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+
+.flow-arrow { text-align: center; color: var(--text-muted); font-size: 16px; }
+
+/* SECTION */
+.section {
+  margin-bottom: 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  animation: fadeInUp 0.4s ease both;
+}
+
+@keyframes fadeInUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+.section:nth-child(1){animation-delay:0.05s}
+.section:nth-child(2){animation-delay:0.1s}
+.section:nth-child(3){animation-delay:0.15s}
+.section:nth-child(4){animation-delay:0.2s}
+.section:nth-child(5){animation-delay:0.25s}
+
+.section-header {
+  padding: 20px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.section-header:hover { background: rgba(255,255,255,0.02); }
+.section-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: var(--surface2); border: 1px solid var(--border); transition: all 0.3s; }
+.section.open .section-icon { background: var(--accent-glow); border-color: rgba(124,58,237,0.3); }
+.section-meta { flex: 1; }
+.section-num { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; }
+.section.open .section-num { color: var(--accent-light); }
+.section-title { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.3; }
+.section-arrow { font-size: 18px; transition: transform 0.3s; color: var(--text-muted); }
+.section.open .section-arrow { transform: rotate(180deg); }
+.section-body { display: none; padding: 0 24px 28px; border-top: 1px solid var(--border); }
+.section.open .section-body { display: block; }
+.section-intro { font-size: 13px; color: var(--text-dim); line-height: 1.7; padding: 18px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+
+/* PROMPT BLOCK */
+.prompt-master {
+  background: #0a0a12;
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+
+.prompt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(124,58,237,0.08);
+  border-bottom: 1px solid rgba(124,58,237,0.2);
+}
+
+.prompt-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.copy-btn {
+  background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--accent-light);
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'Space Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-btn:hover { background: rgba(124,58,237,0.25); }
+.copy-btn.copied { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: var(--green); }
+
+.prompt-text {
+  padding: 16px;
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* SECTOR GRID */
+.sector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.sector-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  transition: border-color 0.2s;
+}
+
+.sector-card:hover { border-color: rgba(124,58,237,0.3); }
+.sector-icon { font-size: 22px; margin-bottom: 8px; }
+.sector-name { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+.sector-ticket { font-size: 11px; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
+.sector-why { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+/* SALES SCRIPT */
+.script-block {
+  background: var(--surface2);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 16px;
+  margin: 10px 0;
+}
+
+.script-role { font-size: 9px; letter-spacing: 2px; color: var(--accent-light); text-transform: uppercase; margin-bottom: 6px; }
+.script-text { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+/* CLOSE SCRIPT */
+.close-block {
+  background: var(--surface2);
+  border-left: 3px solid var(--green);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 16px;
+  margin: 10px 0;
+}
+
+.close-role { font-size: 9px; letter-spacing: 2px; color: var(--green); text-transform: uppercase; margin-bottom: 6px; }
+.close-text { font-size: 13px; color: var(--text); line-height: 1.7; }
+
+/* MONEY CARD */
+.money-card {
+  background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(245,158,11,0.06));
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 14px;
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.money-title { font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 700; color: var(--green); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
+.money-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
+.money-row:last-child { border-bottom: none; }
+.money-label { color: var(--text-dim); }
+.money-val { font-weight: 700; color: var(--green); }
+
+/* TIPS */
+.tip { display: flex; gap: 12px; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); border-radius: 10px; padding: 12px 16px; margin: 10px 0; font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+.tip strong { color: var(--green); }
+.tip-icon { flex-shrink: 0; font-size: 16px; }
+
+.alert { display: flex; gap: 12px; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 12px 16px; margin: 10px 0; font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+.alert strong { color: var(--gold); }
+
+/* FAQ */
+.faq-item { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.faq-q { padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; transition: background 0.2s; }
+.faq-q:hover { background: rgba(255,255,255,0.02); }
+.faq-q::before { content: '→'; color: var(--accent-light); flex-shrink: 0; transition: transform 0.2s; }
+.faq-item.open .faq-q::before { transform: rotate(90deg); }
+.faq-a { display: none; padding: 12px 16px 14px 34px; font-size: 12px; color: var(--text-dim); line-height: 1.7; border-top: 1px solid var(--border); }
+.faq-item.open .faq-a { display: block; }
+
+/* FINAL */
+.final-cta { background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(245,158,11,0.06)); border: 1px solid rgba(124,58,237,0.3); border-radius: 20px; padding: 40px; text-align: center; margin-top: 40px; }
+.final-cta h2 { font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 900; margin-bottom: 12px; background: linear-gradient(135deg, var(--accent-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.final-cta p { color: var(--text-dim); font-size: 13px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <div class="module-tag">Recurso Avanzado · Claude Code</div>
+    <h1>Construye y vende<br><em>webs para negocios locales</em></h1>
+    <p class="hero-desc">Cómo construir con Claude Code un sistema que detecta negocios sin web, genera una web profesional en segundos y te da un argumento de venta que cierra solo.</p>
+  </div>
+
+  <!-- OPORTUNIDAD -->
+  <div class="opportunity">
+    <div class="opp-title">// La oportunidad que nadie está atacando</div>
+    <div class="opp-grid">
+      <div class="opp-stat">
+        <div class="opp-num">60%</div>
+        <div class="opp-label">negocios locales sin web profesional en España</div>
+      </div>
+      <div class="opp-stat">
+        <div class="opp-num">30s</div>
+        <div class="opp-label">para generar una web con Claude</div>
+      </div>
+      <div class="opp-stat">
+        <div class="opp-num">500€+</div>
+        <div class="opp-label">ticket por web con demo en directo</div>
+      </div>
+    </div>
+    <div class="opp-desc">Fontaneros, peluquerías, clínicas, restaurantes. Miles de negocios en tu ciudad sin web o con una web de hace 10 años que no convierte. Tú llegas, generas su web en 30 segundos con su nombre y logo, se la muestras en el móvil y cierras. Así de simple.</div>
+  </div>
+
+  <!-- SECCIÓN 1: EL FLUJO -->
+  <div class="section" id="s0">
+    <div class="section-header" onclick="toggleSection(0)">
+      <div class="section-icon">🔄</div>
+      <div class="section-meta">
+        <div class="section-num">01 · El sistema</div>
+        <div class="section-title">Cómo funciona el flujo completo</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">El sistema tiene tres fases: detectar, generar y vender. Claude Code construye todo. Tú solo operas.</div>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-content">
+            <div class="flow-title">Detecta negocios sin web o con web antigua</div>
+            <div class="flow-desc">El sistema busca en Google Maps negocios de un sector en tu zona y detecta cuáles no tienen web o tienen una web que no convierte. Te da una lista de prospectos listos para contactar.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-content">
+            <div class="flow-title">Genera la web en 30 segundos</div>
+            <div class="flow-desc">Con el nombre del negocio, el sector, el teléfono y una descripción breve, Claude genera una web profesional completa. Incluye chatbot de IA, botón de WhatsApp, formulario de contacto e imágenes reales del sector.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-content">
+            <div class="flow-title">Muestra la demo en directo</div>
+            <div class="flow-desc">Recibes el link de preview por Telegram. Lo abres en el móvil delante del cliente. Le enseñas su web ya lista con su nombre y logo. En ese momento el 80% de la venta ya está hecha.</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-content">
+            <div class="flow-title">Cierra y entrega</div>
+            <div class="flow-desc">Si compra, configuras el dominio, le asignas la web y listo. Si no compra, la archivas y prospecto siguiente. Sin tiempo perdido en propuestas ni presupuestos que nadie lee.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="money-card">
+        <div class="money-title">// El modelo en números</div>
+        <div class="money-row"><span class="money-label">Tiempo de generación por web</span><span class="money-val">30-60 segundos</span></div>
+        <div class="money-row"><span class="money-label">Ticket recomendado</span><span class="money-val">500€ — 1.500€</span></div>
+        <div class="money-row"><span class="money-label">Coste por web generada</span><span class="money-val">~0,10€ en API</span></div>
+        <div class="money-row"><span class="money-label">Margen por venta</span><span class="money-val">>98%</span></div>
+        <div class="money-row"><span class="money-label">Recurrente posible</span><span class="money-val">50-100€/mes mantenimiento</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: PROMPT MAESTRO -->
+  <div class="section" id="s1">
+    <div class="section-header" onclick="toggleSection(1)">
+      <div class="section-icon">⚡</div>
+      <div class="section-meta">
+        <div class="section-num">02 · Prompt maestro</div>
+        <div class="section-title">Copia esto en Claude Code y empieza a construir</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Este es el prompt completo para que Claude Code construya el sistema desde cero. Cópialo tal cual, pégalo en una sesión nueva y deja que trabaje.</div>
+
+      <div class="prompt-master">
+        <div class="prompt-header">
+          <span class="prompt-label">// Prompt maestro — copia y pega en Claude Code</span>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copiar</button>
+        </div>
+        <div class="prompt-text" id="promptText">Quiero que construyas una aplicación web completa llamada "Constructor de Webs para Negocios Locales".
+
+El objetivo del sistema es este:
+Detectar negocios locales sin web o con web antigua, generar una web profesional para ellos en segundos usando IA y permitirme mostrársela como demo para cerrar la venta en el momento.
+
+Lo que necesito que construyas:
+
+1. DETECCIÓN DE NEGOCIOS
+Una pantalla donde pueda introducir una zona (ciudad o barrio) y un sector (peluquería, fontanero, restaurante, clínica, etc.) y el sistema me devuelva una lista de negocios de esa zona que no tienen web o tienen una web muy básica o anticuada.
+Usa la API de Google Maps Places para buscarlos.
+Para cada negocio muestra: nombre, dirección, teléfono si está disponible, valoración y si tiene web o no.
+
+2. GENERACIÓN DE WEB CON IA
+Para cada negocio de la lista, quiero poder hacer clic en "Generar web" y que el sistema cree automáticamente una web profesional completa usando Claude.
+La web generada debe incluir:
+- Diseño profesional adaptado al sector del negocio
+- Nombre y logo del negocio si lo tengo
+- Sección de servicios generada con IA según el sector
+- Imágenes reales del sector usando la API de Pexels
+- Chatbot de IA embebido que responde preguntas básicas del negocio
+- Botón de WhatsApp directo si tengo el teléfono
+- Formulario de contacto que envía los leads por Telegram
+- Diseño responsive que se vea bien en móvil
+
+3. PREVIEW Y GESTIÓN
+Cada web generada debe tener un link de preview único que pueda abrir en el móvil para mostrárselo al cliente en directo.
+Cuando la web esté lista quiero recibir el link por Telegram automáticamente.
+Para cada prospecto quiero poder marcar el estado: pendiente, demo hecha, vendido, descartado.
+
+4. PANEL DE CONTROL
+Una pantalla principal donde vea todos mis prospectos, su estado y las webs generadas.
+Que pueda buscar y filtrar por zona, sector y estado.
+
+APIs que necesito integrar:
+- Claude API (Anthropic) para generar el contenido de las webs
+- Google Maps Places API para detectar negocios
+- Pexels API para las imágenes
+- Telegram Bot API para recibir las notificaciones
+
+Stack recomendado: el que tú consideres más adecuado para que funcione bien y sea fácil de mantener. Que sea simple, no necesito nada complejo.
+
+Empieza por preguntarme las API keys que necesitas y luego construye el sistema paso a paso, explicándome qué hace cada parte en lenguaje simple.</div>
+      </div>
+
+      <div class="alert">
+        <span>⚡</span>
+        <span><strong>Antes de pegar el prompt:</strong> ten preparadas tus API keys de Claude, Google Maps, Pexels y Telegram. Claude Code te las va a pedir al empezar. Si no las tienes todas, dile cuáles tienes y cuáles no y te guiará para conseguirlas.</span>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">💡</span>
+        <span><strong>Si algo no funciona:</strong> dile a Claude Code exactamente qué pasa y qué ves en pantalla. Con esa información lo corrige solo. No necesitas saber programar para operar esto.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: SECTORES -->
+  <div class="section" id="s2">
+    <div class="section-header" onclick="toggleSection(2)">
+      <div class="section-icon">🎯</div>
+      <div class="section-meta">
+        <div class="section-num">03 · Sectores</div>
+        <div class="section-title">Dónde funciona mejor y cuánto cobrar</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">No todos los sectores convierten igual. Empieza por estos cinco y ve ajustando según tu zona.</div>
+
+      <div class="sector-grid">
+        <div class="sector-card">
+          <div class="sector-icon">💇</div>
+          <div class="sector-name">Peluquerías y estéticas</div>
+          <div class="sector-ticket">600€ — 900€</div>
+          <div class="sector-why">Alta densidad. El dueño decide en el momento. Valoran las reservas online y el botón de WhatsApp.</div>
+        </div>
+        <div class="sector-card">
+          <div class="sector-icon">🍽️</div>
+          <div class="sector-name">Restaurantes y bares</div>
+          <div class="sector-ticket">800€ — 1.200€</div>
+          <div class="sector-why">Muchos solo tienen Facebook. La carta online y el formulario de reservas les da ROI inmediato.</div>
+        </div>
+        <div class="sector-card">
+          <div class="sector-icon">🏥</div>
+          <div class="sector-name">Clínicas y consultas</div>
+          <div class="sector-ticket">1.000€ — 1.500€</div>
+          <div class="sector-why">Ticket alto porque entienden el valor de captar pacientes. El chatbot para dudas les encanta.</div>
+        </div>
+        <div class="sector-card">
+          <div class="sector-icon">🔧</div>
+          <div class="sector-name">Fontaneros y electricistas</div>
+          <div class="sector-ticket">500€ — 800€</div>
+          <div class="sector-why">Casi ninguno tiene web. Cierre rápido porque son decisores directos y ven el valor al momento.</div>
+        </div>
+        <div class="sector-card" style="grid-column: span 2;">
+          <div class="sector-icon">🏋️</div>
+          <div class="sector-name">Gimnasios y centros deportivos</div>
+          <div class="sector-ticket">900€ — 1.400€</div>
+          <div class="sector-why">Valoran el formulario de captación de nuevos socios y el chatbot para responder horarios y precios. Alta competencia en el sector genera urgencia de diferenciarse.</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">💡</span>
+        <span><strong>Pro tip:</strong> empieza por negocios de tu barrio o ciudad que ya conoces. La cercanía baja la guardia y facilita el cierre. Y si conoces al dueño, mejor todavía.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: VENTA -->
+  <div class="section" id="s3">
+    <div class="section-header" onclick="toggleSection(3)">
+      <div class="section-icon">💬</div>
+      <div class="section-meta">
+        <div class="section-num">04 · Cierra la venta</div>
+        <div class="section-title">El guión que funciona para presentar y cerrar</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">La demo hace el 80% del trabajo. Este guión es para el 20% restante.</div>
+
+      <div class="script-block">
+        <div class="script-role">Apertura — genera curiosidad sin vender</div>
+        <div class="script-text">"Buenas, soy [nombre]. Me dedico a ayudar a negocios locales a conseguir más clientes con IA. ¿Tienes 2 minutos? Tengo algo que quiero enseñarte."</div>
+      </div>
+
+      <div class="script-block">
+        <div class="script-role">La demo — el momento que cierra solo</div>
+        <div class="script-text">"Antes de venir he preparado algo para ti."<br><br>[Abres el preview en el móvil y se lo muestras]<br><br>"Es tu web. Con tu nombre, tu logo, tus servicios y un chat que responde a tus clientes solo, las 24 horas. La he generado en 30 segundos."</div>
+      </div>
+
+      <div class="script-block">
+        <div class="script-role">Cuando pregunten el precio</div>
+        <div class="script-text">"Son [precio]. Pago único, sin mensualidades. Pero antes de hablar de precio, dime: ¿cuántos clientes nuevos consigues al mes ahora mismo buscándote en Google?"</div>
+      </div>
+
+      <div class="close-block">
+        <div class="close-role">Si dicen que lo tienen que pensar</div>
+        <div class="close-text">"Entendido. Solo te digo una cosa: esta web ya está hecha. Si la quieres, la tienes hoy. Si no, la archivamos y listo. No hay presión ni hay propuesta que esperar."</div>
+      </div>
+
+      <div class="close-block">
+        <div class="close-role">Para cerrar</div>
+        <div class="close-text">"¿Empezamos? Solo necesito que me confirmes el teléfono y el email donde quieres que lleguen los contactos del formulario."</div>
+      </div>
+
+      <div class="close-block">
+        <div class="close-role">Si ya tienen web pero es antigua</div>
+        <div class="close-text">"Veo que tienes web, pero lleva tiempo sin actualizarse y no tiene botón de WhatsApp ni chat. Te genero una versión nueva en 30 segundos para que veas la diferencia."</div>
+      </div>
+
+      <div class="alert">
+        <span>⚠️</span>
+        <span><strong>Regla de oro:</strong> nunca vendas antes de mostrar la demo. Genera primero, muestra después. La web ya hecha es tu mejor argumento. No hay propuesta ni presentación que la supere.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 5: FAQ -->
+  <div class="section" id="s4">
+    <div class="section-header" onclick="toggleSection(4)">
+      <div class="section-icon">❓</div>
+      <div class="section-meta">
+        <div class="section-num">05 · FAQ</div>
+        <div class="section-title">Preguntas que van a surgir</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Las dudas más frecuentes cuando empiezas a construir y vender el sistema.</div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Necesito saber programar para construir esto?</div>
+        <div class="faq-a">No. Claude Code te guía paso a paso. Tú le describes lo que quieres, él construye, tú revisas. Si algo no funciona, le dices qué pasa y lo corrige. El prompt maestro ya tiene todo lo que Claude necesita saber para empezar.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Cuánto tiempo lleva construir el sistema?</div>
+        <div class="faq-a">Entre 2 y 4 horas de trabajo con Claude Code para tener una versión funcional. No es perfecto desde el principio, pero con eso ya puedes generar webs y hacer demos. El refinamiento viene después, con uso real.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Dónde se alojan las webs generadas?</div>
+        <div class="faq-a">En tu propio servidor o en servicios gratuitos como Railway o Render para empezar. Cuando tengas clientes pagando, mueves a un VPS que te da más control. Claude Code te ayuda con el despliegue también.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Puedo modificar la web después de generarla?</div>
+        <div class="faq-a">Sí. Puedes regenerarla con más información o editar el HTML directamente. Para ajustes rápidos, regenerar con mejor descripción suele ser suficiente y más rápido.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Y si el cliente quiere cambios después de comprar?</div>
+        <div class="faq-a">Eso es una oportunidad. Los cambios menores los haces en minutos regenerando. Para cambios grandes, tienes dos opciones: incluirlos en el precio original o cobrarlos aparte. Define esto antes de cerrar para evitar malentendidos.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Puedo montar un recurrente encima de esto?</div>
+        <div class="faq-a">Sí y es la parte más interesante. Una vez vendida la web, ofrece mantenimiento mensual: actualizaciones, cambios de contenido, mejoras del chatbot. 50-100€/mes por cliente es fácil de defender para un negocio que ya confía en ti. 10 clientes en recurrente son 500-1.000€/mes sin hacer nada nuevo.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Qué hago si el negocio dice que ya tiene web?</div>
+        <div class="faq-a">Le generas la demo igualmente. "Veo que tienes web, pero déjame enseñarte cómo podría quedar con IA." Cuando ven la diferencia entre su web actual y lo que acabas de generar, la conversación cambia. Los negocios con webs anticuadas son en muchos casos mejores prospectos que los que no tienen nada.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">¿Cuánto cobro exactamente?</div>
+        <div class="faq-a">Depende del sector y del negocio. La referencia es: si la web les puede traer 2-3 clientes más al mes y cada cliente vale 100€ o más, cobrar 500-800€ es una decisión fácil para ellos. Nunca pongas el precio antes de entender cuánto vale un cliente para ese negocio.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="final-cta">
+    <div style="font-size:48px; margin-bottom:16px;">🚀</div>
+    <h2>Ahora a construirlo</h2>
+    <p>Tienes el prompt. Tienes el flujo. Tienes el guión de venta.</p>
+    <p style="margin-top:8px;">Abre Claude Code, pega el prompt maestro y empieza a construir.</p>
+    <p style="margin-top:8px;">El primer cliente que cierres con una demo en directo va a cambiar cómo ves el negocio de las webs para siempre.</p>
+    <p style="margin-top:20px; color:var(--accent-light); font-weight:700;">Cualquier duda, compártela en el grupo. Seguimos construyendo. 🔥</p>
+  </div>
+
+</div>
+
+<script>
+function toggleSection(idx) {
+  const s = document.getElementById(`s${idx}`);
+  const isOpen = s.classList.contains('open');
+  document.querySelectorAll('.section').forEach(x => x.classList.remove('open'));
+  if (!isOpen) s.classList.add('open');
+}
+
+function toggleFaq(el) {
+  el.classList.toggle('open');
+}
+
+function copyPrompt(btn) {
+  const text = document.getElementById('promptText').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copiar';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+toggleSection(0);
+</script>
+</body>
+</html>
