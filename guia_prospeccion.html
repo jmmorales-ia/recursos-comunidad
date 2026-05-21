@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Prospección Outbound — Guía Interactiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --surface: #0e0e1a;
+  --surface2: #14142a;
+  --border: #1e1e3a;
+  --accent: #7c3aed;
+  --accent-light: #a855f7;
+  --accent-glow: rgba(124,58,237,0.15);
+  --gold: #f59e0b;
+  --green: #10b981;
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --orange: #f97316;
+  --text: #f1f0ff;
+  --text-muted: #6b6b9a;
+  --text-dim: #9d9dc0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(124,58,237,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(245,158,11,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  padding: 60px 0 48px;
+  text-align: center;
+}
+
+.module-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--accent-light);
+  font-size: 11px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  margin-bottom: 28px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.module-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0.2} }
+
+.hero h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--gold), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 540px;
+  margin: 0 auto 36px;
+}
+
+/* INSTALL BANNER */
+.install-banner {
+  background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(124,58,237,0.06));
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
+}
+
+.install-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.install-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.install-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.install-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(16,185,129,0.15);
+  border: 1px solid rgba(16,185,129,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* CODE INLINE */
+.code-inline {
+  background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--accent-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* PIPELINE VISUAL */
+.pipeline {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
+}
+
+.pipeline-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-light);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.pipeline-steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pipe-step {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.pipe-step:hover { border-color: rgba(124,58,237,0.4); color: var(--text); }
+.pipe-step.active { background: var(--accent-glow); border-color: rgba(124,58,237,0.4); color: var(--text); }
+
+.pipe-arrow { color: var(--text-muted); font-size: 14px; }
+
+.pipe-detail {
+  background: var(--surface2);
+  border: 1px solid rgba(124,58,237,0.2);
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+
+.pipe-detail.show { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)} }
+
+.pipe-detail strong { color: var(--accent-light); }
+
+/* BIFURCATION */
+.bifurc {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.bifurc-card {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+}
+
+.bifurc-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.bifurc-list {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* SECTION */
+.section {
+  margin-bottom: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  animation: fadeInUp 0.4s ease both;
+}
+
+@keyframes fadeInUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+
+.section-header {
+  padding: 20px 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.section-header:hover { background: rgba(255,255,255,0.02); }
+.section-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: var(--surface2); border: 1px solid var(--border); transition: all 0.3s; }
+.section.open .section-icon { background: var(--accent-glow); border-color: rgba(124,58,237,0.3); }
+.section-meta { flex: 1; }
+.section-num { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 3px; }
+.section.open .section-num { color: var(--accent-light); }
+.section-title { font-family: 'Unbounded', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.3; }
+.section-arrow { font-size: 18px; transition: transform 0.3s; color: var(--text-muted); }
+.section.open .section-arrow { transform: rotate(180deg); }
+.section-body { display: none; padding: 0 24px 28px; border-top: 1px solid var(--border); }
+.section.open .section-body { display: block; }
+.section-intro { font-size: 13px; color: var(--text-dim); line-height: 1.7; padding: 18px 0 20px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+
+/* AGENT TABLE */
+.agent-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 12px;
+}
+
+.agent-table th {
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.agent-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.agent-table tr:last-child td { border-bottom: none; }
+.agent-table tr:hover td { background: rgba(255,255,255,0.01); }
+.agent-name { color: var(--accent-light); font-weight: 700; }
+
+/* API TABLE */
+.api-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 11px;
+}
+
+.api-table th {
+  background: var(--surface2);
+  color: var(--text-muted);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.api-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.api-table tr:last-child td { border-bottom: none; }
+.api-name { color: var(--gold); font-weight: 700; font-family: 'Space Mono', monospace; }
+.api-cost { color: var(--green); font-weight: 700; }
+
+/* CODE BLOCK */
+.code-block {
+  background: #0a0a12;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 14px 0;
+  font-size: 11px;
+  line-height: 1.8;
+  overflow-x: auto;
+  position: relative;
+}
+
+.code-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.code-block .key { color: #a855f7; }
+.code-block .val { color: #fbbf24; }
+.code-block .str { color: #34d399; }
+.code-block .comment { color: #4b5563; font-style: italic; }
+.code-block .required { color: #f87171; }
+
+.copy-code-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--accent-light);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: 'Space Mono', monospace;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-code-btn:hover { background: rgba(124,58,237,0.25); }
+.copy-code-btn.copied { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: var(--green); }
+
+/* LINKEDIN STATES */
+.state-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 14px 0;
+}
+
+.state-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.state-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-family: 'Space Mono', monospace;
+}
+
+.state-desc { color: var(--text-muted); font-size: 11px; }
+.state-arrow { text-align: center; color: var(--text-muted); font-size: 12px; padding: 2px 0 2px 14px; }
+
+/* TIPS */
+.tip { display: flex; gap: 12px; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.2); border-radius: 10px; padding: 12px 16px; margin: 10px 0; font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+.tip strong { color: var(--green); }
+.tip-icon { flex-shrink: 0; font-size: 16px; }
+
+.alert { display: flex; gap: 12px; background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 12px 16px; margin: 10px 0; font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+.alert strong { color: var(--gold); }
+
+.info { display: flex; gap: 12px; background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 12px 16px; margin: 10px 0; font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+.info strong { color: var(--blue); }
+
+/* STEPS */
+.steps { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
+.step { display: flex; gap: 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.step-num { width: 32px; height: 32px; border-radius: 8px; background: var(--accent-glow); border: 1px solid rgba(124,58,237,0.3); display: flex; align-items: center; justify-content: center; font-family: 'Unbounded', sans-serif; font-size: 12px; font-weight: 900; color: var(--accent-light); flex-shrink: 0; }
+.step-content { flex: 1; }
+.step-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.step-desc { font-size: 12px; color: var(--text-dim); line-height: 1.6; }
+
+/* FINAL */
+.final-cta { background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(245,158,11,0.06)); border: 1px solid rgba(124,58,237,0.3); border-radius: 20px; padding: 40px; text-align: center; margin-top: 40px; }
+.final-cta h2 { font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 900; margin-bottom: 12px; background: linear-gradient(135deg, var(--accent-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.final-cta p { color: var(--text-dim); font-size: 13px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <div class="module-tag">Módulo Prospección · Skill /prospeccion</div>
+    <h1>Sistema de <em>Prospección</em><br>Outbound con IA</h1>
+    <p class="hero-desc">El pipeline completo que busca leads, los cualifica con Claude y genera mensajes personalizados para email y LinkedIn. Solo. Sin que toques nada.</p>
+  </div>
+
+  <!-- INSTALL -->
+  <div class="install-banner">
+    <div class="install-title">⚡ Instala la skill en 1 minuto</div>
+    <div class="install-steps">
+      <div class="install-step">
+        <div class="install-num">1</div>
+        <div>Descarga el archivo <span class="code-inline">prospeccion.md</span> desde el repo de la comunidad</div>
+      </div>
+      <div class="install-step">
+        <div class="install-num">2</div>
+        <div>Cópialo a esta ruta en tu proyecto: <span class="code-inline">.claude/commands/prospeccion.md</span></div>
+      </div>
+      <div class="install-step">
+        <div class="install-num">3</div>
+        <div>Abre Claude Code y escribe <span class="code-inline">/prospeccion</span> — ya está disponible</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE VISUAL -->
+  <div class="pipeline">
+    <div class="pipeline-title">// El pipeline — 7 pasos automatizados</div>
+    <div class="pipeline-steps">
+      <div class="pipe-step" onclick="showPipe(0)">SCOUT</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showPipe(1)">DEDUP</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showPipe(2)">ENRICH</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showPipe(3)">QUALIFY</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showPipe(4)">WRITE</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showPipe(5)">SEND</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step" onclick="showPipe(6)">TRACK</div>
+    </div>
+    <div class="pipe-detail" id="pipe-detail">Pulsa cualquier paso para ver qué hace</div>
+  </div>
+
+  <!-- SECCIÓN 1: CÓMO FUNCIONA -->
+  <div class="section" id="s0">
+    <div class="section-header" onclick="toggleSection(0)">
+      <div class="section-icon">🧠</div>
+      <div class="section-meta">
+        <div class="section-num">01 · Visión general</div>
+        <div class="section-title">Qué hace el sistema y cómo está construido</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">El sistema automatiza el ciclo completo de outbound en dos canales: email frío vía Instantly y LinkedIn con mensajes generados por IA y cola de gestión manual.</div>
+
+      <div class="bifurc">
+        <div class="bifurc-card" style="border-color:rgba(59,130,246,0.3);">
+          <div class="bifurc-title" style="color:var(--blue);">📧 Canal Email</div>
+          <div class="bifurc-list">
+            → Claude genera 3 variables de personalización<br>
+            → El lead entra automáticamente a tu campaña de Instantly<br>
+            → Instantly gestiona envíos, aperturas y follow-ups<br>
+            → Las respuestas con interés van al CRM (GHL)
+          </div>
+        </div>
+        <div class="bifurc-card" style="border-color:rgba(124,58,237,0.3);">
+          <div class="bifurc-title" style="color:var(--accent-light);">💼 Canal LinkedIn</div>
+          <div class="bifurc-list">
+            → Claude genera 5 mensajes (solicitud + 4 follow-ups)<br>
+            → Los mensajes quedan en la cola para copiar y pegar<br>
+            → Tú controlas cuándo enviar cada uno<br>
+            → El sistema promueve automáticamente los follow-ups
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;">
+        <div class="code-label">// Los 4 agentes de Claude</div>
+        <table class="agent-table">
+          <thead>
+            <tr>
+              <th>Agente</th>
+              <th>Función</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="agent-name">Qualifier</span></td>
+              <td>Puntúa cada lead de 0-100 contra tu ICP. Los que no llegan al umbral (55 por defecto) se descartan automáticamente.</td>
+            </tr>
+            <tr>
+              <td><span class="agent-name">LinkedIn Writer</span></td>
+              <td>Genera 5 mensajes cold/warm personalizados con tu tono exacto.</td>
+            </tr>
+            <tr>
+              <td><span class="agent-name">Email Writer</span></td>
+              <td>Genera 3 variables de personalización para el template de Instantly.</td>
+            </tr>
+            <tr>
+              <td><span class="agent-name">Reply Classifier</span></td>
+              <td>Clasifica las respuestas entrantes: interés / objeción / rechazo.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">💡</span>
+        <span><strong>Lo más importante:</strong> el Qualifier es lo que hace que el sistema sea inteligente. Si no le dices bien quién es tu cliente ideal, va a cualificar basura. La skill <span style="color:var(--accent-light);">/prospeccion</span> te guía para configurarlo bien.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: APIS -->
+  <div class="section" id="s1">
+    <div class="section-header" onclick="toggleSection(1)">
+      <div class="section-icon">🔌</div>
+      <div class="section-meta">
+        <div class="section-num">02 · APIs necesarias</div>
+        <div class="section-title">Qué necesitas y cuánto cuesta</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">No necesitas todas desde el principio. Hay un stack mínimo para empezar y un stack completo para escalar.</div>
+
+      <table class="api-table">
+        <thead>
+          <tr>
+            <th>API</th>
+            <th>Para qué</th>
+            <th>Coste mínimo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="api-name">Anthropic</span></td>
+            <td>Los 4 agentes IA: qualifier, linkedin writer, email writer, reply classifier</td>
+            <td><span class="api-cost">$5 créditos</span></td>
+          </tr>
+          <tr>
+            <td><span class="api-name">Apify</span></td>
+            <td>Scrapers: Google Maps, LinkedIn, Clutch</td>
+            <td><span class="api-cost">~$50/mes</span></td>
+          </tr>
+          <tr>
+            <td><span class="api-name">Hunter.io</span></td>
+            <td>Waterfall de emails — 1ª capa</td>
+            <td><span class="api-cost">Free 25/mes</span></td>
+          </tr>
+          <tr>
+            <td><span class="api-name">Snov.io</span></td>
+            <td>Waterfall de emails — 2ª capa</td>
+            <td><span class="api-cost">$39/mes</span></td>
+          </tr>
+          <tr>
+            <td><span class="api-name">Apollo.io</span></td>
+            <td>Waterfall de emails — 3ª capa</td>
+            <td><span class="api-cost">Free 50/mes</span></td>
+          </tr>
+          <tr>
+            <td><span class="api-name">Neverbounce</span></td>
+            <td>Verificación de emails por patrón</td>
+            <td><span class="api-cost">$8/1.000</span></td>
+          </tr>
+          <tr>
+            <td><span class="api-name">Instantly</span></td>
+            <td>Envío de emails fríos y tracking</td>
+            <td><span class="api-cost">$37/mes</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert">
+        <span>⚡</span>
+        <span><strong>Stack mínimo para empezar:</strong> Anthropic + Apollo Free + Instantly. Suficiente para 50 leads/día con solo ~$50/mes. Añade el resto cuando necesites más volumen.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: QUALIFIER -->
+  <div class="section" id="s2">
+    <div class="section-header" onclick="toggleSection(2)">
+      <div class="section-icon">🎯</div>
+      <div class="section-meta">
+        <div class="section-num">03 · El Qualifier</div>
+        <div class="section-title">Cómo adaptar el ICP a tu negocio</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">El Qualifier es el agente más importante. Determina qué leads pasan y cuáles no. Si está mal configurado, el sistema trabaja para nada. La skill /prospeccion te hace las preguntas correctas para generarlo bien.</div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Describe tu cliente ideal</div>
+            <div class="step-desc">Cargo, sector, tamaño de empresa y geografía. Cuanto más específico, mejor cualifica el agente.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Define las señales positivas</div>
+            <div class="step-desc">Qué ves en un perfil o empresa que te dice que es un buen lead. Ejemplos concretos de cargos, sectores o señales en la web.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Define las señales negativas</div>
+            <div class="step-desc">Qué tipos de empresa, cargos o situaciones descartas inmediatamente. El agente descarta agresivamente lo que no encaja.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Ajusta el umbral</div>
+            <div class="step-desc">Por defecto el umbral es 55/100. Si estás descartando demasiados leads buenos, bájalo. Si entra demasiada basura, súbelo.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-label">// Criterio de puntuación</div>
+      <div class="code-block">
+        <span class="comment">// 80-100 → lead perfecto, todos los criterios cumplidos</span><br>
+        <span class="comment">// 60-79  → buen fit con alguna duda menor</span><br>
+        <span class="comment">// 40-59  → posible pero dudoso</span><br>
+        <span class="comment">// 0-39   → claro no-fit, descartado automáticamente</span>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">💡</span>
+        <span><strong>Usa /prospeccion opción 2</strong> para que Claude Code te haga las preguntas y genere el System Prompt del Qualifier adaptado a tu negocio exacto.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: LINKEDIN -->
+  <div class="section" id="s3">
+    <div class="section-header" onclick="toggleSection(3)">
+      <div class="section-icon">💼</div>
+      <div class="section-meta">
+        <div class="section-num">04 · Cola de LinkedIn</div>
+        <div class="section-title">Cómo funciona el workflow manual</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">LinkedIn es semi-automático. La IA genera los mensajes pero el envío lo haces tú copiando y pegando. Máximo 20 solicitudes al día para no quemar la cuenta.</div>
+
+      <div class="state-flow">
+        <div class="state-item">
+          <span class="state-badge" style="background:rgba(245,158,11,0.1);color:var(--gold);border:1px solid rgba(245,158,11,0.3);">PENDING_CONNECTION</span>
+          <span class="state-desc">Copias la solicitud de conexión en LinkedIn</span>
+        </div>
+        <div class="state-arrow">↓</div>
+        <div class="state-item">
+          <span class="state-badge" style="background:rgba(59,130,246,0.1);color:var(--blue);border:1px solid rgba(59,130,246,0.3);">CONNECTION_SENT</span>
+          <span class="state-desc">La persona acepta</span>
+        </div>
+        <div class="state-arrow">↓</div>
+        <div class="state-item">
+          <span class="state-badge" style="background:rgba(124,58,237,0.1);color:var(--accent-light);border:1px solid rgba(124,58,237,0.3);">CONNECTED</span>
+          <span class="state-desc">Copias el first_message en LinkedIn</span>
+        </div>
+        <div class="state-arrow">↓</div>
+        <div class="state-item">
+          <span class="state-badge" style="background:rgba(249,115,22,0.1);color:var(--orange);border:1px solid rgba(249,115,22,0.3);">NEEDS_FU1 → FU2 → FU3</span>
+          <span class="state-desc">Follow-ups automáticos a 24h, 48h y 72h</span>
+        </div>
+        <div class="state-arrow">↓</div>
+        <div class="state-item">
+          <span class="state-badge" style="background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.3);">REPLIED</span>
+          <span class="state-desc">Pasa al pipeline de ventas en GHL</span>
+        </div>
+      </div>
+
+      <div class="alert" style="margin-top:16px;">
+        <span>⚠️</span>
+        <span><strong>Rutina diaria recomendada (20-30 min):</strong> 1) PENDING_CONNECTION → envía solicitudes (máx. 20/día) 2) NEEDS_FU — envía los mensajes pendientes 3) CONNECTED → envía first_message a los que aceptaron ayer.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 5: CONFIGURAR DESDE CERO -->
+  <div class="section" id="s4">
+    <div class="section-header" onclick="toggleSection(4)">
+      <div class="section-icon">⚙️</div>
+      <div class="section-meta">
+        <div class="section-num">05 · Configurar desde cero</div>
+        <div class="section-title">Las variables de entorno que necesitas</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Crea un archivo .env en la raíz del proyecto con estas variables. Las marcadas con * son obligatorias para el mínimo viable.</div>
+
+      <div class="code-label">// Variables de entorno — copia y adapta</div>
+      <div class="code-block" style="position:relative;">
+        <button class="copy-code-btn" onclick="copyEnv(this)">Copiar</button>
+        <span class="comment"># OBLIGATORIO SIEMPRE</span><br>
+        <span class="required">ADMIN_API_SECRET</span>=<span class="str">tu_clave_secreta</span> <span class="comment"># *</span><br>
+        <span class="required">DATABASE_URL</span>=<span class="str">postgresql://user:pass@host/db</span> <span class="comment"># *</span><br>
+        <span class="required">ANTHROPIC_API_KEY</span>=<span class="str">sk-ant-...</span> <span class="comment"># *</span><br><br>
+        <span class="comment"># FUENTES DE LEADS (elige al menos una)</span><br>
+        <span class="key">APIFY_API_TOKEN</span>=<span class="str">...</span> <span class="comment"># Google Maps, LinkedIn, Clutch</span><br><br>
+        <span class="comment"># BÚSQUEDA DE EMAILS (waterfall)</span><br>
+        <span class="key">HUNTER_API_KEY</span>=<span class="str">...</span> <span class="comment"># 1ª capa</span><br>
+        <span class="key">SNOV_CLIENT_ID</span>=<span class="str">...</span> <span class="comment"># 2ª capa</span><br>
+        <span class="key">SNOV_SECRET</span>=<span class="str">...</span><br>
+        <span class="key">APOLLO_API_KEY</span>=<span class="str">...</span> <span class="comment"># 3ª capa (free)</span><br><br>
+        <span class="comment"># CANAL EMAIL</span><br>
+        <span class="key">INSTANTLY_API_KEY</span>=<span class="str">...</span><br>
+        <span class="key">INSTANTLY_CAMPAIGN_ID</span>=<span class="str">...</span><br><br>
+        <span class="comment"># COMPORTAMIENTO DEL PIPELINE</span><br>
+        <span class="key">PROSPECTION_DAILY_LIMIT</span>=<span class="val">200</span><br>
+        <span class="key">PROSPECTION_ICP_MIN_SCORE</span>=<span class="val">55</span> <span class="comment"># umbral qualifier</span><br>
+        <span class="key">PROSPECTION_DEFAULT_QUERY</span>=<span class="str">agencia marketing digital</span><br>
+        <span class="key">PROSPECTION_DEFAULT_LOCATION</span>=<span class="str">España</span><br>
+        <span class="key">PROSPECTION_SCHEDULE_HOUR</span>=<span class="val">-1</span> <span class="comment"># -1 = manual</span><br><br>
+        <span class="comment"># TIEMPOS LINKEDIN (horas)</span><br>
+        <span class="key">LINKEDIN_FU1_DELAY_HOURS</span>=<span class="val">24</span><br>
+        <span class="key">LINKEDIN_FU2_DELAY_HOURS</span>=<span class="val">48</span><br>
+        <span class="key">LINKEDIN_FU3_DELAY_HOURS</span>=<span class="val">72</span>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Fase 1 — Base</div>
+            <div class="step-desc">Configura el .env con las variables obligatorias y ejecuta las migraciones de base de datos. Verifica que el endpoint /prospection/scout-test responde.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Fase 2 — Primera ejecución</div>
+            <div class="step-desc">Lanza POST /prospection/run?source=google_maps y revisa /prospection/last-run para ver el estado. ¿Cuántos leads pasaron el qualifier?</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Fase 3 — Afinar</div>
+            <div class="step-desc">Ajusta PROSPECTION_ICP_MIN_SCORE según los resultados. Conecta Instantly y activa el canal de email. Empieza a usar la cola de LinkedIn.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">💡</span>
+        <span><strong>Usa /prospeccion opción 5</strong> para que Claude Code te guíe en el setup completo paso a paso según lo que ya tienes instalado.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 6: SKILL COMMANDS -->
+  <div class="section" id="s5">
+    <div class="section-header" onclick="toggleSection(5)">
+      <div class="section-icon">⚡</div>
+      <div class="section-meta">
+        <div class="section-num">06 · Lo que puedes hacer con /prospeccion</div>
+        <div class="section-title">Las 6 opciones de la skill</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Cuando escribes /prospeccion en Claude Code aparecen estas 6 opciones. Cada una te guía en una parte del sistema.</div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Entender cómo funciona el sistema</div>
+            <div class="step-desc">Visión general del pipeline completo + arquitectura. Perfecto si es tu primera vez con el sistema.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Adaptar el Qualifier a tu ICP</div>
+            <div class="step-desc">Te hace preguntas sobre tu cliente ideal y genera el System Prompt del Qualifier personalizado para tu negocio.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Adaptar los prompts de LinkedIn</div>
+            <div class="step-desc">Te pregunta tu tono, posicionamiento y palabras prohibidas. Genera el LinkedIn Writer con tu voz exacta.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Aprender a usar la cola de LinkedIn</div>
+            <div class="step-desc">Explica los estados del lead, la rutina diaria recomendada y cómo avanzar manualmente cada lead.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Configurar el sistema desde cero</div>
+            <div class="step-desc">Te pregunta qué tienes instalado y te guía en el setup completo: .env, migraciones, primera ejecución y afinado.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-title">Ver los prompts listos para copiar</div>
+            <div class="step-desc">Muestra directamente los prompts del Qualifier, LinkedIn Writer y Email Writer listos para adaptar y usar.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 7: PROMPTS -->
+  <div class="section" id="s6">
+    <div class="section-header" onclick="toggleSection(6)">
+      <div class="section-icon">📋</div>
+      <div class="section-meta">
+        <div class="section-num">07 · Prompts listos</div>
+        <div class="section-title">Qualifier, LinkedIn Writer y Email Writer</div>
+      </div>
+      <div class="section-arrow">⌄</div>
+    </div>
+    <div class="section-body">
+      <div class="section-intro">Los 3 prompts base listos para copiar y adaptar a tu negocio. Cambia los campos entre [corchetes] por tu información real.</div>
+
+      <!-- QUALIFIER -->
+      <div class="code-label">// Prompt Qualifier — ICP scoring</div>
+      <div class="code-block" style="position:relative; white-space:pre-wrap;">
+        <button class="copy-code-btn" onclick="copyBlock('qualifier', this)">Copiar</button>
+        <span id="qualifier">Eres un evaluador de leads para [TU NEGOCIO].
+Tu trabajo es determinar si un lead encaja con el ICP y asignarle un score 0-100 con razonamiento.
+
+AVATAR IDEAL:
+[Describe a tu cliente ideal: quién es, qué cargo tiene, qué problema tiene]
+
+SEÑALES POSITIVAS fuertes:
+- Cargo con poder de decisión: [lista de cargos]
+- Sector: [lista de sectores]
+- Tamaño empresa: [rango de empleados]
+- Geografía: [países]
+- Señal de problema real: [descripción]
+
+NO ENCAJAN (descarta agresivamente):
+- [Tipos de cargo a descartar]
+- [Tipos de empresa a descartar]
+- [Geografías fuera de scope]
+
+CRITERIO DE PUNTUACIÓN:
+- 80-100: Lead perfecto — todos los criterios del avatar cumplidos
+- 60-79: Buen fit con alguna duda menor
+- 40-59: Posible pero dudoso
+- 0-39: Claro no-fit
+
+Para cada lead devuelve un JSON con exactamente estos campos:
+{
+  "score": &lt;int 0-100&gt;,
+  "verdict": "qualified" | "discarded",
+  "reasoning": "&lt;2-3 frases explicando los factores clave&gt;"
+}
+
+El input que recibirás:
+- Empresa: [nombre]
+- Web: [url]
+- Encontrado en: [fuente]
+- Cargo del contacto: [cargo]
+- Empleados estimados: [rango]
+- Servicios detectados: [lista]
+- Descripción de su web: [texto]</span>
+      </div>
+
+      <!-- LINKEDIN WRITER -->
+      <div class="code-label" style="margin-top:20px;">// Prompt LinkedIn Writer — mensajes cold</div>
+      <div class="code-block" style="position:relative; white-space:pre-wrap;">
+        <button class="copy-code-btn" onclick="copyBlock('linkedin', this)">Copiar</button>
+        <span id="linkedin">Eres el asistente de redacción de mensajes de LinkedIn de [TU NEGOCIO].
+
+CONTEXTO DE QUIEN ESCRIBE:
+- [Tu rol y posicionamiento en 2 líneas]
+- Avatar al que escribes: [descripción del cliente ideal]
+
+TONO Y REGLAS:
+- [Idioma e informalidad: tuteo/usted, formal/informal]
+- NUNCA usar: [palabras prohibidas]
+- NUNCA mencionar precio en ningún mensaje.
+- Sí usar: [palabras que sí van con tu marca]
+- NUNCA escribas placeholders tipo {nombre}. Usa los datos del contexto literalmente.
+- No vender en el primer mensaje. El primer mensaje abre conversación.
+
+LOS 5 MENSAJES:
+
+1. connection_request (MÁXIMO 200 caracteres)
+   - Objetivo: que clique en aceptar, no presentarte.
+   - Algo concreto de su empresa/perfil. Cero olor a venta.
+
+2. first_message (2-4 líneas, cuando acepta)
+   - Agradecer brevemente. Mencionar algo específico de su empresa.
+   - Pregunta abierta sobre su situación. Sin pitch, sin link.
+
+3. followup_1 (3 días sin respuesta, 1-2 líneas)
+   - Recordatorio light. Una observación o pregunta concreta.
+
+4. followup_2 (5 días después, 1-2 líneas)
+   - Aporta una idea concreta. Nada de "sigues sin responder".
+
+5. followup_3 (último intento, 1-2 líneas)
+   - Cierre limpio. "Si no es buen momento, sin problema."
+
+DEVUELVE SOLO ESTE JSON:
+{
+  "connection_request": "...",
+  "first_message": "...",
+  "followup_1": "...",
+  "followup_2": "...",
+  "followup_3": "..."
+}</span>
+      </div>
+
+      <!-- EMAIL WRITER -->
+      <div class="code-label" style="margin-top:20px;">// Prompt Email Writer — variables para Instantly</div>
+      <div class="code-block" style="position:relative; white-space:pre-wrap;">
+        <button class="copy-code-btn" onclick="copyBlock('email', this)">Copiar</button>
+        <span id="email">Eres el asistente de redacción de emails en frío de [TU NEGOCIO].
+Tu trabajo es generar 3 variables de personalización para un template de email outbound.
+
+CONTEXTO DEL NEGOCIO:
+[Describe en 2-3 líneas qué haces, para quién y qué resuelves]
+
+TONO:
+- Cercano, directo, sin corporativismos
+- Una sola idea por variable
+- Máximo 15-20 palabras por variable
+- [Idioma e informalidad]
+
+VARIABLES A GENERAR:
+- personalization_line: algo MUY específico de su web (nunca genérico)
+  Mal: "Vi que sois una agencia interesante"
+  Bien: "Vi que trabajáis con ecommerce de moda y tenéis casos con Shopify"
+- pain_point: el mayor cuello de botella que probablemente tienen
+- hook: el beneficio más relevante para ellos en una frase
+
+Devuelve SOLO este JSON:
+{
+  "personalization_line": "...",
+  "pain_point": "...",
+  "hook": "..."
+}</span>
+      </div>
+
+      <div class="tip">
+        <span class="tip-icon">💡</span>
+        <span><strong>Recuerda:</strong> estos son los prompts base. Usa <span style="color:var(--accent-light);">/prospeccion opción 2</span> para que Claude Code te haga las preguntas y los genere adaptados a tu negocio exacto.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <div class="final-cta">
+    <div style="font-size:48px; margin-bottom:16px;">🚀</div>
+    <h2>Ahora a prospectar</h2>
+    <p>Instala la skill, configura el Qualifier con tu ICP y lanza el pipeline.</p>
+    <p style="margin-top:8px;">En mi sistema hay 1.700 leads en pipeline y no he buscado ninguno a mano.</p>
+    <p style="margin-top:20px; color:var(--accent-light); font-weight:700;">Cualquier duda, al grupo. Seguimos construyendo. 🔥</p>
+  </div>
+
+</div>
+
+<script>
+const pipeData = [
+  { name: 'SCOUT', desc: '<strong>Descubre leads desde múltiples fuentes:</strong><br>→ Google Maps (nombre empresa, web, teléfono)<br>→ LinkedIn (perfil del decisor: cargo, nombre, empresa)<br>→ Clutch.co (agencias con ratings)<br>→ CSV importado (leads de Apollo, LinkedIn Sales Nav, etc.)' },
+  { name: 'DEDUP', desc: '<strong>Elimina duplicados por dominio.</strong><br>Comprueba si la empresa ya está en base de datos. Evita contactar dos veces a la misma empresa.' },
+  { name: 'ENRICH', desc: '<strong>Enriquece cada lead nuevo:</strong><br>1. Raspa su web → extrae descripción y servicios detectados<br>2. Busca el email del decisor en cascada: Hunter → Snov → Apollo → Patrón (nombre@dominio)' },
+  { name: 'QUALIFY', desc: '<strong>Claude puntúa el lead de 0-100 contra tu ICP.</strong><br>Los que no llegan al umbral (55 por defecto) se descartan automáticamente.<br>Los que pasan siguen al siguiente paso.' },
+  { name: 'WRITE', desc: '<strong>Genera los mensajes según el canal:</strong><br>→ Email: Claude genera 3 variables de personalización para el template de Instantly<br>→ LinkedIn: Claude genera 5 mensajes completos (solicitud + 4 follow-ups)' },
+  { name: 'SEND', desc: '<strong>Envía según el canal:</strong><br>→ Email: el lead entra automáticamente a la campaña de Instantly<br>→ LinkedIn: los mensajes quedan en la cola para copiar y pegar a mano' },
+  { name: 'TRACK', desc: '<strong>Registra todo:</strong><br>→ Instantly registra aperturas, clics y respuestas<br>→ Las respuestas con interés se mueven automáticamente al pipeline de ventas en GHL' }
+];
+
+let activePipe = -1;
+
+function showPipe(idx) {
+  const detail = document.getElementById('pipe-detail');
+  const steps = document.querySelectorAll('.pipe-step');
+
+  if (activePipe === idx) {
+    detail.classList.remove('show');
+    detail.innerHTML = 'Pulsa cualquier paso para ver qué hace';
+    steps[idx].classList.remove('active');
+    activePipe = -1;
+    return;
+  }
+
+  steps.forEach(s => s.classList.remove('active'));
+  steps[idx].classList.add('active');
+  detail.innerHTML = pipeData[idx].desc;
+  detail.classList.add('show');
+  activePipe = idx;
+}
+
+function toggleSection(idx) {
+  const s = document.getElementById(`s${idx}`);
+  const isOpen = s.classList.contains('open');
+  document.querySelectorAll('.section').forEach(x => x.classList.remove('open'));
+  if (!isOpen) s.classList.add('open');
+}
+
+function copyEnv(btn) {
+  const envText = `# OBLIGATORIO SIEMPRE
+ADMIN_API_SECRET=tu_clave_secreta
+DATABASE_URL=postgresql://user:pass@host/db
+ANTHROPIC_API_KEY=sk-ant-...
+
+# FUENTES DE LEADS
+APIFY_API_TOKEN=...
+
+# BÚSQUEDA DE EMAILS
+HUNTER_API_KEY=...
+SNOV_CLIENT_ID=...
+SNOV_SECRET=...
+APOLLO_API_KEY=...
+
+# CANAL EMAIL
+INSTANTLY_API_KEY=...
+INSTANTLY_CAMPAIGN_ID=...
+
+# COMPORTAMIENTO
+PROSPECTION_DAILY_LIMIT=200
+PROSPECTION_ICP_MIN_SCORE=55
+PROSPECTION_DEFAULT_QUERY=agencia marketing digital
+PROSPECTION_DEFAULT_LOCATION=España
+PROSPECTION_SCHEDULE_HOUR=-1
+
+# TIEMPOS LINKEDIN
+LINKEDIN_FU1_DELAY_HOURS=24
+LINKEDIN_FU2_DELAY_HOURS=48
+LINKEDIN_FU3_DELAY_HOURS=72`;
+
+  navigator.clipboard.writeText(envText).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyBlock(id, btn) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+toggleSection(0);
+</script>
+</body>
+</html>
