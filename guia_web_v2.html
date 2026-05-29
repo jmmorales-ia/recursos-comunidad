@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía: Sistema de Demos con IA — @jmmorales.ia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F0EBE0;
+    --cream-dark: #E5DDD0;
+    --paper: #EDE6D8;
+    --orange: #C8501A;
+    --orange-light: #E8693A;
+    --black: #1A1A18;
+    --brown: #5C4A38;
+    --tan: #D4C4A8;
+    --note-bg: #E8DFC8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Lora', Georgia, serif;
+    color: var(--black);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--black);
+    color: #F0EBE0;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 40px,
+      rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px
+    );
+  }
+  .header-badge {
+    display: inline-block;
+    background: var(--orange);
+    color: white;
+    font-family: 'Lora', serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    margin-bottom: 1rem;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+  .header h1 span { color: var(--orange-light); }
+  .header-sub {
+    font-size: 1rem;
+    color: rgba(240,235,224,0.65);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .header-tools {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .tool-pill {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(240,235,224,0.85);
+    font-size: 12px;
+    padding: 5px 12px;
+    font-family: 'Lora', serif;
+  }
+
+  /* NAV SIDEBAR */
+  .layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: calc(100vh - 160px);
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: 0;
+  }
+
+  .sidebar {
+    background: var(--paper);
+    border-right: 1.5px solid var(--tan);
+    padding: 2rem 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    font-family: 'Lora', serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--brown);
+    padding: 0 1.25rem 1rem;
+    border-bottom: 1px solid var(--tan);
+    margin-bottom: 0.5rem;
+  }
+  .nav-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 1.25rem;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .nav-item:hover { background: var(--cream-dark); }
+  .nav-item.active {
+    border-left-color: var(--orange);
+    background: var(--cream);
+  }
+  .nav-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--orange);
+    min-width: 20px;
+    margin-top: 1px;
+  }
+  .nav-item.active .nav-num { color: var(--orange); }
+  .nav-label {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--brown);
+  }
+  .nav-item.active .nav-label { color: var(--black); font-weight: 600; }
+
+  /* MAIN CONTENT */
+  .main {
+    padding: 3rem 2.5rem;
+    max-width: 780px;
+  }
+
+  /* SECTION */
+  .section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .section.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SECTION HEADER */
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--black);
+    color: #F0EBE0;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 5px 12px;
+    margin-bottom: 1.2rem;
+    font-family: 'Lora', serif;
+  }
+  .section-badge span {
+    background: var(--orange);
+    color: white;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+  }
+  .section-title .orange { color: var(--orange); }
+
+  .section-intro {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--brown);
+    margin-bottom: 2rem;
+    font-style: italic;
+    border-left: 3px solid var(--orange);
+    padding-left: 1rem;
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 2rem 0;
+    color: var(--tan);
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--tan);
+  }
+  .divider-star { font-size: 16px; color: var(--tan); }
+
+  /* STICKY NOTE */
+  .sticky-note {
+    background: var(--note-bg);
+    border: 1px solid #C8B898;
+    padding: 1.2rem 1.4rem;
+    margin: 1.5rem 0;
+    position: relative;
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--brown);
+  }
+  .sticky-note::before {
+    content: '';
+    position: absolute;
+    top: -8px; left: 20px;
+    width: 30px; height: 16px;
+    background: #C8B898;
+    opacity: 0.6;
+  }
+  .sticky-note strong { color: var(--orange); font-style: normal; }
+
+  /* KEY MESSAGE BOX */
+  .key-msg {
+    background: var(--black);
+    color: #F0EBE0;
+    padding: 1.4rem 1.6rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--orange);
+  }
+  .key-msg-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+  .key-msg p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* STEP LIST */
+  .step-list { margin: 1.5rem 0; }
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-num {
+    width: 32px; height: 32px;
+    min-width: 32px;
+    background: var(--orange);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  .step-content h4 {
+    font-family: 'Lora', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: var(--black);
+  }
+  .step-content p {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--brown);
+  }
+
+  /* CHECK LIST */
+  .check-list { margin: 1rem 0; }
+  .check-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 6px 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--brown);
+  }
+  .check-icon {
+    width: 18px; height: 18px; min-width: 18px;
+    background: var(--cream-dark);
+    border: 1.5px solid var(--tan);
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--orange);
+  }
+
+  /* X LIST */
+  .x-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 8px 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    border-bottom: 1px solid var(--cream-dark);
+    color: var(--brown);
+  }
+  .x-icon {
+    color: var(--orange);
+    font-weight: 700;
+    font-size: 16px;
+    min-width: 16px;
+    margin-top: 2px;
+  }
+
+  /* TOOL CARD */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 1.5rem 0;
+  }
+  .tool-card {
+    background: white;
+    border: 1px solid var(--tan);
+    padding: 1rem 1.2rem;
+    border-top: 3px solid var(--orange);
+  }
+  .tool-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--black);
+  }
+  .tool-card p { font-size: 0.88rem; color: var(--brown); line-height: 1.5; }
+
+  /* FLOW CHART */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+  }
+  .flow-step {
+    background: var(--note-bg);
+    border: 1px solid var(--tan);
+    padding: 0.8rem 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    min-width: 100px;
+    flex: 1;
+  }
+  .flow-step strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--black);
+    margin-bottom: 2px;
+  }
+  .flow-step span { color: var(--brown); font-style: italic; font-size: 0.8rem; }
+  .flow-arrow {
+    color: var(--orange);
+    font-size: 20px;
+    font-weight: 700;
+    padding: 0 6px;
+  }
+
+  /* PRICE BOX */
+  .price-box {
+    background: var(--paper);
+    border: 2px solid var(--black);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+  }
+  .price-box .price {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--orange);
+    display: block;
+  }
+  .price-box .price-label {
+    font-size: 0.85rem;
+    color: var(--brown);
+    margin-top: 4px;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+    margin: 1.5rem 0;
+  }
+  .stat-card {
+    background: var(--paper);
+    border: 1px solid var(--tan);
+    border-top: 3px solid var(--orange);
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-card .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--orange);
+    display: block;
+  }
+  .stat-card .stat-label {
+    font-size: 0.75rem;
+    color: var(--brown);
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+
+  /* MESSAGE EXAMPLE */
+  .message-box {
+    background: white;
+    border: 1px solid var(--tan);
+    border-left: 4px solid var(--orange);
+    padding: 1.4rem;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: var(--brown);
+  }
+  .message-box .msg-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--orange);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  /* TIMELINE */
+  .timeline { margin: 1.5rem 0; }
+  .tl-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--cream-dark);
+    align-items: start;
+  }
+  .tl-time {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--orange);
+    padding-top: 2px;
+  }
+  .tl-content p { font-size: 0.92rem; line-height: 1.6; color: var(--brown); }
+
+  /* PROMPT BOX */
+  .prompt-box {
+    background: #1A1A18;
+    border: 1px solid #3A3A38;
+    padding: 1.4rem;
+    margin: 1.5rem 0;
+    font-family: 'Lora', monospace;
+    font-size: 0.88rem;
+    line-height: 1.8;
+    color: #C8C0B0;
+  }
+  .prompt-box .prompt-label {
+    color: var(--orange);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #3A3A38;
+    padding-bottom: 8px;
+  }
+
+  /* HEADING INSIDE SECTION */
+  .section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--black);
+    margin: 2rem 0 0.8rem;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid var(--tan);
+  }
+  .section p {
+    font-size: 0.97rem;
+    line-height: 1.8;
+    color: var(--brown);
+    margin-bottom: 1rem;
+  }
+  .section strong { color: var(--black); }
+  .orange { color: var(--orange); }
+
+  /* NAVIGATION BUTTONS */
+  .section-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--tan);
+  }
+  .btn-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1.5px solid var(--black);
+    color: var(--black);
+    padding: 10px 18px;
+    font-family: 'Lora', serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-nav:hover { background: var(--black); color: #F0EBE0; }
+  .btn-nav.primary { background: var(--orange); border-color: var(--orange); color: white; }
+  .btn-nav.primary:hover { background: #A03A10; border-color: #A03A10; }
+  .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--black);
+    color: rgba(240,235,224,0.5);
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 12px;
+    font-family: 'Lora', serif;
+    letter-spacing: 1px;
+  }
+  .footer span { color: var(--orange); }
+
+  /* SCROLLBAR */
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: var(--paper); }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--tan); }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; display: flex; flex-wrap: wrap; padding: 1rem; gap: 4px; }
+    .sidebar-title { display: none; }
+    .nav-item { padding: 6px 10px; border-left: none; border-bottom: 2px solid transparent; flex-direction: row; gap: 6px; }
+    .nav-item.active { border-bottom-color: var(--orange); border-left-color: transparent; background: transparent; }
+    .nav-label { display: none; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .main { padding: 2rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">Guía completa del sistema</div>
+  <h1>De herramientas a <span>3.000€</span></h1>
+  <p class="header-sub">El método paso a paso — @jmmorales.ia</p>
+  <div class="header-tools">
+    <span class="tool-pill">Google Maps</span>
+    <span class="tool-pill">Claude</span>
+    <span class="tool-pill">Lovable</span>
+    <span class="tool-pill">Higgsfield</span>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-title">Índice del sistema</div>
+
+    <a class="nav-item active" onclick="showSection(0)" href="#">
+      <span class="nav-num">↗</span>
+      <span class="nav-label">La idea central</span>
+    </a>
+    <a class="nav-item" onclick="showSection(1)" href="#">
+      <span class="nav-num">1</span>
+      <span class="nav-label">Por qué funciona</span>
+    </a>
+    <a class="nav-item" onclick="showSection(2)" href="#">
+      <span class="nav-num">2</span>
+      <span class="nav-label">Las 4 herramientas</span>
+    </a>
+    <a class="nav-item" onclick="showSection(3)" href="#">
+      <span class="nav-num">P1</span>
+      <span class="nav-label">Encuentra negocios</span>
+    </a>
+    <a class="nav-item" onclick="showSection(4)" href="#">
+      <span class="nav-num">P2</span>
+      <span class="nav-label">Claude escribe todo</span>
+    </a>
+    <a class="nav-item" onclick="showSection(5)" href="#">
+      <span class="nav-num">P3</span>
+      <span class="nav-label">Construye las demos</span>
+    </a>
+    <a class="nav-item" onclick="showSection(6)" href="#">
+      <span class="nav-num">P4</span>
+      <span class="nav-label">El vídeo de 10 seg.</span>
+    </a>
+    <a class="nav-item" onclick="showSection(7)" href="#">
+      <span class="nav-num">P5</span>
+      <span class="nav-label">Envíalo</span>
+    </a>
+    <a class="nav-item" onclick="showSection(8)" href="#">
+      <span class="nav-num">P6</span>
+      <span class="nav-label">Cierra en llamada</span>
+    </a>
+    <a class="nav-item" onclick="showSection(9)" href="#">
+      <span class="nav-num">📅</span>
+      <span class="nav-label">Fin de semana real</span>
+    </a>
+    <a class="nav-item" onclick="showSection(10)" href="#">
+      <span class="nav-num">€</span>
+      <span class="nav-label">Los números</span>
+    </a>
+    <a class="nav-item" onclick="showSection(11)" href="#">
+      <span class="nav-num">✗</span>
+      <span class="nav-label">5 errores que matan</span>
+    </a>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- SECTION 0: LA IDEA -->
+    <div class="section visible" id="s0">
+      <div class="section-badge">Intro <span>Slide 1–2</span></div>
+      <h2 class="section-title">La idea <span class="orange">central</span></h2>
+      <p class="section-intro">No es un carrusel de herramientas. Es un sistema para encontrar un problema visible, construir una solución y cobrar por resolverlo.</p>
+
+      <p>La promesa es simple: usando cuatro herramientas accesibles puedes generar una oportunidad comercial real en un solo fin de semana.</p>
+
+      <div class="flow">
+        <div class="flow-step"><strong>Busca</strong><span>Negocios con web mala</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>Construye</strong><span>Demo mejorada</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>Enseña</strong><span>Antes / Después</span></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step"><strong>Cobra</strong><span>3.000€ setup</span></div>
+      </div>
+
+      <div class="sticky-note">
+        <strong>Idea simple. Problema real. Dinero real.</strong><br>
+        Encuentras negocios locales con una web que parece de 2012. Les preparas una versión mejor. Se la enseñas. Responden. 15 minutos de llamada. 3.000€ de setup + 300€/mes.
+      </div>
+
+      <h3>Lo que hace diferente a este sistema</h3>
+      <p>La mayoría llega con un pitch: "¿quieres una web nueva?". El cliente tiene que <em>imaginar</em>. Cuando el cliente tiene que imaginar, normalmente dice que no.</p>
+      <p>Este sistema llega con una demo ya construida: su nombre, su ciudad, sus servicios, un antes y un después visible. <strong>No vendes una promesa. Enseñas una solución.</strong></p>
+
+      <div class="key-msg">
+        <div class="key-msg-label">El principio</div>
+        <p>"No gana quien conoce más herramientas. Gana quien las convierte en una oferta."</p>
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" disabled>← Anterior</button>
+        <button class="btn-nav primary" onclick="showSection(1)">Siguiente: Por qué funciona →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 1: POR QUÉ FUNCIONA -->
+    <div class="section" id="s1">
+      <div class="section-badge">Fundamento <span>Slide 3</span></div>
+      <h2 class="section-title">Por qué <span class="orange">funciona</span></h2>
+      <p class="section-intro">La forma vieja obliga al cliente a imaginar. La forma nueva le enseña la solución.</p>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h4>❌ Forma vieja</h4>
+          <p>"Hola, ¿quieres una web nueva?"<br><br>El cliente tiene que imaginar cómo quedaría. Y cuando tiene que imaginar... normalmente dice que no.</p>
+        </div>
+        <div class="tool-card">
+          <h4>✅ Forma nueva</h4>
+          <p>Llegas con su web ya mejorada. Su nombre, su ciudad, sus servicios, su problema. Le enseñas el antes y el después. No convences. Muestras.</p>
+        </div>
+      </div>
+
+      <h3>Por qué esto convierte mejor</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Eliminas la fricción de imaginación</h4>
+            <p>El cliente no necesita visualizar el resultado. Ya lo está viendo. Eso reduce el "no sé si esto me funcionaría" a cero.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Demuestras que has hecho deberes</h4>
+            <p>Has buscado su negocio, su ciudad, sus servicios. Eso no es un pitch masivo. Es atención específica. Y eso genera confianza.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>El antes/después hace el trabajo de venta</h4>
+            <p>Ver la diferencia entre su web actual y la demo nueva activa el deseo de forma natural. No hay que convencer con argumentos, la comparación visual convence sola.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Tú controlas la conversación</h4>
+            <p>No apareces pidiendo una oportunidad. Apareces ofreciendo algo concreto. Eso cambia completamente la dinámica de la negociación.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="key-msg">
+        <div class="key-msg-label">La clave</div>
+        <p>"No se trata de convencer. Se trata de mostrar."</p>
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(0)">← La idea central</button>
+        <button class="btn-nav primary" onclick="showSection(2)">Las 4 herramientas →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 2: LAS 4 HERRAMIENTAS -->
+    <div class="section" id="s2">
+      <div class="section-badge">Stack <span>Slide 4</span></div>
+      <h2 class="section-title">Las 4 <span class="orange">herramientas</span></h2>
+      <p class="section-intro">Cada herramienta tiene una función clara. No las uses por usarlas. Úsalas porque juntas forman un sistema completo.</p>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h4>Google Maps</h4>
+          <p>Encuentra negocios locales con buenas reseñas pero web antigua o mal diseñada. Es tu fuente de prospectos cualificados.</p>
+        </div>
+        <div class="tool-card">
+          <h4>Claude</h4>
+          <p>Diagnostica el negocio, escribe el brief de la demo, redacta el mensaje frío y organiza la tabla de trabajo. No es la magia. Es quien ordena.</p>
+        </div>
+        <div class="tool-card">
+          <h4>Lovable</h4>
+          <p>Construye la landing demo en minutos con prompt específico. Mobile first, diseño premium, orientada a captar solicitudes.</p>
+        </div>
+        <div class="tool-card">
+          <h4>Higgsfield</h4>
+          <p>Convierte capturas de la demo en un vídeo vertical de 10 segundos. Los vídeos consiguen respuestas. Las capturas se pierden.</p>
+        </div>
+      </div>
+
+      <div class="sticky-note">
+        <strong>Importante:</strong> Claude no es "la herramienta de IA que lo hace todo". Claude ayuda a organizar el diagnóstico y el mensaje. La magia no está en la IA. Está en <strong>la oferta que construyes con ella</strong>.
+      </div>
+
+      <h3>Cómo se conectan</h3>
+      <div class="flow" style="flex-direction: column; gap: 4px;">
+        <div class="flow-step" style="text-align: left; padding: 0.7rem 1rem;"><strong style="font-size:0.88rem;">Google Maps</strong> → lista de 35 negocios con nombre, web, ciudad y algo concreto que hayas visto</div>
+        <div class="flow-arrow" style="padding: 0; padding-left: 1rem; color: var(--orange);">↓</div>
+        <div class="flow-step" style="text-align: left; padding: 0.7rem 1rem;"><strong style="font-size:0.88rem;">Claude</strong> → diagnóstico, brief de demo, mensaje frío personalizado para cada uno</div>
+        <div class="flow-arrow" style="padding: 0; padding-left: 1rem;">↓</div>
+        <div class="flow-step" style="text-align: left; padding: 0.7rem 1rem;"><strong style="font-size:0.88rem;">Lovable</strong> → 6–10 landings demo, mobile first, con datos reales del negocio</div>
+        <div class="flow-arrow" style="padding: 0; padding-left: 1rem;">↓</div>
+        <div class="flow-step" style="text-align: left; padding: 0.7rem 1rem;"><strong style="font-size:0.88rem;">Higgsfield</strong> → vídeo vertical 4:5 de 10 segundos mostrando el antes/después</div>
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(1)">← Por qué funciona</button>
+        <button class="btn-nav primary" onclick="showSection(3)">Paso 1: Encuentra negocios →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 3: PASO 1 -->
+    <div class="section" id="s3">
+      <div class="section-badge">Paso 1 <span>Slide 5</span></div>
+      <h2 class="section-title">Encuentra los <span class="orange">negocios correctos</span></h2>
+      <p class="section-intro">No todos los negocios sirven. Busca donde una web mala pueda costar dinero. Eso es lo que hace que el pitch tenga sentido.</p>
+
+      <h3>Sectores con más potencial</h3>
+      <p>Negocios donde la web es su único escaparate y una mala primera impresión les cuesta clientes directamente:</p>
+
+      <div class="check-list">
+        <div class="check-item"><div class="check-icon">✓</div>Clínicas dentales y estéticas</div>
+        <div class="check-item"><div class="check-icon">✓</div>Abogados de extranjería</div>
+        <div class="check-item"><div class="check-icon">✓</div>Reformas integrales</div>
+        <div class="check-item"><div class="check-icon">✓</div>Empresas de climatización</div>
+        <div class="check-item"><div class="check-icon">✓</div>Academias privadas</div>
+        <div class="check-item"><div class="check-icon">✓</div>Fisioterapeutas y psicólogos</div>
+        <div class="check-item"><div class="check-icon">✓</div>Fotógrafos de boda</div>
+        <div class="check-item"><div class="check-icon">✓</div>Instaladores solares</div>
+        <div class="check-item"><div class="check-icon">✓</div>Empresas de piscinas y centros de depilación láser</div>
+      </div>
+
+      <h3>Señales que buscas en cada negocio</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">✓</div>
+          <div class="step-content">
+            <h4>Web antigua o mal adaptada a móvil</h4>
+            <p>Si la web parece de 2012 o se rompe en el móvil, hay un problema claro y visible. El cliente lo sabe. Solo necesita ver la solución.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">✓</div>
+          <div class="step-content">
+            <h4>Buenas reseñas en Google</h4>
+            <p>4+ estrellas con reseñas reales significa que el negocio funciona, hay clientes satisfechos, y hay margen para invertir en presencia digital.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">✓</div>
+          <div class="step-content">
+            <h4>Negocio real (no franquicia grande)</h4>
+            <p>Evita franquicias o cadenas con presupuestos propios. Busca negocios locales donde el dueño decide solo y rápido.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">✓</div>
+          <div class="step-content">
+            <h4>Pinta de tener margen</h4>
+            <p>Clínicas, abogados, reformas y servicios especializados suelen cobrar tickets altos. Eso significa que 2.000–3.000€ en web no es un gasto enorme para ellos.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Cómo buscar en Google Maps</h3>
+      <p>Búsquedas ejemplo: <strong>"clínica dental en Getafe"</strong>, <strong>"abogado extranjería Madrid"</strong>, <strong>"reformas integrales Sevilla"</strong>, <strong>"fisioterapia Málaga"</strong>.</p>
+      <p>Para cada negocio recoge: nombre, teléfono, web actual, ciudad y <em>algo concreto que hayas visto</em> (web rota, sin versión móvil, diseño anticuado, sin CTA claro).</p>
+
+      <div class="sticky-note">
+        <strong>Objetivo:</strong> recoge 35 leads. Con 35 bien elegidos y mensaje personalizado puedes esperar 4–6 respuestas. De ahí salen 1–3 ventas si ejecutas bien.
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(2)">← Las 4 herramientas</button>
+        <button class="btn-nav primary" onclick="showSection(4)">Paso 2: Claude escribe →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 4: PASO 2 -->
+    <div class="section" id="s4">
+      <div class="section-badge">Paso 2 <span>Slide 6</span></div>
+      <h2 class="section-title">Deja que <span class="orange">Claude escriba</span> todo</h2>
+      <p class="section-intro">Claude no reemplaza tu criterio. Ordena y escala el trabajo que tú harías a mano para 35 negocios.</p>
+
+      <p>Pega tu lista de negocios en Claude. Pídele 4 cosas por cada negocio:</p>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Diagnóstico</h4>
+            <p>Qué falla en su presencia online y qué dinero puede estar perdiendo por eso. Esto es lo que valida el problema ante el cliente.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Brief de la demo</h4>
+            <p>Qué debería comunicar la nueva web: qué secciones, qué copy, qué prueba social, qué CTA. Esto alimenta el prompt de Lovable.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Mensaje frío</h4>
+            <p>Corto, humano y específico. Con algo concreto que hayas visto en su negocio. Sin mencionar Claude, Lovable, Higgsfield ni IA.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Tabla de trabajo</h4>
+            <p>Todo ordenado en columnas: negocio / diagnóstico / brief demo / mensaje. Listo para ejecutar sin tener que pensar cada vez.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Prompt para pedirle a Claude</h3>
+      <div class="prompt-box">
+        <span class="prompt-label">Prompt modelo — Claude</span>
+        Tengo una lista de negocios locales. Para cada uno, dame:<br><br>
+        1. <strong>Diagnóstico</strong>: qué falla en su presencia online y qué dinero puede estar perdiendo.<br>
+        2. <strong>Brief de demo</strong>: qué debería comunicar la nueva web (secciones, copy clave, CTA, prueba social).<br>
+        3. <strong>Mensaje frío</strong>: corto, humano, específico. Sin mencionar IA. Que mencione algo concreto de su negocio.<br>
+        4. <strong>Tabla de trabajo</strong>: negocio / diagnóstico / brief / mensaje.<br><br>
+        Aquí la lista: [PEGA TU LISTA]
+      </div>
+
+      <div class="sticky-note">
+        <strong>Regla crítica:</strong> El dueño de la clínica no quiere IA. Quiere más solicitudes, más llamadas y más pacientes. Claude no es el negocio. Claude te ayuda a <strong>vender mejor</strong>.
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(3)">← Encuentra negocios</button>
+        <button class="btn-nav primary" onclick="showSection(5)">Paso 3: Demos →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 5: PASO 3 -->
+    <div class="section" id="s5">
+      <div class="section-badge">Paso 3 <span>Slide 7</span></div>
+      <h2 class="section-title">Construye las <span class="orange">demos</span></h2>
+      <p class="section-intro">No construyas 35 webs. Eso es una locura. Elige las 6–10 donde el antes/después sea más evidente y el negocio tenga más potencial.</p>
+
+      <h3>Cómo elegir qué demos construir</h3>
+      <p>Prioriza los negocios donde la diferencia visual sea mayor. Si su web actual es muy mala y el negocio tiene buenas reseñas, el impacto del antes/después será máximo.</p>
+      <p>Con 6–10 demos bien hechas tienes suficiente para ejecutar la prospección de la semana. Menos demos, más impacto.</p>
+
+      <h3>Prompt para Lovable</h3>
+      <div class="prompt-box">
+        <span class="prompt-label">Prompt modelo — Lovable</span>
+        Crea una landing page para [nombre del negocio], un [tipo de negocio] en [ciudad].<br><br>
+        <strong>Objetivo:</strong> conseguir más solicitudes de contacto.<br>
+        <strong>Estilo:</strong> limpio, premium, local, confiable.<br>
+        <strong>Secciones:</strong> hero, problema, servicios, prueba social, proceso, CTA y contacto.<br>
+        <strong>Mobile first.</strong> Copy claro. Nada genérico.<br><br>
+        Usa estos datos reales del negocio: [datos del brief de Claude]
+      </div>
+
+      <h3>Lo que NO debe tener una demo</h3>
+      <div class="x-item"><div class="x-icon">×</div><div>"Bienvenido a nuestra web" como titular</div></div>
+      <div class="x-item"><div class="x-icon">×</div><div>Fotos stock genéricas o de mala calidad</div></div>
+      <div class="x-item"><div class="x-icon">×</div><div>Textos que parecen escritos por agencia</div></div>
+      <div class="x-item"><div class="x-icon">×</div><div>Promesas vacías sin prueba social</div></div>
+      <div class="x-item"><div class="x-icon">×</div><div>Diseño de plantilla barata sin personalización</div></div>
+
+      <div class="sticky-note">
+        <strong>El objetivo de la demo:</strong> que cuando el dueño la vea, piense "esto sí parece mi negocio, pero como yo querría que fuera". No tiene que ser perfecta. Tiene que ser claramente mejor que lo que tienen ahora.
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(4)">← Claude escribe</button>
+        <button class="btn-nav primary" onclick="showSection(6)">Paso 4: Vídeo →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 6: PASO 4 -->
+    <div class="section" id="s6">
+      <div class="section-badge">Paso 4 <span>Slide 8</span></div>
+      <h2 class="section-title">El vídeo de <span class="orange">10 segundos</span></h2>
+      <p class="section-intro">La captura se ignora. El vídeo se mira. Un vídeo corto, vertical y bien hecho multiplica la probabilidad de que el cliente abra y entienda la propuesta.</p>
+
+      <h3>Por qué vídeo vertical</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Parece más personal</h4>
+            <p>Un vídeo vertical tiene el look de un mensaje de alguien que se ha tomado el tiempo de preparar algo específico para ti. No parece publicidad.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Se abre fácil en móvil</h4>
+            <p>El 80% de los mensajes se abren desde el móvil. Un vídeo vertical se ve sin rotar el teléfono. Sin fricción = más visualizaciones.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Se entiende rápido</h4>
+            <p>10 segundos bien aprovechados: zoom lento al hero de la demo, bajada por secciones, pausa en prueba social, final en botón de contacto.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Cómo crearlo con Higgsfield</h3>
+      <p>Haz 3–5 capturas de la demo en Lovable (hero, servicios, prueba social, contacto). Súbelas a Higgsfield y usa este prompt:</p>
+
+      <div class="prompt-box">
+        <span class="prompt-label">Prompt modelo — Higgsfield</span>
+        Crea un vídeo vertical 4:5 de 10 segundos mostrando esta web como una demo premium para un negocio local.<br><br>
+        Movimiento suave. Zoom lento al hero.<br>
+        Bajada a servicios. Paso por prueba social.<br>
+        Final en el botón de contacto.<br>
+        Estilo limpio, humano, profesional.<br>
+        Sin cortes agresivos. Sin efectos raros.
+      </div>
+
+      <div class="key-msg">
+        <div class="key-msg-label">La regla</div>
+        <p>"Los vídeos consiguen respuestas. Las capturas se pierden."</p>
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(5)">← Construye demos</button>
+        <button class="btn-nav primary" onclick="showSection(7)">Paso 5: Envíalo →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 7: PASO 5 -->
+    <div class="section" id="s7">
+      <div class="section-badge">Paso 5 <span>Slide 9</span></div>
+      <h2 class="section-title"><span class="orange">Envíalo</span></h2>
+      <p class="section-intro">La forma de enviar importa tanto como la demo. El mensaje tiene que sonar humano, específico y sin presión.</p>
+
+      <h3>Las 4 reglas del mensaje</h3>
+      <div class="x-item"><div class="x-icon">1</div><div><strong>No digas Claude.</strong> El cliente no compra herramientas.</div></div>
+      <div class="x-item"><div class="x-icon">2</div><div><strong>No digas Lovable.</strong> No aporta nada al mensaje.</div></div>
+      <div class="x-item"><div class="x-icon">3</div><div><strong>No digas Higgsfield.</strong> Innecesario.</div></div>
+      <div class="x-item"><div class="x-icon">4</div><div><strong>No digas IA.</strong> Los negocios están cansados de pitches raros.</div></div>
+
+      <h3>Mensaje ejemplo</h3>
+      <div class="message-box">
+        <span class="msg-label">Ejemplo de mensaje frío</span>
+        Hola [nombre], he visto vuestra ficha de Google y vuestra web.<br><br>
+        Tenéis buenas reseñas, pero la web no transmite el mismo nivel.<br><br>
+        He preparado una demo rápida de cómo podría verse una versión más clara y orientada a captar solicitudes.<br><br>
+        Vídeo ejemplo: [link]<br>
+        Demo completa: [link]<br><br>
+        Si te encaja lo que te gustaría tener, lo vemos 10 minutos.<br>
+        Si no, no pasa nada.
+      </div>
+
+      <div class="sticky-note" style="font-size: 1rem; font-weight: 600; text-align: center;">
+        Corto. Humano. Concreto.
+      </div>
+
+      <h3>Dónde enviarlo</h3>
+      <p>Email, WhatsApp, Instagram DM o LinkedIn. Elige el canal donde el negocio esté más activo. Lo puedes ver en su perfil de Google o redes.</p>
+
+      <h3>Follow-up</h3>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-time">Día 4</div>
+          <div class="tl-content"><p>Recordatorio breve. "Solo quería asegurarme de que te llegó." Nada más.</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">Día 10</div>
+          <div class="tl-content"><p>Último mensaje. Cierra el loop. "Entiendo que quizás no sea el momento. Si en algún momento te interesa verla, aquí estoy."</p></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">Después</div>
+          <div class="tl-content"><p>Paras. No perseguir. La relevancia, la confianza y el valor ya los dejaste en el mensaje. Lo demás es ruido.</p></div>
+        </div>
+      </div>
+
+      <div class="key-msg">
+        <div class="key-msg-label">El principio</div>
+        <p>"Relevancia. Confianza. Valor. Eso es lo que convierte."</p>
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(6)">← El vídeo</button>
+        <button class="btn-nav primary" onclick="showSection(8)">Paso 6: Cierra →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 8: PASO 6 -->
+    <div class="section" id="s8">
+      <div class="section-badge">Paso 6 <span>Slide 11</span></div>
+      <h2 class="section-title">Cierra en <span class="orange">llamada</span></h2>
+      <p class="section-intro">Si alguien responde con interés, no lo cierres por email. El cierre pasa en conversación. Siempre.</p>
+
+      <h3>Lo que NO haces</h3>
+      <div class="x-item"><div class="x-icon">×</div><div>No cierras por email</div></div>
+      <div class="x-item"><div class="x-icon">×</div><div>No mandas audios eternos</div></div>
+      <div class="x-item" style="margin-bottom:1.5rem;"><div class="x-icon">×</div><div>No dices "te mando presupuesto"</div></div>
+
+      <p>Si responde con interés: propón un Zoom de 10–15 minutos. Corto, concreto, sin presión.</p>
+
+      <h3>En la llamada haces esto</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Compartes pantalla</h4>
+            <p>Abres la demo en vivo. Que la vean en tiempo real, no en capturas. La experiencia de navegación importa.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Enseñas la demo</h4>
+            <p>Pasas por las secciones: hero, servicios, prueba social, contacto. No expliques demasiado. Deja que lo vean.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Preguntas: "¿Qué cambiarías?"</h4>
+            <p>Esta pregunta es la más poderosa de la llamada. El cliente empieza a imaginar cómo quedaría con sus datos reales. Eso activa el deseo de compra.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Tomas notas en directo</h4>
+            <p>Anota sus respuestas mientras habla. Eso demuestra que lo que dice importa y que la web final será suya, no una plantilla.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Le das precio ahí mismo</h4>
+            <p>No envíes presupuesto después. Lo das en la llamada: "Te la dejo implementada, adaptada y lista para captar solicitudes por 2.000€. Y si quieres mantenimiento y optimización mensual, 300€/mes."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="key-msg">
+        <div class="key-msg-label">La actitud</div>
+        <p>"Escucha más. Pitcha menos."</p>
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(7)">← Envíalo</button>
+        <button class="btn-nav primary" onclick="showSection(9)">Fin de semana real →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 9: FIN DE SEMANA REAL -->
+    <div class="section" id="s9">
+      <div class="section-badge">Ejecución <span>Slide 10</span></div>
+      <h2 class="section-title">Un fin de semana <span class="orange">real</span></h2>
+      <p class="section-intro">El método funciona si se ejecuta. Aquí está el plan concreto para hacerlo en un bloque de tiempo real.</p>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-time">Viernes — 2h</div>
+          <div class="tl-content">
+            <p>Buscas 35 negocios en Google Maps. Recoges nombre, web, ciudad y algo concreto que hayas visto. Pasas la lista por Claude y obtienes diagnósticos, briefs y mensajes.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">Sábado mañana — 3h</div>
+          <div class="tl-content">
+            <p>Construyes 6–8 demos en Lovable con los briefs de Claude. Haces 3–5 capturas de cada demo. Las subes a Higgsfield y generas los vídeos verticales de 10 segundos.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">Sábado tarde — 45 min</div>
+          <div class="tl-content">
+            <p>Envías los mensajes. A los top 8 (los más prometedores): demo + vídeo. Al resto: mensaje personalizado solamente.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">Domingo</div>
+          <div class="tl-content">
+            <p>Esperas. Revisas respuestas. Espera realista: 4–6 respuestas. De esas, 2–3 querrán llamada.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">Lunes–Martes</div>
+          <div class="tl-content">
+            <p>Haces las llamadas. Enseñas la demo. Escuchas. Das precio en directo. <strong style="color:var(--orange);">Cierras 1 cliente: 3.000€ setup + 300€/mes.</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky-note" style="font-size: 1.1rem; text-align: center; font-weight: 600;">
+        No necesitas complicarlo.<br>Necesitas ejecutarlo.
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(8)">← Cierra en llamada</button>
+        <button class="btn-nav primary" onclick="showSection(10)">Los números →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 10: NÚMEROS -->
+    <div class="section" id="s10">
+      <div class="section-badge">Economía del sistema <span>Slide 12</span></div>
+      <h2 class="section-title">Los <span class="orange">números</span></h2>
+      <p class="section-intro">El sistema tiene una lógica económica clara. Aquí están las conversiones reales que puedes esperar si ejecutas bien.</p>
+
+      <h3>De 35 mensajes a ingresos</h3>
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-num">35</span>
+          <span class="stat-label">mensajes enviados</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">12–18%</span>
+          <span class="stat-label">tasa de respuesta</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">4–6</span>
+          <span class="stat-label">respuestas esperadas</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">35–55%</span>
+          <span class="stat-label">cierre en llamadas</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">1–3</span>
+          <span class="stat-label">ventas cerradas</span>
+        </div>
+      </div>
+
+      <h3>Por cada venta</h3>
+      <div class="tools-grid">
+        <div class="price-box">
+          <span class="price">1.500€–3.000€</span>
+          <div class="price-label">Setup (pago único)</div>
+        </div>
+        <div class="price-box">
+          <span class="price">150€–500€</span>
+          <div class="price-label">Mantenimiento mensual</div>
+        </div>
+      </div>
+
+      <h3>Escenarios reales</h3>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>Un fin de semana bueno</h4>
+            <p>1 cliente cerrado = <strong style="color:var(--orange);">3.000€ en caja</strong> + 300€/mes recurrente.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">→</div>
+          <div class="step-content">
+            <h4>Dos fines de semana al mes</h4>
+            <p><strong style="color:var(--orange);">3.000€–6.000€ en setup</strong> + mensualidad recurrente que crece con cada cliente.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky-note">
+        <strong>Importante:</strong> estos números asumen ejecución correcta — demos personalizadas, mensaje específico, no masivo, y cierre en llamada. Un sistema mal ejecutado (mensajes genéricos, demos de plantilla) dará resultados muy por debajo.
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(9)">← Fin de semana real</button>
+        <button class="btn-nav primary" onclick="showSection(11)">5 errores que matan →</button>
+      </div>
+    </div>
+
+    <!-- SECTION 11: ERRORES -->
+    <div class="section" id="s11">
+      <div class="section-badge">Errores críticos <span>Slide 13</span></div>
+      <h2 class="section-title">5 cosas que <span class="orange">matan</span> esto</h2>
+      <p class="section-intro">El método falla si se ejecuta de forma genérica, apresurada o sin criterio. Estos son los errores más comunes.</p>
+
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Hacer demos genéricas</h4>
+            <p>Si la demo parece una plantilla con el nombre del negocio pegado encima, no responderán. La demo tiene que usar sus servicios reales, su ciudad, su problema específico. Si parece genérica, no responde.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Hablar de IA</h4>
+            <p>Decir "lo he construido con IA" mata la confianza si el cliente no lo ha pedido. El negocio local no quiere IA. Quiere más solicitudes. No menciones las herramientas.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Mandar el mismo mensaje a todos</h4>
+            <p>Se nota. Un mensaje masivo se detecta en dos segundos. Cada mensaje tiene que mencionar algo concreto del negocio que demuestre que fuiste a su web y pensaste en ellos.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Enviar vídeo horizontal</h4>
+            <p>Parece un anuncio viejo. El vídeo vertical parece personal y se ve bien en móvil. El horizontal parece publicidad corporativa. No funciona igual.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Intentar cerrar por email</h4>
+            <p>Si mandas el precio por email, el cliente lo rechaza sin escucharte. Te metes solo en una negociación mala. El cierre pasa en llamada, siempre.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="key-msg">
+        <div class="key-msg-label">El principio final</div>
+        <p>"Relevancia. Confianza. Valor. Todo lo demás es ruido."</p>
+      </div>
+
+      <div class="sticky-note">
+        ¿Quieres el sistema completo con recursos descargables, prompts probados y acceso a la comunidad?<br><br>
+        <strong>Comenta GUIA en el post</strong> y te lo mando por DM. O sígueme en <strong>@jmmorales.ia</strong>.
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-nav" onclick="showSection(10)">← Los números</button>
+        <button class="btn-nav" onclick="showSection(0)">↑ Volver al inicio</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="footer">
+  Sistema de demos con IA — <span>@jmmorales.ia</span> — Guía interactiva completa
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.section');
+  const navItems = document.querySelectorAll('.nav-item');
+  let current = 0;
+
+  function showSection(idx) {
+    sections[current].classList.remove('visible');
+    navItems[current].classList.remove('active');
+    current = idx;
+    sections[current].classList.add('visible');
+    navItems[current].classList.add('active');
+    window.scrollTo({ top: document.querySelector('.layout').offsetTop - 20, behavior: 'smooth' });
+  }
+
+  navItems.forEach((item, i) => {
+    item.addEventListener('click', (e) => { e.preventDefault(); showSection(i); });
+  });
+</script>
+</body>
+</html>
