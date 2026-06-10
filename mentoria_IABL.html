@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentoría IA Business Lab — Edición Fundador</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0A0A0A;
+    --surface: #111111;
+    --surface2: #1A1A1A;
+    --border: #242424;
+    --accent: #C8F135;
+    --accent-dim: rgba(200,241,53,0.12);
+    --text: #F0F0F0;
+    --text-muted: #888;
+    --text-dim: #555;
+    --max: 680px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* NAV */
+  nav {
+    padding: 20px 24px;
+    max-width: var(--max);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .logo span { color: var(--accent); }
+
+  .nav-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid rgba(200,241,53,0.25);
+    padding: 5px 12px;
+    border-radius: 100px;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 72px 24px 64px;
+    max-width: var(--max);
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 7vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 28px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    max-width: 560px;
+  }
+
+  .hero-sub strong { color: var(--text); font-weight: 600; }
+
+  .cta-primary {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--black);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 16px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .cta-primary:hover { opacity: 0.88; }
+
+  .cta-note {
+    display: block;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.03em;
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 64px 24px;
+    max-width: var(--max);
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+  }
+
+  .section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 5vw, 34px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 20px;
+  }
+
+  .section-intro {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  /* PROMESA */
+  .promesa-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 28px 32px;
+    border-radius: 4px;
+    margin-bottom: 40px;
+  }
+
+  .promesa-box p {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .promesa-box strong { color: var(--accent); }
+
+  /* PHASES */
+  .phases {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 0;
+  }
+
+  .phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 0 20px;
+    align-items: start;
+  }
+
+  .phase-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1;
+    color: var(--text-dim);
+    padding-top: 2px;
+  }
+
+  .phase-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .phase h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .phase p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* CHECKLIST */
+  .checklist {
+    list-style: none;
+    display: grid;
+    gap: 0;
+  }
+
+  .checklist li {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(200,241,53,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .check-icon::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .check-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .check-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    display: block;
+  }
+
+  /* BONOS */
+  .bonos {
+    display: grid;
+    gap: 12px;
+  }
+
+  .bono {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .bono-icon {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  .bono-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .bono-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    display: block;
+  }
+
+  /* PARA QUIÉN */
+  .para-quien {
+    display: grid;
+    gap: 0;
+  }
+
+  .pq-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+
+  .pq-item:last-child { border-bottom: none; }
+
+  .pq-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .pq-item p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .pq-item p strong { color: var(--text); font-weight: 600; }
+
+  /* NO PARA QUIÉN */
+  .no-pq-dot {
+    width: 6px;
+    height: 6px;
+    background: #444;
+    border-radius: 50%;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  /* PRECIO */
+  .precio-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .precio-header {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .precio-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .precio-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--accent);
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+
+  .precio-body {
+    padding: 28px;
+  }
+
+  .precio-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .precio-amount span {
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  .precio-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .precio-note strong { color: var(--text); }
+
+  .precio-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 24px 0;
+  }
+
+  .precio-ventaja {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .precio-ventaja strong { color: var(--accent); }
+
+  .cta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cta-full {
+    display: block;
+    background: var(--accent);
+    color: var(--black);
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 17px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    text-align: center;
+    transition: opacity 0.15s;
+  }
+
+  .cta-full:hover { opacity: 0.88; }
+
+  .cta-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* SOBRE JOSE */
+  .sobre {
+    display: grid;
+    gap: 20px;
+  }
+
+  .sobre p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  .sobre p strong { color: var(--text); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    max-width: var(--max);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-logo {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  footer p {
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* MOBILE */
+  @media (max-width: 480px) {
+    .hero { padding: 48px 20px 48px; }
+    .section { padding: 48px 20px; }
+    .phase { grid-template-columns: 1fr; gap: 8px; }
+    .phase-num { font-size: 22px; }
+    .precio-amount { font-size: 44px; }
+    nav { padding: 16px 20px; }
+    footer { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">IA Business Lab</div>
+  <div class="nav-badge">5 plazas · Fundador</div>
+</nav>
+
+<hr class="divider">
+
+<section class="hero">
+  <div class="eyebrow">Mentoría — Edición Fundador</div>
+  <h1>De saber IA<br>a <em>vender IA.</em></h1>
+  <p class="hero-sub">
+    Tienes el conocimiento. El problema no es técnico.<br>
+    <strong>Es que no sabes convertirlo en una oferta que alguien quiera pagar.</strong>
+    Eso es exactamente lo que resolvemos en 6 meses.
+  </p>
+  <a href="https://sistema.brainaiagency.com/widget/bookings/jmmorales" class="cta-primary">Solicitar plaza fundador</a>
+  <span class="cta-note">Máximo 5 plazas. Sin llamada de ventas — vas directo a diagnóstico.</span>
+</section>
+
+<hr class="divider">
+
+<!-- PROMESA -->
+<section class="section">
+  <div class="section-label">La promesa</div>
+  <div class="promesa-box">
+    <p>En <strong>90 días</strong> tienes tu oferta de IA definida y tu sistema de captación montado y funcionando. Los siguientes 3 meses los dedicamos a <strong>cerrar tus primeros clientes y escalar.</strong></p>
+  </div>
+
+  <div class="phases">
+    <div class="phase">
+      <div class="phase-num">01</div>
+      <div>
+        <div class="phase-label">Meses 1–2</div>
+        <h3>Oferta y sistema</h3>
+        <p>Oferta definida, avatar cerrado, mensaje comercial y sistema de captación montado y funcionando. Puedes cerrar primeros clientes con servicios simples desde el primer mes.</p>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">02</div>
+      <div>
+        <div class="phase-label">Mes 3</div>
+        <h3>Primeros clientes</h3>
+        <p>Sistema en producción. Primeras conversaciones reales. Primeros cierres con acompañamiento directo.</p>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">03</div>
+      <div>
+        <div class="phase-label">Meses 4–6</div>
+        <h3>Optimización y escala</h3>
+        <p>Correcciones con feedback del mercado real. Nuevos modelos de negocio. Escala del sistema.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ACOMPAÑAMIENTO -->
+<section class="section">
+  <div class="section-label">El acompañamiento</div>
+  <h2>No estás solo en ningún momento.</h2>
+  <p class="section-intro">6 meses de trabajo directo conmigo. Por hitos reales, no por calendario muerto.</p>
+
+  <ul class="checklist">
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Sesión de diagnóstico 1:1 — Día 1</span>
+        <span class="check-desc">Tu punto de partida, tu plan y tu oferta inicial definidos antes de acabar la primera semana.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Sesión semanal 1:1 durante 6 meses</span>
+        <span class="check-desc">Avanzamos cuando tú avanzas. No pagas tiempo muerto.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Revisión directa de cada producto antes de lanzarlo</span>
+        <span class="check-desc">Tu oferta, tu mensaje, tu sistema — revisados conmigo antes de que lleguen al primer lead.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Soporte entre sesiones para desbloquear</span>
+        <span class="check-desc">No te quedas atascado una semana esperando la siguiente llamada.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Acompañamiento en los primeros cierres reales</span>
+        <span class="check-desc">Cuando llegue el momento de cerrar, no estás solo.</span>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<!-- LO QUE CONSTRUYES -->
+<section class="section">
+  <div class="section-label">Lo que construyes</div>
+  <h2>El sistema que vas a usar para conseguir clientes.</h2>
+  <p class="section-intro">No teoría. No plantillas genéricas. El sistema concreto, montado por ti, revisado conmigo.</p>
+
+  <ul class="checklist">
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Oferta de IA definida y empaquetada</span>
+        <span class="check-desc">Lista para vender. Que se explica en una frase. Que alguien quiera pagar.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Nicho, avatar y mensaje comercial cerrado</span>
+        <span class="check-desc">Sin cambiar de enfoque cada dos semanas. Con criterio y dirección clara.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Agente de WhatsApp para cualificar leads</span>
+        <span class="check-desc">Que trabaja mientras tú no estás.</span>
+      </div>
+    </li>
+    <li>
+      <div class="check-icon"></div>
+      <div>
+        <span class="check-title">Argumentario para primeras conversaciones comerciales</span>
+        <span class="check-desc">Para cerrar con criterio, no con suerte.</span>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<hr class="divider">
+
+<!-- PILARES -->
+<section class="section">
+  <div class="section-label">Qué trabajamos</div>
+  <h2>Cuatro pilares. En ese orden.</h2>
+  <p class="section-intro">No hay sistema de captación sin mentalidad de fundador. No hay ventas sin marketing. No hay IA útil sin oferta clara.</p>
+
+  <div class="phases">
+    <div class="phase">
+      <div class="phase-num">01</div>
+      <div>
+        <div class="phase-label">Mentalidad</div>
+        <h3>La base que lo sostiene todo</h3>
+        <p>Foco, disciplina y criterio para ejecutar sin excusas. Sin esto, las herramientas no sirven de nada.</p>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">02</div>
+      <div>
+        <div class="phase-label">Marketing</div>
+        <h3>Que te encuentren los que tienen que encontrarte</h3>
+        <p>Posicionamiento, mensaje, contenido y sistema de captación que atrae leads cualificados.</p>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">03</div>
+      <div>
+        <div class="phase-label">Ventas</div>
+        <h3>Convertir conversaciones en clientes</h3>
+        <p>Proceso de venta claro, argumentario real y acompañamiento en los primeros cierres.</p>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">04</div>
+      <div>
+        <div class="phase-label">IA</div>
+        <h3>La herramienta que multiplica todo lo anterior</h3>
+        <p>Sistemas, agentes y automatizaciones que tienen sentido comercial. La técnica siempre al servicio de la oferta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- BONOS -->
+<section class="section">
+  <div class="section-label">Bonos exclusivos fundador</div>
+  <h2>Solo para esta edición.</h2>
+  <p class="section-intro">Cuando el programa pase a formato grupal, estos bonos desaparecen o cambian de precio.</p>
+
+  <div class="bonos">
+    <div class="bono">
+      <div class="bono-icon">⚙️</div>
+      <div>
+        <span class="bono-title">3 meses de GHL incluidos</span>
+        <span class="bono-desc">Para que arranques sin fricción técnica ni coste extra desde el día 1. CRM, automatizaciones y seguimiento de leads desde el primer día.</span>
+      </div>
+    </div>
+    <div class="bono">
+      <div class="bono-icon">🔒</div>
+      <div>
+        <span class="bono-title">Sala Founders — sesiones privadas mensuales</span>
+        <span class="bono-desc">Cada mes te enseño un modelo de negocio con IA que puedes vender. Casos reales, con números, con sistema. Esto no sale en YouTube ni en el programa grupal.</span>
+      </div>
+    </div>
+    <div class="bono">
+      <div class="bono-icon">📹</div>
+      <div>
+        <span class="bono-title">Grabaciones de todas las sesiones</span>
+        <span class="bono-desc">Acceso permanente para repasar cuando lo necesites.</span>
+      </div>
+    </div>
+    <div class="bono">
+      <div class="bono-icon">💬</div>
+      <div>
+        <span class="bono-title">Sala Builders VIP — comunidad privada exclusiva</span>
+        <span class="bono-desc">Solo para los de la mentoría. Sin ruido, sin principiantes perdidos. Networking real con gente que está construyendo en serio.</span>
+      </div>
+    </div>
+    <div class="bono">
+      <div class="bono-icon">📦</div>
+      <div>
+        <span class="bono-title">Plantillas, prompts y recursos en producción real</span>
+        <span class="bono-desc">Lo que uso yo. No lo que enseño en teoría.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PARA QUIÉN -->
+<section class="section">
+  <div class="section-label">Para quién es esto</div>
+  <h2>Solo gente con hambre real.</h2>
+  <p class="section-intro">No busco volumen. Busco 5 personas que estén dispuestas a ejecutar.</p>
+
+  <div class="para-quien" style="margin-bottom: 40px;">
+    <div class="pq-item">
+      <div class="pq-dot"></div>
+      <p><strong>Tienes conocimiento o capacidad con IA</strong> — aunque sea básica — y no sabes cómo convertirlo en algo que alguien pague.</p>
+    </div>
+    <div class="pq-item">
+      <div class="pq-dot"></div>
+      <p><strong>Tienes agencia, negocio de servicios o eres freelance</strong> y sabes que la IA debería estar generándote ingresos, pero no está pasando.</p>
+    </div>
+    <div class="pq-item">
+      <div class="pq-dot"></div>
+      <p><strong>Estás dispuesto a ejecutar.</strong> No solo a consumir. No solo a aprender. A salir al mercado y cerrar.</p>
+    </div>
+    <div class="pq-item">
+      <div class="pq-dot"></div>
+      <p><strong>Tienes el compromiso de hacer un x10</strong> de lo que estás haciendo ahora para conseguir clientes.</p>
+    </div>
+  </div>
+
+  <div class="section-label">Esto NO es para ti si</div>
+  <div class="para-quien">
+    <div class="pq-item">
+      <div class="no-pq-dot"></div>
+      <p>Buscas dinero rápido sin esfuerzo real.</p>
+    </div>
+    <div class="pq-item">
+      <div class="no-pq-dot"></div>
+      <p>Quieres que alguien lo construya todo por ti.</p>
+    </div>
+    <div class="pq-item">
+      <div class="no-pq-dot"></div>
+      <p>No tienes tiempo ni disposición para ejecutar entre sesiones.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PRECIO -->
+<section class="section">
+  <div class="section-label">Precio y condiciones</div>
+  <h2>Una primera edición. No un descuento.</h2>
+  <p class="section-intro" style="margin-bottom: 32px;">El precio fundador no es un descuento. Es lo que vale la primera edición donde el trabajo es cercano y los módulos se desarrollan contigo.</p>
+
+  <div class="precio-card">
+    <div class="precio-header">
+      <div class="precio-label">Edición Fundador</div>
+      <div class="precio-badge">5 plazas máximo</div>
+    </div>
+    <div class="precio-body">
+      <div class="precio-amount">997<span>€</span></div>
+      <p class="precio-note">Pago único · 6 meses completos de acompañamiento · Todos los bonos incluidos</p>
+      <hr class="precio-divider">
+      <p class="precio-ventaja">Cuando el programa pase a formato grupal, el precio sube a <strong>1.497€</strong>. Los fundadores mantienen el acompañamiento 1:1 sin coste adicional. <strong>Eso no tiene precio equivalente posterior.</strong></p>
+      <div class="cta-block">
+        <a href="https://sistema.brainaiagency.com/widget/bookings/jmmorales" class="cta-full">Solicitar plaza fundador</a>
+        <p class="cta-sub">Agenda una llamada de diagnóstico. Si encajas, empezamos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SOBRE JOSE -->
+<section class="section">
+  <div class="section-label">Quién está detrás</div>
+  <h2>Jose Manuel Morales</h2>
+  <p class="section-intro">Fundador de IA Business Lab.</p>
+
+  <div class="sobre">
+    <p>Construyo e implemento soluciones de IA para empresas y ayudo a profesionales del sector a convertir ese mismo conocimiento en una oferta clara y vendible.</p>
+    <p><strong>Lo que me diferencia no es saber más IA.</strong> Es saber convertirla en negocio. He visto demasiada gente con herramientas montadas y cero clientes. El problema nunca fue técnico.</p>
+    <p>Esta mentoría es la versión directa de lo que aplico: oferta primero, sistema después, clientes como resultado.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<footer>
+  <div class="footer-logo">IA Business Lab</div>
+  <p>© 2026 Jose Manuel Morales · IA Business Lab</p>
+</footer>
+
+</body>
+</html>
