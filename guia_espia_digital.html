@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Modelo del Espía Digital — BrainAI Agency</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #060608;
+    --surface: #0D0D12;
+    --card: #12121A;
+    --border: #1C1C28;
+    --accent: #00E5FF;
+    --accent-glow: rgba(0,229,255,0.08);
+    --accent-border: rgba(0,229,255,0.2);
+    --orange: #FF5C00;
+    --orange-glow: rgba(255,92,0,0.08);
+    --green: #00FF88;
+    --green-glow: rgba(0,255,136,0.08);
+    --text: #E8E8F0;
+    --muted: #6B6B80;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* SCANLINE EFFECT */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* HEADER */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6,6,8,0.92);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-border);
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+
+  .header-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+  }
+
+  .dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .dot.done { background: var(--green); }
+
+  /* PROGRESS */
+  .progress-bar {
+    height: 1px;
+    background: var(--border);
+    position: sticky;
+    top: 53px;
+    z-index: 99;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  /* HERO */
+  .hero {
+    padding: 100px 32px 80px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '//';
+    color: var(--muted);
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 700;
+    line-height: 1.0;
+    color: white;
+    margin-bottom: 8px;
+    letter-spacing: -2px;
+  }
+
+  .hero h1 .spy {
+    color: var(--accent);
+    text-shadow: 0 0 40px rgba(0,229,255,0.4);
+  }
+
+  .hero h1 .digital {
+    color: var(--orange);
+    text-shadow: 0 0 40px rgba(255,92,0,0.3);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin: 28px 0 48px;
+  }
+
+  .hero-metrics {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 560px;
+    background: var(--surface);
+  }
+
+  .metric {
+    flex: 1;
+    padding: 20px 24px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .metric:last-child { border-right: none; }
+
+  .metric-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .metric-val.cyan { color: var(--accent); }
+  .metric-val.orange { color: var(--orange); }
+  .metric-val.green { color: var(--green); }
+
+  .metric-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  /* TABS */
+  .tabs {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 54px;
+    z-index: 98;
+  }
+
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    padding: 13px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab.done { color: var(--green); }
+
+  .tab-num {
+    font-size: 9px;
+    opacity: 0.5;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 32px 100px;
+  }
+
+  /* PANELS */
+  .panel { display: none; animation: fadeIn 0.3s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEAD */
+  .section-head { margin-bottom: 40px; }
+
+  .section-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-eyebrow::before { content: '>_'; color: var(--muted); }
+
+  .section-head h2 {
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: 700;
+    color: white;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+
+  .section-head p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card:hover { border-color: #252535; }
+  .card:hover::before { opacity: 0.5; }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .card-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-border);
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 3px;
+  }
+
+  .card-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* GRID */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  @media (max-width: 580px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  @media (max-width: 680px) { .grid-3 { grid-template-columns: 1fr; } }
+
+  /* NICHE CARDS */
+  .niche-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .niche-card:hover {
+    border-color: var(--accent-border);
+    transform: translateY(-2px);
+  }
+
+  .niche-card.selected {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.04);
+  }
+
+  .niche-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .niche-emoji { font-size: 28px; margin-bottom: 12px; }
+
+  .niche-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .niche-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .niche-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  /* PROCESS FLOW */
+  .flow { margin: 24px 0; }
+
+  .flow-item {
+    display: flex;
+    gap: 20px;
+    padding: 18px 0;
+    position: relative;
+  }
+
+  .flow-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 56px;
+    bottom: -18px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent-border), transparent);
+  }
+
+  .flow-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    flex-shrink: 0;
+    z-index: 1;
+    transition: all 0.2s;
+  }
+
+  .flow-item:hover .flow-dot {
+    border-color: var(--accent-border);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  .flow-body { flex: 1; padding-top: 8px; }
+
+  .flow-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .flow-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* PRICE TABLE */
+  .price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+
+  .price-row:hover { border-color: var(--accent-border); }
+
+  .price-row-label {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .price-row-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .price-row-amount {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  /* ALERTS */
+  .alert {
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .alert-cyan {
+    background: var(--accent-glow);
+    border: 1px solid var(--accent-border);
+    color: rgba(0,229,255,0.8);
+  }
+
+  .alert-orange {
+    background: var(--orange-glow);
+    border: 1px solid rgba(255,92,0,0.2);
+    color: rgba(255,150,80,0.9);
+  }
+
+  .alert-green {
+    background: var(--green-glow);
+    border: 1px solid rgba(0,255,136,0.2);
+    color: rgba(0,255,136,0.8);
+  }
+
+  /* CODE / MESSAGE BLOCK */
+  .code-block {
+    background: #08080C;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 14px 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    position: relative;
+    color: #C8C8E0;
+  }
+
+  .code-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--border);
+    border: none;
+    color: var(--muted);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: var(--accent); color: var(--bg); }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 18px;
+  }
+
+  .divider-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; margin: 16px 0; }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li.done { color: var(--muted); text-decoration: line-through; }
+
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 10px;
+    transition: all 0.2s;
+    margin-top: 1px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .checklist li.done .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--bg);
+  }
+
+  /* TAG */
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin: 3px;
+  }
+
+  .tag-cyan { background: var(--accent-glow); border: 1px solid var(--accent-border); color: var(--accent); }
+  .tag-orange { background: var(--orange-glow); border: 1px solid rgba(255,92,0,0.2); color: var(--orange); }
+  .tag-green { background: var(--green-glow); border: 1px solid rgba(0,255,136,0.2); color: var(--green); }
+
+  /* NAV BUTTONS */
+  .nav-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 52px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    padding: 11px 26px;
+    border-radius: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,229,255,0.2); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { color: var(--text); border-color: #333; }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+  .step-counter {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* UPSELL TABLE */
+  .upsell-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .upsell-item:last-child { border-bottom: none; }
+
+  .upsell-arrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .upsell-name {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .upsell-price {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--green);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">IA Business Lab</div>
+  <div class="header-title">El Modelo del Espía Digital</div>
+  <div class="header-right" id="dots"></div>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-eyebrow">Negocio listo para vender hoy</div>
+  <h1>El modelo del<br><span class="spy">espía</span> <span class="digital">digital</span></h1>
+  <p class="hero-sub">Analiza lo que ya funciona en la competencia de un negocio y véndele un informe accionable en menos de 24 horas. Sin cara. Sin agencia. Sin código.</p>
+  <div class="hero-metrics">
+    <div class="metric">
+      <div class="metric-val cyan">24h</div>
+      <div class="metric-label">tiempo de entrega</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val orange">49€</div>
+      <div class="metric-label">precio de entrada</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val green">0</div>
+      <div class="metric-label">skills técnicos</div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs" id="tabsNav">
+  <div class="tab active" onclick="go(0)" id="tab-0"><span class="tab-num">01</span> La idea</div>
+  <div class="tab" onclick="go(1)" id="tab-1"><span class="tab-num">02</span> Elige nicho</div>
+  <div class="tab" onclick="go(2)" id="tab-2"><span class="tab-num">03</span> El proceso</div>
+  <div class="tab" onclick="go(3)" id="tab-3"><span class="tab-num">04</span> El informe</div>
+  <div class="tab" onclick="go(4)" id="tab-4"><span class="tab-num">05</span> Precios</div>
+  <div class="tab" onclick="go(5)" id="tab-5"><span class="tab-num">06</span> Cómo venderlo</div>
+  <div class="tab" onclick="go(6)" id="tab-6"><span class="tab-num">07</span> Arranque</div>
+</div>
+
+<div class="main">
+
+  <!-- PANEL 1: LA IDEA -->
+  <div class="panel active" id="panel-0">
+    <div class="section-head">
+      <div class="section-eyebrow">La idea</div>
+      <h2>Lo que casi ningún negocio hace<br>y tú puedes venderles mañana</h2>
+      <p>La mayoría de negocios no sabe qué está haciendo su competencia. No miran sus anuncios, reseñas, ofertas, Instagram ni su web. Tú sí. Y eso tiene un precio.</p>
+    </div>
+
+    <div class="alert alert-cyan">
+      <div class="alert-icon">💡</div>
+      <div><strong>La propuesta:</strong> "Te preparo un informe express donde analizo 5 competidores y te doy 10 oportunidades concretas para captar más clientes." Cualquier negocio entiende esto. No suena a humo. Suena útil.</div>
+    </div>
+
+    <div class="divider"><div class="divider-label">Por qué funciona</div><div class="divider-line"></div></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🎯</div>
+          <div>
+            <div class="card-title">Valor inmediatamente claro</div>
+            <div class="card-sub">El cliente lo entiende al instante</div>
+          </div>
+        </div>
+        <p>No tienes que explicar qué es la IA ni cómo funciona. Solo dices qué están haciendo sus competidores para captarle clientes. Eso cualquiera lo entiende.</p>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">👻</div>
+          <div>
+            <div class="card-title">100% faceless</div>
+            <div class="card-sub">Sin cara, sin marca personal</div>
+          </div>
+        </div>
+        <p>Todo se puede hacer por email, WhatsApp, LinkedIn o DM. El entregable es un PDF o documento. No necesitas aparecer en ningún lado.</p>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🤖</div>
+          <div>
+            <div class="card-title">La IA hace el trabajo duro</div>
+            <div class="card-sub">Tú supervisas y entregas</div>
+          </div>
+        </div>
+        <p>Analiza competidores, resume anuncios, detecta patrones, crea ideas de mejora, redacta propuestas. La IA hace el análisis. Tú lo supervisas y lo entregas.</p>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📈</div>
+          <div>
+            <div class="card-title">Escala sola</div>
+            <div class="card-sub">De 49€ a 1.500€+ por cliente</div>
+          </div>
+        </div>
+        <p>Primero vendes el informe. Luego puedes ofrecer implementar las mejoras: anuncios, automatizaciones, webs, sistemas de seguimiento. El upsell es natural.</p>
+      </div>
+    </div>
+
+    <div class="divider"><div class="divider-label">Lo que NO necesitas</div><div class="divider-line"></div></div>
+
+    <div class="card">
+      <p>
+        <span class="tag tag-orange">✗ Programar</span>
+        <span class="tag tag-orange">✗ Montar software</span>
+        <span class="tag tag-orange">✗ Marca personal</span>
+        <span class="tag tag-orange">✗ Enseñar la cara</span>
+        <span class="tag tag-orange">✗ Promesas raras</span>
+        <span class="tag tag-orange">✗ Equipo</span>
+      </p>
+      <br>
+      <p style="font-size:13px;color:var(--muted)">Solo necesitas entregar un informe útil. La herramienta es la IA. El producto es la claridad que le das al negocio.</p>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-ghost" disabled>← Anterior</button>
+      <div class="step-counter">01 / 07</div>
+      <button class="btn btn-primary" onclick="go(1)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: ELIGE NICHO -->
+  <div class="panel" id="panel-1">
+    <div class="section-head">
+      <div class="section-eyebrow">Elige nicho</div>
+      <h2>Tres nichos para empezar<br>a vender esta semana</h2>
+      <p>No lo abras a todo el mundo. Elige uno y domínalo. Cuanto más específico, más fácil es encontrar clientes y más relevante es tu informe.</p>
+    </div>
+
+    <div class="grid-3" id="nicheGrid">
+      <div class="niche-card" onclick="selectNiche(this)">
+        <div class="niche-emoji">🛒</div>
+        <div class="niche-name">Ecommerce</div>
+        <div class="niche-desc">Anuncios activos, hooks, creativos, landings, bundles, ofertas. Para quien entiende tiendas online.</div>
+        <div class="niche-price">49€ — 197€</div>
+      </div>
+      <div class="niche-card" onclick="selectNiche(this)">
+        <div class="niche-emoji">🏥</div>
+        <div class="niche-name">Clínicas</div>
+        <div class="niche-desc">Estéticas, dentales, fisioterapia. Qué publican, qué tratamientos promueven, cómo captan citas.</div>
+        <div class="niche-price">49€ — 150€</div>
+      </div>
+      <div class="niche-card" onclick="selectNiche(this)">
+        <div class="niche-emoji">🍕</div>
+        <div class="niche-name">Negocios locales</div>
+        <div class="niche-desc">Restaurantes, gimnasios, peluquerías. Google Maps, reseñas, Instagram, ofertas. El más fácil para empezar.</div>
+        <div class="niche-price">39€ — 99€</div>
+      </div>
+    </div>
+
+    <div class="alert alert-cyan" id="nicheAlert" style="display:none">
+      <div class="alert-icon">✓</div>
+      <div id="nicheAlertText">Nicho seleccionado. Ahora ve al siguiente paso para ver el proceso exacto.</div>
+    </div>
+
+    <div class="divider"><div class="divider-label">Qué analiza el informe según nicho</div><div class="divider-line"></div></div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">🛒 Ecommerce</div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted)">
+          Anuncios activos en Meta<br>
+          Hooks y creativos<br>
+          Ofertas y bundles<br>
+          Landing pages<br>
+          Claims principales<br>
+          10 ideas de anuncios
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">🏥 Clínicas</div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted)">
+          Contenido en Instagram<br>
+          Tratamientos que promueven<br>
+          Reseñas Google<br>
+          Cómo captan citas<br>
+          Errores en web/Instagram<br>
+          10 ideas para captar más pacientes
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">🍕 Local</div>
+        <p style="font-size:12px;line-height:1.8;color:var(--muted)">
+          Google Maps y reseñas<br>
+          Fotos y carta/oferta<br>
+          Promociones activas<br>
+          Presencia en Instagram<br>
+          Oportunidades de mejora<br>
+          10 acciones recomendadas
+        </p>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-ghost" onclick="go(0)">← Anterior</button>
+      <div class="step-counter">02 / 07</div>
+      <button class="btn btn-primary" onclick="go(2)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: EL PROCESO -->
+  <div class="panel" id="panel-2">
+    <div class="section-head">
+      <div class="section-eyebrow">El proceso</div>
+      <h2>De cero a informe entregado<br>en menos de 24 horas</h2>
+      <p>Seis pasos. Ninguno requiere habilidades técnicas. La IA hace el análisis pesado. Tú supervisas, corriges y entregas.</p>
+    </div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot">01</div>
+        <div class="flow-body">
+          <div class="flow-title">Elige el nicho y busca 20 negocios</div>
+          <div class="flow-desc">Busca en Google Maps, Instagram o LinkedIn negocios del nicho que hayas elegido. No contactes a todos. Solo identifica 20 candidatos y prioriza los que tienen presencia en redes pero sin estrategia clara.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">02</div>
+        <div class="flow-body">
+          <div class="flow-title">Analiza 5 competidores del nicho</div>
+          <div class="flow-desc">Para cada cliente potencial, analiza 5 competidores directos. Mira su Instagram, Google Maps, web y anuncios si los tienen. Toma capturas. Esto es la materia prima del informe.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">03</div>
+        <div class="flow-body">
+          <div class="flow-title">Usa IA para detectar patrones y oportunidades</div>
+          <div class="flow-desc">Pásale a Claude o ChatGPT toda la información recopilada. Pídele que detecte patrones, qué están haciendo bien los competidores, qué errores cometen y qué oportunidades hay para el negocio cliente.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">04</div>
+        <div class="flow-body">
+          <div class="flow-title">Genera el informe</div>
+          <div class="flow-desc">Con el análisis de la IA, monta el informe. 6 páginas máximo. Diagnóstico, hallazgos, oportunidades y 10 acciones recomendadas. PDF, Notion o Google Doc. Lo que mejor te maneje.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">05</div>
+        <div class="flow-body">
+          <div class="flow-title">Contacta y ofrece el informe</div>
+          <div class="flow-desc">Escribe al negocio. Cuéntale que has revisado su sector y que tienes un informe listo. Muéstrale un ejemplo del tipo de oportunidades que detectas. El primer contacto no vende el informe, abre la conversación.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">06</div>
+        <div class="flow-body">
+          <div class="flow-title">Entrega y ofrece el siguiente paso</div>
+          <div class="flow-desc">Entrega el informe. Cuando el cliente vea el valor, ofrece implementar las mejoras principales. Ahí es donde está el ticket alto: automatizaciones, anuncios, web, sistema de reseñas.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">⚡</div>
+      <div>El primer informe te llevará 3-4 horas. A partir del segundo, con la plantilla lista y los prompts definidos, puedes entregarlo en menos de 2 horas.</div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-ghost" onclick="go(1)">← Anterior</button>
+      <div class="step-counter">03 / 07</div>
+      <button class="btn btn-primary" onclick="go(3)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 4: EL INFORME -->
+  <div class="panel" id="panel-3">
+    <div class="section-head">
+      <div class="section-eyebrow">El entregable</div>
+      <h2>El informe perfecto<br>en 6 páginas</h2>
+      <p>No lo compliques. El entregable tiene que ser claro, visual y accionable. Nada más. El cliente no quiere un análisis académico. Quiere saber qué hacer el lunes.</p>
+    </div>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-dot">P1</div>
+        <div class="flow-body">
+          <div class="flow-title">Portada</div>
+          <div class="flow-desc">Nombre del negocio, fecha, tu marca o nombre. Aspecto profesional desde el primer segundo.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">P2</div>
+        <div class="flow-body">
+          <div class="flow-title">Negocio analizado y contexto</div>
+          <div class="flow-desc">Resumen del negocio del cliente. Sector, presencia actual, punto de partida. Demuestra que lo conoces.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">P3</div>
+        <div class="flow-body">
+          <div class="flow-title">Competidores analizados</div>
+          <div class="flow-desc">Los 5 competidores revisados con tabla comparativa. Qué hace cada uno, en qué destacan, qué les falta.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">P4</div>
+        <div class="flow-body">
+          <div class="flow-title">Hallazgos principales</div>
+          <div class="flow-desc">Qué están haciendo bien los competidores. Patrones que se repiten. Mensajes que funcionan. Lo que el cliente no está viendo.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">P5</div>
+        <div class="flow-body">
+          <div class="flow-title">10 oportunidades concretas</div>
+          <div class="flow-desc">No genéricas. Específicas para este negocio. "Crear campaña de diagnóstico gratuito como hace tu competidor X." Accionables desde ya.</div>
+        </div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-dot">P6</div>
+        <div class="flow-body">
+          <div class="flow-title">Siguiente paso sugerido</div>
+          <div class="flow-desc">Una recomendación clara de por dónde empezar. Y tu propuesta para ayudarles a implementarlo. El upsell natural.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-orange">
+      <div class="alert-icon">⚠️</div>
+      <div>No intentes hacerlo perfecto. Hazlo suficientemente bueno para que el cliente vea valor y quiera el siguiente paso. La perfección es el enemigo del primer cliente.</div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-ghost" onclick="go(2)">← Anterior</button>
+      <div class="step-counter">04 / 07</div>
+      <button class="btn btn-primary" onclick="go(4)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 5: PRECIOS -->
+  <div class="panel" id="panel-4">
+    <div class="section-head">
+      <div class="section-eyebrow">Precios</div>
+      <h2>Cómo escalar de 49€<br>a 1.500€ por cliente</h2>
+      <p>Empieza barato para validar rápido. Sube el precio cuando tengas los primeros casos reales. El upsell es donde está el dinero de verdad.</p>
+    </div>
+
+    <div class="divider"><div class="divider-label">Precios por informe</div><div class="divider-line"></div></div>
+
+    <div class="price-row">
+      <div>
+        <div class="price-row-label">Beta — Primeros 3 clientes</div>
+        <div class="price-row-sub">Para validar el proceso y conseguir casos reales</div>
+      </div>
+      <div class="price-row-amount">49€</div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-row-label">Estándar — A partir del 4º cliente</div>
+        <div class="price-row-sub">Tienes casos reales, puedes defender el precio</div>
+      </div>
+      <div class="price-row-amount">97€ — 197€</div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="price-row-label">Premium — Con nicho especializado</div>
+        <div class="price-row-sub">Cuando seas referente en un sector concreto</div>
+      </div>
+      <div class="price-row-amount">197€ — 497€</div>
+    </div>
+
+    <div class="divider"><div class="divider-label">Upsell — Aquí está el dinero real</div><div class="divider-line"></div></div>
+
+    <div class="upsell-item">
+      <div class="upsell-arrow">→</div>
+      <div class="upsell-name">Optimización Google Business Profile</div>
+      <div class="upsell-price">150€ — 300€</div>
+    </div>
+    <div class="upsell-item">
+      <div class="upsell-arrow">→</div>
+      <div class="upsell-name">Automatización de WhatsApp</div>
+      <div class="upsell-price">300€ — 800€</div>
+    </div>
+    <div class="upsell-item">
+      <div class="upsell-arrow">→</div>
+      <div class="upsell-name">Landing page</div>
+      <div class="upsell-price">300€ — 600€</div>
+    </div>
+    <div class="upsell-item">
+      <div class="upsell-arrow">→</div>
+      <div class="upsell-name">Sistema de captación completo</div>
+      <div class="upsell-price">800€ — 1.500€</div>
+    </div>
+    <div class="upsell-item">
+      <div class="upsell-arrow">→</div>
+      <div class="upsell-name">Anuncios + automatización + seguimiento</div>
+      <div class="upsell-price">1.000€ — 2.500€</div>
+    </div>
+
+    <div class="alert alert-cyan">
+      <div class="alert-icon">💡</div>
+      <div>El informe no es el negocio. Es la puerta de entrada. Cobras 49€ por abrir la conversación. El negocio real está en lo que viene después.</div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-ghost" onclick="go(3)">← Anterior</button>
+      <div class="step-counter">05 / 07</div>
+      <button class="btn btn-primary" onclick="go(5)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 6: CÓMO VENDERLO -->
+  <div class="panel" id="panel-5">
+    <div class="section-head">
+      <div class="section-eyebrow">Cómo venderlo</div>
+      <h2>El mensaje que abre<br>la conversación</h2>
+      <p>No vendas el informe en el primer mensaje. Abre la conversación mostrando que has hecho trabajo previo y que tienes algo útil para ellos.</p>
+    </div>
+
+    <div class="divider"><div class="divider-label">Mensaje de prospección</div><div class="divider-line"></div></div>
+
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      <div class="code-label">DM / WhatsApp / LinkedIn</div>
+      Hola [Nombre], he estado revisando negocios de [nicho] en [ciudad] y he visto que muchos competidores están usando ofertas, mensajes y estrategias bastante distintas para captar clientes.
+
+Estoy preparando informes express donde analizo 5 competidores y entrego 10 ideas concretas para mejorar captación.
+
+Estoy haciendo los primeros a precio beta por 49€.
+
+¿Quieres que te enseñe un ejemplo de lo que incluye?
+    </div>
+
+    <div class="divider"><div class="divider-label">Dónde encontrar clientes</div><div class="divider-line"></div></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📍</div>
+          <div>
+            <div class="card-title">Google Maps</div>
+            <div class="card-sub">Negocios locales</div>
+          </div>
+        </div>
+        <p>Busca el nicho en tu ciudad. Filtra por valoración media (3-4 estrellas). Los que tienen potencial pero no están optimizados son los mejores clientes.</p>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">📸</div>
+          <div>
+            <div class="card-title">Instagram</div>
+            <div class="card-sub">Negocios con presencia activa</div>
+          </div>
+        </div>
+        <p>Busca el hashtag del nicho + ciudad. Los negocios que publican pero sin estrategia clara son tu cliente ideal. Tienen intención pero no saben cómo mejorarlo.</p>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">💼</div>
+          <div>
+            <div class="card-title">LinkedIn</div>
+            <div class="card-sub">Para ecommerce y B2B</div>
+          </div>
+        </div>
+        <p>Busca responsables de marketing o dueños de negocio en el sector. LinkedIn es donde están los que tienen presupuesto y toman decisiones.</p>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">🤝</div>
+          <div>
+            <div class="card-title">Red de contactos</div>
+            <div class="card-sub">El canal más rápido</div>
+          </div>
+        </div>
+        <p>¿Conoces a alguien que tenga un negocio en el nicho? Empieza por ahí. El primer cliente siempre es más fácil cuando hay confianza previa.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">🎯</div>
+      <div><strong>La regla:</strong> no vendas el informe. Vende la curiosidad. "He visto que tus competidores están haciendo algo que tú no" abre más conversaciones que cualquier propuesta formal.</div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-ghost" onclick="go(4)">← Anterior</button>
+      <div class="step-counter">06 / 07</div>
+      <button class="btn btn-primary" onclick="go(6)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 7: ARRANQUE -->
+  <div class="panel" id="panel-6">
+    <div class="section-head">
+      <div class="section-eyebrow">Arranque</div>
+      <h2>Lo que haces hoy<br>para tener un cliente esta semana</h2>
+      <p>No esperes a tener todo perfecto. El primer informe no tiene que ser el mejor. Tiene que ser suficientemente bueno para que alguien pague por él.</p>
+    </div>
+
+    <div class="divider"><div class="divider-label">Checklist de hoy</div><div class="divider-line"></div></div>
+
+    <ul class="checklist" id="launch-checklist">
+      <li onclick="toggleCheck(this)"><div class="checkbox">✓</div>He elegido un nicho concreto</li>
+      <li onclick="toggleCheck(this)"><div class="checkbox">✓</div>He buscado 20 negocios del nicho en Google Maps o Instagram</li>
+      <li onclick="toggleCheck(this)"><div class="checkbox">✓</div>He identificado 3-5 candidatos con potencial claro</li>
+      <li onclick="toggleCheck(this)"><div class="checkbox">✓</div>He analizado 5 competidores del primer candidato</li>
+      <li onclick="toggleCheck(this)"><div class="checkbox">✓</div>He generado el informe con IA</li>
+      <li onclick="toggleCheck(this)"><div class="checkbox">✓</div>He enviado el mensaje de prospección al primer candidato</li>
+    </ul>
+
+    <div class="divider"><div class="divider-label">Prompt para analizar competidores</div><div class="divider-line"></div></div>
+
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      <div class="code-label">Prompt para Claude o ChatGPT</div>
+      Analiza esta información sobre 5 competidores de [nombre del negocio cliente], que es [describe el negocio brevemente].
+
+[Pega aquí la información que has recopilado: capturas, descripciones, anuncios, reseñas...]
+
+Necesito que me des:
+1. Qué están haciendo bien los competidores para captar clientes
+2. Qué patrones se repiten (mensajes, ofertas, formatos)
+3. Qué errores cometen que el cliente podría aprovechar
+4. 10 oportunidades concretas y accionables para [nombre del negocio]
+5. Por dónde empezaría si fuera el dueño del negocio
+
+Sé específico. Nada genérico. Cada oportunidad debe incluir qué hacer exactamente.
+    </div>
+
+    <div class="alert alert-orange">
+      <div class="alert-icon">🔥</div>
+      <div><strong>La regla del primer cliente:</strong> no esperes a tener la plantilla perfecta ni el proceso optimizado. Acepta el primer encargo aunque creas que no estás listo. El primer informe te enseña más que cien horas de preparación.</div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-ghost" onclick="go(5)">← Anterior</button>
+      <div class="step-counter">07 / 07</div>
+      <button class="btn btn-primary" style="background:var(--green);color:var(--bg)" disabled>✓ Listo para vender</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let current = 0;
+  const total = 7;
+
+  function buildDots() {
+    const c = document.getElementById('dots');
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.id = 'dot-' + i;
+      c.appendChild(d);
+    }
+  }
+
+  function go(step) {
+    document.getElementById('panel-' + current).classList.remove('active');
+    document.getElementById('tab-' + current).classList.remove('active');
+    const prevDot = document.getElementById('dot-' + current);
+    prevDot.classList.remove('active');
+    if (step > current) prevDot.classList.add('done');
+
+    current = step;
+
+    document.getElementById('panel-' + current).classList.add('active');
+    document.getElementById('tab-' + current).classList.add('active');
+    const newDot = document.getElementById('dot-' + current);
+    newDot.classList.add('active');
+    newDot.classList.remove('done');
+
+    document.getElementById('progressFill').style.width = ((current + 1) / total * 100) + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('tab-' + current).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  function selectNiche(el) {
+    document.querySelectorAll('.niche-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    const name = el.querySelector('.niche-name').textContent;
+    const alert = document.getElementById('nicheAlert');
+    document.getElementById('nicheAlertText').textContent = 'Nicho seleccionado: ' + name + '. Ve al siguiente paso para ver el proceso exacto.';
+    alert.style.display = 'flex';
+  }
+
+  function toggleCheck(el) { el.classList.toggle('done'); }
+
+  function copyCode(btn) {
+    const block = btn.parentElement;
+    const text = block.innerText.replace('Copiar\n', '').replace(block.querySelector('.code-label').innerText + '\n', '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => btn.textContent = 'Copiar', 2000);
+    });
+  }
+
+  buildDots();
+  document.getElementById('progressFill').style.width = (1 / total * 100) + '%';
+</script>
+
+</body>
+</html>
