@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Paso a paso — Dashboard Meta Ads con Claude Code</title>
+<style>
+  :root{
+    --bg:#050810;
+    --card:#0c111e;
+    --accent:#1E9EFF;
+    --text:#f2f5fa;
+    --muted:#9aa7bd;
+    --border:#1b2436;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Barlow','Calibri',Arial,sans-serif;
+    line-height:1.6;
+    padding:48px 20px;
+  }
+  .wrap{max-width:840px;margin:0 auto;}
+  h1{
+    font-family:'Archivo Black','Century Schoolbook',serif;
+    font-size:28px;
+    margin:0 0 6px;
+    color:#fff;
+  }
+  .subtitle{
+    color:var(--muted);
+    font-size:15px;
+    margin:0 0 40px;
+    border-left:3px solid var(--accent);
+    padding-left:14px;
+  }
+  .step{
+    display:flex;
+    gap:18px;
+    margin-bottom:14px;
+  }
+  .step-num{
+    flex:0 0 auto;
+    width:40px; height:40px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#050810;
+    font-weight:700;
+    font-family:'Archivo Black',sans-serif;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+  }
+  .step-body{flex:1;}
+  .step-body h2{
+    margin:6px 0 10px;
+    font-size:18px;
+    color:#fff;
+    font-family:'Archivo Black','Century Schoolbook',serif;
+  }
+  .step-line{
+    width:2px;
+    background:var(--border);
+    margin-left:19px;
+    height:24px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 22px;
+    margin-top:8px;
+  }
+  p{margin:0 0 12px;color:var(--text);}
+  strong{color:#fff;}
+  code{
+    background:#101828;
+    color:var(--accent);
+    padding:2px 6px;
+    border-radius:4px;
+    font-size:13.5px;
+    font-family:'SFMono-Regular',Consolas,monospace;
+  }
+  ul, ol{padding-left:22px;margin:0 0 10px;}
+  li{margin-bottom:8px;}
+  .checklist{list-style:none;padding-left:0;}
+  .checklist li{position:relative;padding-left:28px;}
+  .checklist li::before{
+    content:"";position:absolute;left:0;top:2px;
+    width:16px;height:16px;border:2px solid var(--accent);border-radius:4px;
+  }
+  .quote{
+    font-style:italic;
+    color:var(--muted);
+    background:#0a0f1a;
+    border-left:3px solid var(--accent);
+    padding:12px 16px;
+    border-radius:0 8px 8px 0;
+    white-space:pre-wrap;
+    font-size:14px;
+  }
+  details{
+    margin-top:8px;
+  }
+  summary{
+    cursor:pointer;
+    color:var(--accent);
+    font-weight:600;
+    font-size:14px;
+    padding:8px 0;
+  }
+  .prompt-box{
+    background:#0a0f1a;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:16px 18px;
+    font-size:13.5px;
+    color:var(--muted);
+    white-space:pre-wrap;
+    max-height:520px;
+    overflow-y:auto;
+    font-family:'SFMono-Regular',Consolas,monospace;
+    line-height:1.5;
+  }
+  .note{
+    margin-top:36px;
+    padding:16px 20px;
+    background:rgba(30,158,255,0.08);
+    border:1px solid rgba(30,158,255,0.3);
+    border-radius:10px;
+    font-size:14px;
+    color:var(--muted);
+  }
+  .note strong{color:var(--accent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Del mensaje inicial al dashboard funcionando</h1>
+  <p class="subtitle">El recorrido completo: qué le dijiste a la IA, qué prompt maestro te generó, y cómo se construye con Claude Code paso a paso.</p>
+
+  <!-- PASO 1 -->
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h2>Hablas con la IA de forma natural</h2>
+      <p>Le explicas, sin estructura ni formato de prompt, qué quieres construir. Esto es lo que le pasaste:</p>
+      <div class="card">
+        <div class="quote">"Quiero que me des un prompt maestro para Claude Code para montar un dashboard para ver esto en tiempo real sin tener que descargar los ficheros xlsx. Aunque también se puedan cargar. Tal vez que se pueda elegir el portafolio y del portafolio la cuenta que necesito ver. No quiero editar nada, solo que se pueda ver. Y que seas capaz con IA de analizar lo que está pasando, las acciones a tomar y las recomendaciones en caso de que las haya, todo en tiempo real."</div>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 2 -->
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h2>La IA convierte eso en un prompt maestro estructurado</h2>
+      <p>A partir de una petición conversacional, la IA construye una especificación técnica completa: rol, restricciones innegociables, stack, fuentes de datos, filtros, análisis IA, plan de fases y criterios de aceptación. Este es el prompt que obtuviste:</p>
+      <details>
+        <summary>Ver prompt maestro completo</summary>
+        <div class="prompt-box">Prompt maestro — Dashboard Meta Ads (solo lectura + análisis IA)
+
+1. ROL Y OBJETIVO
+Eres un ingeniero full-stack senior. Vas a construir un dashboard web de solo lectura para analizar campañas de Meta Ads (Facebook/Instagram) en vivo, sin descargar informes .xlsx. El panel debe:
+— Conectarse a la Meta Marketing API en modo LECTURA.
+— Permitir elegir portafolio → cuenta publicitaria → campaña → rango de fechas.
+— Permitir cargar un .xlsx alternativo, parseado al mismo modelo de datos.
+— Mostrar KPIs, tendencias semanales, distribución por conjunto/creativo y tabla de detalle.
+— Ofrecer un módulo de Análisis con IA que explique qué está pasando, señale alertas y proponga acciones.
+— No se edita nada. Solo se visualiza.
+
+2. RESTRICCIONES INNEGOCIABLES
+— Solo lectura hacia Meta: nunca POST/PUT/DELETE.
+— Permisos mínimos: ads_read + business_management, nunca ads_management.
+— Secretos server-side: token de Meta y API key de Anthropic solo en variables de entorno del servidor, nunca en el cliente.
+— Caché y rate limits: 5–15 min, con backoff en errores. Mostrar hora del último refresco.
+— Sin base de datos obligatoria: caché en memoria basta.
+
+3. STACK
+Next.js (App Router) + TypeScript · Tailwind CSS · Recharts · SheetJS (xlsx) · @anthropic-ai/sdk · fetch nativo para Meta.
+
+4. FUENTES DE DATOS
+4.1 Meta Marketing API — endpoints GET: /me/businesses, /{business_id}/owned_ad_accounts y client_ad_accounts, /act_{account_id}/campaigns, /act_{account_id}/insights (con level, fields, time_increment, breakdowns).
+Extracción de leads: robusta frente a actions[] con action_type variable (leadgen_grouped, onsite_conversion.lead_grouped, lead, o que contenga "lead"). Coste por lead desde cost_per_action_type o spend/leads.
+
+4.2 Carga de .xlsx — hoja "Formatted Report", cabecera en fila 2, columnas en español, forward-fill jerárquico de campaña/conjunto/anuncio, Nivel de la entrega indica el nivel.
+
+4.3 Modelo de datos común — estructura Row unificada (source, level, campaign/adset/ad, semana, spend, impressions, reach, frequency, clicks, ctr, cpc, cpm, leads, cpl, age, gender) que alimenta gráficos y análisis IA sea cual sea la fuente.
+
+5. SISTEMA DE FILTROS
+5.1 Ámbito en cascada: Portafolio → Cuenta → Campaña (multi) → Conjunto (multi, dependiente) → Creativo (multi, dependiente).
+5.2 Fechas: presets rápidos, granularidad (día/semana/mes), comparación de periodo con deltas ▲/▼ coloreados (en CPL, bajar = mejor).
+5.3 Desgloses: edad, sexo, plataforma, posición, dispositivo, estado de entrega. Aviso: combinaciones de breakdowns incompatibles deben gestionarse sin romper la UI.
+5.4 Umbrales: gasto mínimo, leads mínimos, CPL máximo, búsqueda por texto — filtran en cliente, instantáneos, sin gastar llamadas a la API.
+5.5 UX: barra esencial siempre visible + panel de filtros avanzados en popover + chips de filtros activos + estado en la URL + botón Actualizar explícito.
+5.6 Modo archivo: al cargar .xlsx se sustituye la fuente Meta y se indica visualmente.
+
+6. MÉTRICAS Y CÁLCULOS
+KPIs (gasto, leads, CPL, CTR, frecuencia, clics) con deltas de comparación. Gráficos semanales, por conjunto/creativo, por edad/sexo, y señal de fatiga (frecuencia + CTR por creativo en el tiempo). Cuidado con divisiones por cero.
+
+7. MÓDULO DE ANÁLISIS IA
+Ruta /api/analyze server-side que recibe el dataset agregado + filtros activos y llama a la Anthropic Messages API. Devuelve JSON con resumen, alertas (por severidad), acciones (pausar/escalar/vigilar/testear) y recomendaciones. System prompt específico del negocio (semáforo de CPL, umbrales de fatiga real, fase de aprendizaje, umbral mínimo de gasto para juzgar un creativo, audiencia que convierte, LTV como métrica final real, estructura Andromeda/ABO/CBO).
+
+8. UI / DISEÑO
+Tema oscuro, estética de panel técnico. Cabecera con selectores + hora de refresco. Fila de KPIs. Pestañas: Resumen · Rendimiento · Creativos · Edad/Sexo · Análisis IA. Sin botones de edición — que se note que es solo lectura. Estados de carga, vacío y error bien cuidados.
+
+9. CONFIGURACIÓN
+.env.example con META_ACCESS_TOKEN, GRAPH_API_VERSION, ANTHROPIC_API_KEY, ANTHROPIC_MODEL, CACHE_TTL_SECONDS.
+
+10. PLAN DE CONSTRUCCIÓN POR FASES
+1) Andamiaje · 2) Conexión Meta · 3) Insights + modelo de datos · 4) Gráficos y tabla · 5) Carga de xlsx · 6) Análisis IA · 7) Pulido visual · Entrega final con instrucciones de arranque y README.
+
+11. CRITERIOS DE ACEPTACIÓN
+Filtros coherentes y reactivos · multi-selección funcional · deltas de comparación con color correcto · estado en URL · breakdowns incompatibles gestionados · leads/CPL coincidentes con el xlsx real · backend sin escrituras ni tokens expuestos · análisis IA con JSON válido y acciones concretas · paridad entre fuente Meta y fuente xlsx.</div>
+      </details>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 3 -->
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h2>Preparas lo que necesitas antes de tocar Claude Code</h2>
+      <div class="card">
+        <ul>
+          <li><strong>Meta System User token</strong> con permisos <code>ads_read</code> + <code>business_management</code> (Business Manager → Usuarios del sistema). Un token de usuario normal caduca y te rompe el dashboard a los pocos días.</li>
+          <li><strong>API key de Anthropic</strong> para el módulo de análisis.</li>
+          <li><strong>Un .xlsx real</strong> exportado de Meta, de una cuenta y semana conocidas — lo necesitas para validar cifras más adelante.</li>
+          <li><strong>Node.js instalado</strong> y una carpeta de proyecto vacía.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 4 -->
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h2>Le das el prompt a Claude Code — pero no entero de golpe</h2>
+      <p>El propio prompt maestro ya lo dice: por fases. Si le pasas todo junto y le dices "hazlo", intenta construir frontend, backend y análisis IA a la vez, y descubres los errores de conexión con Meta cuando ya tienes 500 líneas de UI encima. Dale el prompt completo como contexto del proyecto, pero pídele explícitamente que empiece solo por la Fase 1.</p>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 5 -->
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h2>Fase 1 — Andamiaje</h2>
+      <div class="card">
+        <p>Next.js + TypeScript + Tailwind. Layout oscuro con selectores mockeados (sin datos reales todavía). Objetivo: tener la estructura visual antes de meter datos.</p>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 6 -->
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <h2>Fase 2 — Conexión a Meta (la fase crítica)</h2>
+      <div class="card">
+        <p>Solo <code>/api/meta/portfolios</code> y <code>/api/meta/accounts</code>. Pídele que te enseñe el JSON de respuesta antes de seguir. Si el token o los permisos fallan, mejor descubrirlo ahora que con todo el dashboard montado encima.</p>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 7 -->
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <h2>Fase 3 — Insights y modelo de datos normalizado</h2>
+      <div class="card">
+        <p>Aquí vive el punto que más se rompe: la extracción de leads desde <code>actions[]</code>, con nombres de <code>action_type</code> que cambian (<code>leadgen_grouped</code>, <code>onsite_conversion.lead_grouped</code>...). Pruébalo contra una cuenta real y compáralo con el .xlsx de esa misma semana antes de dar la fase por buena.</p>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 8 -->
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-body">
+      <h2>Fase 4 — Gráficos y tabla sobre datos reales</h2>
+      <div class="card">
+        <p>KPIs, tendencia semanal, distribución por conjunto/creativo, ranking, tabla de detalle. Todo alimentado por el modelo normalizado de la fase anterior — nunca por datos mockeados.</p>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 9 -->
+  <div class="step">
+    <div class="step-num">9</div>
+    <div class="step-body">
+      <h2>Fase 5 — Carga de .xlsx al mismo modelo</h2>
+      <div class="card">
+        <p>Aquí validas cifras cruzadas: sube el informe real y comprueba que los leads y el CPL coinciden exactamente con lo que ya viste vía API para esa cuenta y semana.</p>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 10 -->
+  <div class="step">
+    <div class="step-num">10</div>
+    <div class="step-body">
+      <h2>Fase 6 — Análisis IA</h2>
+      <div class="card">
+        <p>Se conecta el botón "Analizar con IA" al system prompt de negocio (semáforo de CPL, fatiga real, fase de aprendizaje, gasto mínimo para juzgar un creativo, audiencia que convierte, LTV como métrica final). Comprueba que la respuesta es JSON válido y que las acciones son concretas, no genéricas.</p>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 11 -->
+  <div class="step">
+    <div class="step-num">11</div>
+    <div class="step-body">
+      <h2>Fase 7 — Pulido visual</h2>
+      <div class="card">
+        <p>Ajustes finales de estética sobre el tema oscuro y la referencia de diseño que le pasaste. Es la última fase, no la primera — pulir antes de tener datos reales es tiempo perdido.</p>
+      </div>
+    </div>
+  </div>
+  <div class="step-line"></div>
+
+  <!-- PASO 12 -->
+  <div class="step">
+    <div class="step-num">12</div>
+    <div class="step-body">
+      <h2>Checklist final antes de dar por cerrado el dashboard</h2>
+      <div class="card">
+        <ul class="checklist">
+          <li>Cambiar cualquier filtro actualiza los datos correctamente; umbral/búsqueda son instantáneos y no re-piden a Meta.</li>
+          <li>Multi-selección de campaña/conjunto/creativo permite comparar más de uno.</li>
+          <li>Comparación de periodo con deltas de color correcto (en CPL, bajar = verde).</li>
+          <li>El estado de los filtros vive en la URL.</li>
+          <li>Breakdowns incompatibles dan aviso claro, no error crudo.</li>
+          <li>Leads y CPL coinciden exactamente con el .xlsx de la misma cuenta y semana.</li>
+          <li>El backend nunca escribe a Meta ni expone tokens al cliente.</li>
+          <li>El análisis IA devuelve JSON válido y acciones concretas.</li>
+          <li>El dashboard funciona igual con datos en vivo que con .xlsx cargado.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Nota:</strong> si además quieres que retome el resumen estructurado y la crítica del proyecto IA Business Lab con los documentos del proyecto, dímelo y lo hago aparte.
+  </div>
+
+</div>
+</body>
+</html>
