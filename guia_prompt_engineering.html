@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Engineering para Negocios — IA Business Lab</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #06080F;
+    --surface: #0C0F1A;
+    --card: #111520;
+    --border: #1A1F2E;
+    --blue: #1E9EFF;
+    --blue-dim: rgba(30,158,255,0.08);
+    --blue-border: rgba(30,158,255,0.18);
+    --green: #00D68F;
+    --green-dim: rgba(0,214,143,0.07);
+    --orange: #FF6B2B;
+    --orange-dim: rgba(255,107,43,0.08);
+    --white: #F0F4FF;
+    --silver: #8A9BBF;
+    --muted: #4A5570;
+    --text: #D8E0F0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6,8,15,0.94);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .header-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: var(--blue-dim);
+    border: 1px solid var(--blue-border);
+    padding: 4px 12px;
+    border-radius: 3px;
+  }
+
+  .header-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--silver);
+  }
+
+  .header-dots {
+    margin-left: auto;
+    display: flex;
+    gap: 5px;
+  }
+
+  .hdot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+  }
+
+  .hdot.active { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+  .hdot.done { background: var(--green); }
+
+  /* PROGRESS */
+  .progress {
+    height: 2px;
+    background: var(--border);
+    position: sticky;
+    top: 53px;
+    z-index: 99;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 8px var(--blue);
+  }
+
+  /* HERO */
+  .hero {
+    padding: 80px 32px 64px;
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(30,158,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30,158,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black, transparent);
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--blue);
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 6vw, 60px);
+    font-weight: 800;
+    line-height: 1.05;
+    color: var(--white);
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--blue);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--silver);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 44px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 500px;
+    background: var(--surface);
+  }
+
+  .stat {
+    flex: 1;
+    padding: 18px 20px;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-val.blue { color: var(--blue); }
+  .stat-val.green { color: var(--green); }
+  .stat-val.orange { color: var(--orange); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* TABS */
+  .tabs {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 55px;
+    z-index: 98;
+  }
+
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    padding: 13px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab.done { color: var(--green); }
+
+  /* MAIN */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 52px 32px 100px;
+  }
+
+  /* PANELS */
+  .panel { display: none; animation: fadeUp 0.3s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEAD */
+  .sh { margin-bottom: 36px; }
+
+  .sh-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sh-tag::before { content: '//'; color: var(--muted); }
+
+  .sh h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+
+  .sh p {
+    font-size: 15px;
+    color: var(--silver);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card:hover { border-color: #252D40; }
+  .card:hover::before { opacity: 0.4; }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--blue-dim);
+    border: 1px solid var(--blue-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 3px;
+  }
+
+  .card-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .card p { font-size: 13px; color: var(--silver); line-height: 1.7; }
+
+  /* FRAMEWORK ELEMENT */
+  .fw-item {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    position: relative;
+  }
+
+  .fw-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 58px;
+    bottom: -20px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--blue-border), transparent);
+  }
+
+  .fw-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--blue-dim);
+    border: 1px solid var(--blue-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--blue);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .fw-body { flex: 1; padding-top: 6px; }
+
+  .fw-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .fw-desc {
+    font-size: 13px;
+    color: var(--silver);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+
+  /* CODE BLOCKS */
+  .code {
+    background: #050710;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    margin: 12px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    position: relative;
+    overflow-x: auto;
+    color: #B8C8E8;
+  }
+
+  .code-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .code .hl { color: var(--blue); }
+  .code .val { color: var(--green); }
+  .code .comment { color: #2A3550; }
+
+  .copy-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--border);
+    border: none;
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { background: var(--blue); color: var(--bg); }
+
+  /* ALERTS */
+  .alert {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .alert-blue { background: var(--blue-dim); border: 1px solid var(--blue-border); color: rgba(100,180,255,0.9); }
+  .alert-green { background: var(--green-dim); border: 1px solid rgba(0,214,143,0.2); color: rgba(0,214,143,0.9); }
+  .alert-orange { background: var(--orange-dim); border: 1px solid rgba(255,107,43,0.2); color: rgba(255,140,80,0.9); }
+
+  /* DIVIDER */
+  .div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 18px;
+  }
+
+  .div-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  .div-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  @media (max-width: 580px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; margin: 16px 0; }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li.done { color: var(--muted); text-decoration: line-through; }
+
+  .chk {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    transition: all 0.2s;
+    margin-top: 1px;
+  }
+
+  .checklist li.done .chk { background: var(--green); border-color: var(--green); color: var(--bg); }
+
+  /* EXAMPLE CARD */
+  .example {
+    background: #080B14;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 14px 0;
+  }
+
+  .example-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .example-label::before { content: '→'; }
+
+  .example-text {
+    font-size: 13px;
+    color: var(--silver);
+    line-height: 1.8;
+    font-style: italic;
+  }
+
+  /* NAV BTNS */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 52px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn {
+    padding: 11px 24px;
+    border-radius: 7px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary { background: var(--blue); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(30,158,255,0.2); }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: #2A3550; }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+  .step-ct { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-badge">IA Business Lab</div>
+  <div class="header-title">Prompt Engineering para Negocios</div>
+  <div class="header-dots" id="dots"></div>
+</div>
+
+<div class="progress"><div class="progress-fill" id="pf"></div></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-label">Framework de Jose Manuel</div>
+  <h1>Cómo hablarle a Claude<br>para casos de <em>negocio real</em></h1>
+  <p class="hero-sub">No prompts mágicos. No técnicas raras. El sistema de 5 elementos que uso cada día para construir sistemas, trabajar avatares y preparar ventas.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-val blue">5</div>
+      <div class="stat-label">elementos siempre</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val green">3x</div>
+      <div class="stat-label">mejor resultado</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val orange">0</div>
+      <div class="stat-label">código necesario</div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs" id="tabsNav">
+  <div class="tab active" onclick="go(0)" id="tab-0">01 · El problema</div>
+  <div class="tab" onclick="go(1)" id="tab-1">02 · El framework</div>
+  <div class="tab" onclick="go(2)" id="tab-2">03 · Caso real</div>
+  <div class="tab" onclick="go(3)" id="tab-3">04 · Más casos</div>
+  <div class="tab" onclick="go(4)" id="tab-4">05 · Practica</div>
+</div>
+
+<div class="main">
+
+  <!-- PANEL 1: EL PROBLEMA -->
+  <div class="panel active" id="panel-0">
+    <div class="sh">
+      <div class="sh-tag">El problema</div>
+      <h2>Por qué Claude a veces<br>da resultados mediocres</h2>
+      <p>No es culpa del modelo. Es culpa de cómo le hablas. Claude es tan bueno o tan malo como la información que le das.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">❌</div>
+          <div>
+            <div class="card-title">Sin contexto</div>
+            <div class="card-sub">Lo que hace la mayoría</div>
+          </div>
+        </div>
+        <p>"Hazme un email de ventas para una clínica dental."</p>
+        <br>
+        <p style="color:var(--muted);font-size:12px">Claude no sabe quién eres, qué vendes, a quién le hablas ni qué resultado esperas. Inventa. Y cuando inventa, sale genérico.</p>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <div class="card-icon">✅</div>
+          <div>
+            <div class="card-title">Con el framework</div>
+            <div class="card-sub">Lo que cambia todo</div>
+          </div>
+        </div>
+        <p>"Soy consultor de IA para clínicas dentales. Mi avatar es el dueño de una clínica con 2-5 dentistas que pierde pacientes fuera de horario. Necesito un email corto que le haga ver ese problema..."</p>
+      </div>
+    </div>
+
+    <div class="alert alert-blue">
+      <div class="alert-icon">💡</div>
+      <div>Cuando Claude no tiene información, la inventa. Y la información inventada es genérica. Tu trabajo es darle tantos datos concretos que no tenga que inventar nada.</div>
+    </div>
+
+    <div class="div"><div class="div-label">La regla de oro</div><div class="div-line"></div></div>
+
+    <div class="card">
+      <div class="card-title" style="font-size:18px;margin-bottom:10px">Basura entra, basura sale.</div>
+      <p>No es un problema del modelo. Es un problema de input. Cuanto más específico y concreto sea lo que le das, más específico y útil será lo que te devuelve. El framework es la forma de sistematizar eso.</p>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-ghost" disabled>← Anterior</button>
+      <div class="step-ct">01 / 05</div>
+      <button class="btn btn-primary" onclick="go(1)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 2: EL FRAMEWORK -->
+  <div class="panel" id="panel-1">
+    <div class="sh">
+      <div class="sh-tag">El framework</div>
+      <h2>Los 5 elementos.<br>Siempre los mismos.</h2>
+      <p>No hace falta memorizarlos. Solo entenderlos. Con la práctica salen solos.</p>
+    </div>
+
+    <div class="fw-item">
+      <div class="fw-num">01</div>
+      <div class="fw-body">
+        <div class="fw-title">Contexto</div>
+        <div class="fw-desc">Quién eres, a qué te dedicas y para qué es lo que le vas a pedir. No para que Claude sepa quién eres. Sino para que entienda el marco desde el que tiene que responder.</div>
+        <div class="example">
+          <div class="example-label">Ejemplo</div>
+          <div class="example-text">"Soy consultor de IA. Ayudo a clínicas dentales a automatizar la captación de pacientes con agentes de WhatsApp. Este mes estoy trabajando con una clínica en Madrid con 3 dentistas y unos 80 pacientes nuevos al mes."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fw-item">
+      <div class="fw-num">02</div>
+      <div class="fw-body">
+        <div class="fw-title">Objetivo</div>
+        <div class="fw-desc">Qué quieres conseguir exactamente. No qué quieres que construya. Qué quieres conseguir con eso. El objetivo es el resultado, no la herramienta.</div>
+        <div class="example">
+          <div class="example-label">Ejemplo</div>
+          <div class="example-text">"Quiero que el dueño de la clínica entienda cuántos pacientes está perdiendo fuera de horario y sienta urgencia por resolverlo. No quiero que hable de tecnología todavía."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fw-item">
+      <div class="fw-num">03</div>
+      <div class="fw-body">
+        <div class="fw-title">Datos</div>
+        <div class="fw-desc">Todo lo que tengas que pueda ayudar. Información del cliente, del sector, de la competencia, métricas, conversaciones previas. Cuantos más datos concretos, menos tiene que inventarse.</div>
+        <div class="example">
+          <div class="example-label">Ejemplo</div>
+          <div class="example-text">"El 70% de las llamadas a clínicas fuera de horario no se atienden. Cada paciente nuevo vale entre 300€ y 2.000€ de media en tratamientos. La clínica recibe unas 15 llamadas al día, 5 de ellas fuera de horario."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fw-item">
+      <div class="fw-num">04</div>
+      <div class="fw-body">
+        <div class="fw-title">Especificaciones</div>
+        <div class="fw-desc">Cómo lo quieres. En qué formato. Con qué tono. Qué tiene que incluir y qué no. Sin esto, Claude toma decisiones solo. A veces bien, a veces no.</div>
+        <div class="example">
+          <div class="example-label">Ejemplo</div>
+          <div class="example-text">"Quiero un email corto, máximo 150 palabras. Tono directo, sin jerga técnica. Que empiece con un dato que impacte, que haga una pregunta incómoda en el medio y que termine con una llamada a la acción clara."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fw-item">
+      <div class="fw-num">05</div>
+      <div class="fw-body">
+        <div class="fw-title">Resultado esperado</div>
+        <div class="fw-desc">Qué tiene que salir al final. No el proceso. El entregable concreto que vas a usar.</div>
+        <div class="example">
+          <div class="example-label">Ejemplo</div>
+          <div class="example-text">"Un email listo para copiar y pegar, sin placeholders, con el asunto incluido. Que pueda enviar mañana mismo sin modificar nada."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">✅</div>
+      <div>No tienes que usar los 5 siempre en ese orden. Pero cuantos más uses, mejor resultado. Los que más se saltan son el objetivo y el resultado esperado. Y son los más importantes.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-ghost" onclick="go(0)">← Anterior</button>
+      <div class="step-ct">02 / 05</div>
+      <button class="btn btn-primary" onclick="go(2)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 3: CASO REAL — DASHBOARD META ADS -->
+  <div class="panel" id="panel-2">
+    <div class="sh">
+      <div class="sh-tag">Caso real</div>
+      <h2>El dashboard de Meta Ads.<br>Cómo lo construí con Claude.</h2>
+      <p>Este es el proceso exacto. Del mensaje natural al sistema funcionando.</p>
+    </div>
+
+    <div class="div"><div class="div-label">Paso 1 · El mensaje natural</div><div class="div-line"></div></div>
+
+    <div class="code">
+      <div class="code-label">Lo que le dije a Claude — en lenguaje natural</div>
+      <span class="comment">// CONTEXTO</span><br>
+      Soy consultor de marketing digital. Gestiono campañas de Meta Ads<br>
+      para clientes. Cada semana exporto datos de Meta en Excel.<br><br>
+      <span class="comment">// OBJETIVO</span><br>
+      Quiero un dashboard que me diga de un vistazo qué anuncios parar,<br>
+      cuáles escalar y cuánto me cuesta cada lead. Y que la IA me dé<br>
+      recomendaciones directamente sin que yo tenga que interpretar datos.<br><br>
+      <span class="comment">// DATOS</span><br>
+      El Excel de Meta tiene estas columnas: nombre del anuncio, impresiones,<br>
+      clics, gasto, leads (dentro de actions[]), CTR, CPM, CPC.<br><br>
+      <span class="comment">// ESPECIFICACIONES</span><br>
+      Quiero que sea visual, que funcione en el navegador, con gráficos,<br>
+      que pueda subir el Excel directamente. El análisis con IA en<br>
+      lenguaje de negocio, no técnico.<br><br>
+      <span class="comment">// RESULTADO ESPERADO</span><br>
+      Un archivo HTML que abra en el navegador, suba mi Excel y en<br>
+      menos de un minuto me dé el análisis completo.
+    </div>
+
+    <div class="div"><div class="div-label">Paso 2 · Claude genera el prompt maestro</div><div class="div-line"></div></div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🧠</div>
+        <div>
+          <div class="card-title">Qué hace Claude con tu mensaje</div>
+          <div class="card-sub">El proceso interno</div>
+        </div>
+      </div>
+      <p>Con los 5 elementos bien dados, Claude convierte tu mensaje natural en un prompt maestro estructurado que Claude Code puede ejecutar. No tienes que saber programar. Solo tienes que saber darle la información correcta.</p>
+    </div>
+
+    <div class="div"><div class="div-label">Paso 3 · Construcción por fases</div><div class="div-line"></div></div>
+
+    <div class="alert alert-orange">
+      <div class="alert-icon">⚠️</div>
+      <div><strong>Clave:</strong> no le pases el prompt maestro entero de golpe a Claude Code. Constrúyelo por fases y valida cada una antes de avanzar. Así evitas que todo se rompa a mitad.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px">Fase 1 — Estructura base</div>
+        <p style="font-size:12px">El andamiaje del dashboard. La interfaz vacía pero funcional.</p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px">Fase 2 — Conexión Meta</div>
+        <p style="font-size:12px">Lectura del Excel exportado de Meta. Extracción de columnas.</p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px">Fase 3 — Métricas y leads</div>
+        <p style="font-size:12px">Cálculo de CPL, CTR, ROAS. Extracción correcta de leads desde actions[].</p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px">Fase 4 — IA y recomendaciones</div>
+        <p style="font-size:12px">Claude analiza los datos y da recomendaciones en lenguaje de negocio.</p>
+      </div>
+    </div>
+
+    <div class="alert alert-blue">
+      <div class="alert-icon">💡</div>
+      <div>Los tres puntos donde esto se rompe casi siempre: la extracción de leads desde actions[], los breakdowns incompatibles de Meta, y el caché/rate limits. Valida cada fase con tu Excel real antes de avanzar.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-ghost" onclick="go(1)">← Anterior</button>
+      <div class="step-ct">03 / 05</div>
+      <button class="btn btn-primary" onclick="go(3)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 4: MÁS CASOS -->
+  <div class="panel" id="panel-3">
+    <div class="sh">
+      <div class="sh-tag">Más casos</div>
+      <h2>El framework aplicado<br>a tu día a día.</h2>
+      <p>Tres situaciones concretas donde usar los 5 elementos cambia completamente el resultado.</p>
+    </div>
+
+    <div class="div"><div class="div-label">Caso 1 · Trabajar el avatar</div><div class="div-line"></div></div>
+
+    <div class="code">
+      <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      <div class="code-label">Prompt con los 5 elementos</div>
+      <span class="hl">CONTEXTO:</span> Soy consultor de IA para [nicho]. Mi cliente ideal es [descripción].<br><br>
+      <span class="hl">OBJETIVO:</span> Necesito definir con precisión el avatar de mi cliente ideal para<br>
+      poder escribir mensajes de prospección que conecten directamente con<br>
+      su situación real.<br><br>
+      <span class="hl">DATOS:</span> Lo que sé de mi cliente: [lo que has observado, conversaciones,<br>
+      sectores, tamaño de empresa, problemas que mencionan].<br><br>
+      <span class="hl">ESPECIFICACIONES:</span> Quiero el avatar en formato estructurado: quién es,<br>
+      qué problema urgente tiene, qué ha intentado antes, qué le frena,<br>
+      cómo habla (sus palabras exactas, no las mías).<br><br>
+      <span class="hl">RESULTADO:</span> Un documento de avatar que pueda usar directamente para<br>
+      escribir mis mensajes de prospección esta semana.
+    </div>
+
+    <div class="div"><div class="div-label">Caso 2 · Preparar una propuesta comercial</div><div class="div-line"></div></div>
+
+    <div class="code">
+      <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      <div class="code-label">Prompt con los 5 elementos</div>
+      <span class="hl">CONTEXTO:</span> Tengo una reunión con [tipo de negocio] el [fecha]. He hablado<br>
+      con ellos antes y sé que su problema principal es [problema].<br><br>
+      <span class="hl">OBJETIVO:</span> Quiero una propuesta que conecte directamente con su dolor<br>
+      y presente mi solución en términos de ROI, no de tecnología.<br><br>
+      <span class="hl">DATOS:</span> El negocio factura [X], tiene [N] empleados, su competencia<br>
+      [información]. El problema les cuesta aproximadamente [impacto económico].<br><br>
+      <span class="hl">ESPECIFICACIONES:</span> Propuesta de máximo 1 página. Sin tecnicismos. Que<br>
+      empiece con el problema, siga con el impacto económico, luego la<br>
+      solución y termine con el precio y el siguiente paso.<br><br>
+      <span class="hl">RESULTADO:</span> Un documento listo para enviar por email o presentar en pantalla.
+    </div>
+
+    <div class="div"><div class="div-label">Caso 3 · Analizar competencia</div><div class="div-line"></div></div>
+
+    <div class="code">
+      <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      <div class="code-label">Prompt con los 5 elementos</div>
+      <span class="hl">CONTEXTO:</span> Estoy preparando una propuesta para [negocio] en el sector [X].<br><br>
+      <span class="hl">OBJETIVO:</span> Quiero entender qué está haciendo la competencia para<br>
+      identificar oportunidades que el negocio cliente no está aprovechando.<br><br>
+      <span class="hl">DATOS:</span> [Pega aquí información de los competidores: web, Instagram,<br>
+      Google Maps, anuncios que hayas visto, reseñas, ofertas].<br><br>
+      <span class="hl">ESPECIFICACIONES:</span> Análisis estructurado: qué hacen bien, qué hacen mal,<br>
+      qué patrones se repiten, qué oportunidades hay. En lenguaje de negocio,<br>
+      no de marketing.<br><br>
+      <span class="hl">RESULTADO:</span> 10 oportunidades concretas y accionables que pueda presentar<br>
+      al cliente esta semana.
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">✅</div>
+      <div>Guarda estos prompts como plantillas. La próxima vez que necesites lo mismo, solo cambias los datos específicos. En 5 minutos tienes un resultado que antes te llevaría horas.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-ghost" onclick="go(2)">← Anterior</button>
+      <div class="step-ct">04 / 05</div>
+      <button class="btn btn-primary" onclick="go(4)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- PANEL 5: PRACTICA -->
+  <div class="panel" id="panel-4">
+    <div class="sh">
+      <div class="sh-tag">Practica</div>
+      <h2>Construye tu primer<br>prompt con el framework.</h2>
+      <p>Elige un caso concreto de tu negocio y aplica los 5 elementos ahora mismo.</p>
+    </div>
+
+    <div class="div"><div class="div-label">Tu plantilla base</div><div class="div-line"></div></div>
+
+    <div class="code">
+      <button class="copy-btn" onclick="copyCode(this)">Copiar plantilla</button>
+      <div class="code-label">Plantilla de los 5 elementos — copia y rellena</div>
+      <span class="hl">CONTEXTO:</span><br>
+      Soy [quién eres y a qué te dedicas]. Estoy trabajando con/para<br>
+      [cliente o situación concreta].<br><br>
+      <span class="hl">OBJETIVO:</span><br>
+      Necesito [qué quieres conseguir, el resultado final, no la herramienta].<br><br>
+      <span class="hl">DATOS:</span><br>
+      Lo que sé: [toda la información relevante que tengas — cuanto más<br>
+      específico, mejor resultado].<br><br>
+      <span class="hl">ESPECIFICACIONES:</span><br>
+      Quiero que el resultado sea [formato, tono, longitud, qué incluir,<br>
+      qué no incluir].<br><br>
+      <span class="hl">RESULTADO ESPERADO:</span><br>
+      Al final quiero tener [el entregable concreto listo para usar].
+    </div>
+
+    <div class="div"><div class="div-label">Checklist antes de enviar el prompt</div><div class="div-line"></div></div>
+
+    <ul class="checklist" id="chk">
+      <li onclick="toggleCheck(this)"><div class="chk">✓</div>He explicado quién soy y para qué es esto</li>
+      <li onclick="toggleCheck(this)"><div class="chk">✓</div>He definido el objetivo como resultado, no como herramienta</li>
+      <li onclick="toggleCheck(this)"><div class="chk">✓</div>He dado todos los datos concretos que tengo</li>
+      <li onclick="toggleCheck(this)"><div class="chk">✓</div>He especificado formato, tono y qué incluir o no</li>
+      <li onclick="toggleCheck(this)"><div class="chk">✓</div>He dicho exactamente qué entregable espero al final</li>
+    </ul>
+
+    <div class="alert alert-blue">
+      <div class="alert-icon">🚀</div>
+      <div><strong>Siguiente paso:</strong> coge un caso real de tu negocio ahora mismo — un email que tengas que escribir, un avatar que definir, una propuesta que preparar — y aplica el framework. Compara el resultado con lo que obtenías antes.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-ghost" onclick="go(3)">← Anterior</button>
+      <div class="step-ct">05 / 05</div>
+      <button class="btn btn-primary" style="background:var(--green);color:var(--bg)" disabled>✓ Framework dominado</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let cur = 0;
+  const total = 5;
+
+  function buildDots() {
+    const c = document.getElementById('dots');
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('div');
+      d.className = 'hdot' + (i === 0 ? ' active' : '');
+      d.id = 'dot-' + i;
+      c.appendChild(d);
+    }
+  }
+
+  function go(step) {
+    document.getElementById('panel-' + cur).classList.remove('active');
+    document.getElementById('tab-' + cur).classList.remove('active');
+    const prevDot = document.getElementById('dot-' + cur);
+    prevDot.classList.remove('active');
+    if (step > cur) prevDot.classList.add('done');
+
+    cur = step;
+
+    document.getElementById('panel-' + cur).classList.add('active');
+    document.getElementById('tab-' + cur).classList.add('active');
+    const newDot = document.getElementById('dot-' + cur);
+    newDot.classList.add('active');
+    newDot.classList.remove('done');
+
+    document.getElementById('pf').style.width = ((cur + 1) / total * 100) + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('tab-' + cur).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+
+  function toggleCheck(el) { el.classList.toggle('done'); }
+
+  function copyCode(btn) {
+    const block = btn.parentElement;
+    const label = block.querySelector('.code-label');
+    let text = block.innerText;
+    if (label) text = text.replace(label.innerText, '').replace('Copiar\n', '').replace('Copiar plantilla\n', '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => btn.textContent = btn.textContent.includes('plantilla') ? 'Copiar plantilla' : 'Copiar', 2000);
+    });
+  }
+
+  buildDots();
+  document.getElementById('pf').style.width = (1 / total * 100) + '%';
+</script>
+
+</body>
+</html>
